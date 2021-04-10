@@ -28,5 +28,5 @@ public interface UserDao {
     void deleteAll();
 
     @Query("SELECT * FROM users ORDER BY id ASC")
-    LiveData<List<User>> getAlphabetizedWords();
+    LiveData<List<User>> getAlphabetizedUsers();
 }

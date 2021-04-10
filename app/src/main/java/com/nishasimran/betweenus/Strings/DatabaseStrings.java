@@ -9,6 +9,5 @@ public class DatabaseStrings {
     public final static String COLUMN_PHONE = "phone";
     public final static String COLUMN_ZODIAC = "zodiac";
     public final static String COLUMN_PHOTO = "photo";
-    public final static String COLUMN_P = "p";
 
 }

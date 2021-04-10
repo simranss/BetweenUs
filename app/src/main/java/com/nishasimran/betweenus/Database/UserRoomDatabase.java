@@ -18,9 +18,9 @@ public abstract class UserRoomDatabase extends RoomDatabase {
     
     private static volatile UserRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
-    static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    static UserRoomDatabase getDatabase(final Context context) {
+    public static UserRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (UserRoomDatabase.class) {
                 if (INSTANCE == null) {

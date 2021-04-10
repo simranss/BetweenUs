@@ -30,8 +30,6 @@ public class User {
     private final String zodiac;
     @ColumnInfo(name = DatabaseStrings.COLUMN_PHOTO)
     private Blob photo;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_P)
-    private String p;
 
 
 
@@ -66,17 +64,11 @@ public class User {
     public String getZodiac() {
         return zodiac;
     }
-    public String getP() {
-        return p;
-    }
     public Blob getPhoto() {
         return photo;
     }
 
     // setters
-    public void setP(String p) {
-        this.p = p;
-    }
     public void setName(String name) {
         this.name = name;
     }
