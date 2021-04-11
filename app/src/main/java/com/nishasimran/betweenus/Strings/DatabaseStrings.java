@@ -29,6 +29,7 @@ public class DatabaseStrings {
     public final static String TABLE_MESSAGES = "messages";
     public final static String DATABASE_MEMORIES = "memories_database";
     public final static String TABLE_MEMORIES = "memories";
+    public final static String TABLE_ALBUMS = "albums";
     public final static String TABLE_SPECIAL_DAY = "special_days";
 
 }
