@@ -12,7 +12,7 @@ import java.util.List;
 
 public class UserViewModel extends AndroidViewModel {
 
-    private UserRepository mRepository;
+    private final UserRepository mRepository;
 
     private final LiveData<List<User>> mAllUsers;
 
