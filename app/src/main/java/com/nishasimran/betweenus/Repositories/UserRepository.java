@@ -13,7 +13,7 @@ import java.util.List;
 public class UserRepository {
     
     private final UserDao userDao;
-    private final LiveData<List<User>> allUsers;
+    private LiveData<List<User>> allUsers;
 
     // Note that in order to unit test the UserRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.

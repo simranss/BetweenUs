@@ -14,7 +14,7 @@ public class UserViewModel extends AndroidViewModel {
 
     private final UserRepository mRepository;
 
-    private final LiveData<List<User>> mAllUsers;
+    private LiveData<List<User>> mAllUsers;
 
     public UserViewModel (Application application) {
         super(application);
