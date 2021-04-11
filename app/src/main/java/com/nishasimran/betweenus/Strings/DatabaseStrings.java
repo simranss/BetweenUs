@@ -21,10 +21,14 @@ public class DatabaseStrings {
     public final static String COLUMN_YEAR = "year";
     public final static String COLUMN_TITLE = "title";
     public final static String COLUMN_DESC = "desc";
+    public final static String COLUMN_MY_PRIVATE = "my_private";
+    public final static String COLUMN_MY_PUBLIC = "my_public";
+    public final static String COLUMN_SERVER_PUBLIC = "server_public";
 
 
     public final static String DATABASE_USERS = "user_database";
     public final static String TABLE_USERS = "users";
+    public final static String TABLE_KEYS = "keys";
     public final static String DATABASE_MESSAGES = "message_database";
     public final static String TABLE_MESSAGES = "messages";
     public final static String DATABASE_MEMORIES = "memories_database";

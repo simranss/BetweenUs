@@ -11,7 +11,7 @@ import com.nishasimran.betweenus.Database.UserRoomDatabase;
 import java.util.List;
 
 public class UserRepository {
-    
+
     private final UserDao userDao;
     private LiveData<List<User>> allUsers;
 

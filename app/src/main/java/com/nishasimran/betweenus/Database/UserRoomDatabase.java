@@ -8,16 +8,20 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.nishasimran.betweenus.DAOs.KeyDao;
+import com.nishasimran.betweenus.DAOs.UserDao;
+import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Strings.DatabaseStrings;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class}, version = 1, exportSchema = false)
+@Database(entities = {User.class, Key.class}, version = 1, exportSchema = false)
 public abstract class UserRoomDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
+    public abstract KeyDao keyDao();
     
     private static volatile UserRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -51,6 +55,7 @@ public abstract class UserRoomDatabase extends RoomDatabase {
                 // Populate the database in the background.
                 // If you want to start with more words, just add them.
                 UserDao dao = INSTANCE.userDao();
+                KeyDao keyDao = INSTANCE.keyDao();
             });
         }
     };
