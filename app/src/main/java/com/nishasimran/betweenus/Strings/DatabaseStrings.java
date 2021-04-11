@@ -13,6 +13,7 @@ public class DatabaseStrings {
     public final static String COLUMN_FROM = "from";
     public final static String COLUMN_TO = "to";
     public final static String COLUMN_M_TYPE = "m_type";
+    public final static String COLUMN_STATUS = "status";
     public final static String COLUMN_CURR_MILLIS = "curr_millis";
     public final static String COLUMN_ALBUM_NAME = "album_name";
     public final static String COLUMN_IMAGE = "image";

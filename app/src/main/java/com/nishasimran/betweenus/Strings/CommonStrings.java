@@ -9,4 +9,9 @@ public class CommonStrings {
     public final static String DECRYPTED_MESSAGE = "decrypted_message";
     public final static String IV = "iv";
 
+    public final static String STATUS_SENDING = "status_0";
+    public final static String STATUS_SENT = "status_1";
+    public final static String STATUS_DELIVERED = "status_2";
+    public final static String STATUS_SEEN = "status_3";
+
 }

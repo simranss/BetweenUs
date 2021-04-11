@@ -22,18 +22,21 @@ public class Message {
     private String to;
     @ColumnInfo(name = DatabaseStrings.COLUMN_M_TYPE)
     private String messageType;
+    @ColumnInfo(name = DatabaseStrings.COLUMN_STATUS)
+    private String status;
     @ColumnInfo(name = DatabaseStrings.COLUMN_CURR_MILLIS)
     private long currMillis;
 
 
 
 
-    public Message(@NonNull String id, String message, String from, String to, String messageType, long currMillis) {
+    public Message(@NonNull String id, String message, String from, String to, String messageType, String status, long currMillis) {
         this.id = id;
         this.message = message;
         this.from = from;
         this.to = to;
         this.messageType = messageType;
+        this.status = status;
         this.currMillis = currMillis;
     }
 
@@ -56,6 +59,9 @@ public class Message {
     public String getMessageType() {
         return messageType;
     }
+    public String getStatus() {
+        return status;
+    }
     public long getCurrMillis() {
         return currMillis;
     }
@@ -72,6 +78,9 @@ public class Message {
     }
     public void setMessageType(String messageType) {
         this.messageType = messageType;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
     public void setCurrMillis(long currMillis) {
         this.currMillis = currMillis;
