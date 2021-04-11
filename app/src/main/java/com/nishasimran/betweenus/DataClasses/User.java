@@ -11,12 +11,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.Blob;
 
-@Entity(tableName = "users")
+@Entity(tableName = DatabaseStrings.TABLE_USERS)
 public class User {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @NonNull
-    @ColumnInfo(name = DatabaseStrings.COLUMN_UID)
+    @ColumnInfo(name = DatabaseStrings.COLUMN_ID)
     private final String id;
     @ColumnInfo(name = DatabaseStrings.COLUMN_NAME)
     private String name;

@@ -9,6 +9,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.nishasimran.betweenus.DataClasses.User;
+import com.nishasimran.betweenus.Strings.DatabaseStrings;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +30,7 @@ public abstract class UserRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(
                             context.getApplicationContext(),
                             UserRoomDatabase.class,
-                            "user_database"
+                            DatabaseStrings.DATABASE_USERS
                     )
                             .addCallback(sRoomDatabaseCallback)
                             .build();
