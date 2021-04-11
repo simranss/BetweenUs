@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DataClasses.User;
-import com.nishasimran.betweenus.Database.UserDao;
+import com.nishasimran.betweenus.DAOs.UserDao;
 import com.nishasimran.betweenus.Database.UserRoomDatabase;
 
 import java.util.List;

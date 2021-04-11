@@ -1,4 +1,4 @@
-package com.nishasimran.betweenus.Database;
+package com.nishasimran.betweenus.DAOs;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
