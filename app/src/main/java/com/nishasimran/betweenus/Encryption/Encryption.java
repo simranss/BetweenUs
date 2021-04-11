@@ -65,6 +65,7 @@ public class Encryption {
             Log.d(TAG, "cipherText: " + Arrays.toString(ciphertext));
 
             map = new HashMap<>();
+            map.put(CommonStrings.MY_PRIVATE_KEY, Arrays.toString(privateKey));
             map.put(CommonStrings.MY_PUBLIC_KEY, Arrays.toString(publicKey));
             map.put(CommonStrings.SERVER_KEY, serverPublicKey);
             map.put(CommonStrings.ENCRYPTED_MESSAGE, Arrays.toString(ciphertext));
