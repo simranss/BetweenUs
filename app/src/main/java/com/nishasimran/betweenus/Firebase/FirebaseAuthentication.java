@@ -20,19 +20,16 @@ public class FirebaseAuthentication {
     private final String TAG = "FirebaseAuthentication";
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    private final Activity context;
 
-    public FirebaseAuthentication(Activity context) {
-        this.context = context;
-    }
+    public static FirebaseAuthentication INSTANCE = new FirebaseAuthentication();
 
-    public void signIn(String number) {
+    public void signIn(Activity activity, String number) {
         AtomicReference<FirebaseUser> user = new AtomicReference<>();
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(auth)
                         .setPhoneNumber(number)
                         .setTimeout(60L, TimeUnit.SECONDS)
-                        .setActivity(context)
+                        .setActivity(activity)
                         .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
