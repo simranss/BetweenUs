@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey;
 
 import com.nishasimran.betweenus.Strings.DatabaseStrings;
 
-import java.sql.Blob;
-
 @Entity(tableName = DatabaseStrings.TABLE_MEMORIES)
 public class Memory {
 
@@ -21,13 +19,13 @@ public class Memory {
     @ColumnInfo(name = DatabaseStrings.COLUMN_CURR_MILLIS)
     private long currMillis;
     @ColumnInfo(name = DatabaseStrings.COLUMN_IMAGE)
-    private Blob image;
+    private String image;
     @ColumnInfo(name = DatabaseStrings.COLUMN_DESC)
     private String desc;
 
 
 
-    public Memory(@NonNull String id, String albumName, long currMillis, Blob image, String desc) {
+    public Memory(@NonNull String id, String albumName, long currMillis, String image, String desc) {
         this.id = id;
         this.albumName = albumName;
         this.currMillis = currMillis;
@@ -48,7 +46,7 @@ public class Memory {
     public long getCurrMillis() {
         return currMillis;
     }
-    public Blob getImage() {
+    public String getImage() {
         return image;
     }
     public String getDesc() {
@@ -62,7 +60,7 @@ public class Memory {
     public void setCurrMillis(long currMillis) {
         this.currMillis = currMillis;
     }
-    public void setImage(Blob image) {
+    public void setImage(String image) {
         this.image = image;
     }
     public void setDesc(String desc) {

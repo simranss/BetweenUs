@@ -24,8 +24,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_15
-        targetCompatibility JavaVersion.VERSION_15
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -43,7 +43,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // ecdh dependency
-    compile files('libs/ecdh-curve25519.jar')
+    implementation files('libs/ecdh-curve25519.jar')
 
     // Room components
     implementation "android.arch.persistence.room:runtime:$room_version"

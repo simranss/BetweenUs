@@ -1,6 +1,7 @@
 package com.nishasimran.betweenus.DAOs;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -12,6 +13,7 @@ import com.nishasimran.betweenus.Strings.DatabaseStrings;
 
 import java.util.List;
 
+@Dao
 public interface KeyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

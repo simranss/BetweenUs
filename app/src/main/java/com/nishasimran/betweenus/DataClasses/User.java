@@ -9,8 +9,6 @@ import com.nishasimran.betweenus.Strings.DatabaseStrings;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Blob;
-
 @Entity(tableName = DatabaseStrings.TABLE_USERS)
 public class User {
 
@@ -29,11 +27,11 @@ public class User {
     @ColumnInfo(name = DatabaseStrings.COLUMN_ZODIAC)
     private final String zodiac;
     @ColumnInfo(name = DatabaseStrings.COLUMN_PHOTO)
-    private Blob photo;
+    private String photo;
 
 
 
-    public User(@NonNull String id, String name, long dob, String email, String phone, String zodiac, Blob photo) {
+    public User(@NonNull String id, String name, long dob, String email, String phone, String zodiac, String photo) {
         this.id = id;
         this.name = name;
         this.dob = dob;
@@ -64,7 +62,7 @@ public class User {
     public String getZodiac() {
         return zodiac;
     }
-    public Blob getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
@@ -78,7 +76,7 @@ public class User {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    public void setPhoto(Blob photo) {
+    public void setPhoto(String photo) {
         this.photo = photo;
     }
 }
