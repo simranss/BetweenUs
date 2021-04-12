@@ -21,7 +21,7 @@ public class FirebaseAuthentication {
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    public static FirebaseAuthentication INSTANCE = new FirebaseAuthentication();
+    public static FirebaseAuthentication INSTANCE = null;
 
     public void signIn(Activity activity, String number) {
         AtomicReference<FirebaseUser> user = new AtomicReference<>();
@@ -56,5 +56,11 @@ public class FirebaseAuthentication {
         auth.signOut();
     }
 
+    public static FirebaseAuthentication getInstance() {
+        if (INSTANCE == null)
+            INSTANCE = new FirebaseAuthentication();
+
+        return INSTANCE;
+    }
 
 }
