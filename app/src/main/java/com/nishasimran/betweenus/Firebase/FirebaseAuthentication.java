@@ -20,13 +20,13 @@ public class FirebaseAuthentication {
     private final String TAG = "FirebaseAuthentication";
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    private Activity context;
+    private final Activity context;
 
     public FirebaseAuthentication(Activity context) {
         this.context = context;
     }
 
-    public FirebaseUser signIn(String number) {
+    public void signIn(String number) {
         AtomicReference<FirebaseUser> user = new AtomicReference<>();
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(auth)
@@ -37,7 +37,7 @@ public class FirebaseAuthentication {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                                 Log.d(TAG, "Verification success");
-                                user.set(signInWithPhoneAuthCredential(phoneAuthCredential));
+                                signInWithPhoneAuthCredential(phoneAuthCredential);
                             }
 
                             @Override
@@ -47,18 +47,12 @@ public class FirebaseAuthentication {
                         })
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
-        return user.get();
     }
 
-    private FirebaseUser signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        AtomicReference<FirebaseUser> user = new AtomicReference<>();
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         auth.signInWithCredential(credential)
-                .addOnSuccessListener(authResult -> {
-                    user.set(authResult.getUser());
-                    Log.d(TAG, "Verification success");
-                })
+                .addOnSuccessListener(authResult -> Log.d(TAG, "Verification success"))
                 .addOnFailureListener(e -> Log.d(TAG, "VerificationFailed: " + e.getMessage()));
-        return user.get();
     }
 
     public void signOut() {
