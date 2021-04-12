@@ -1,19 +1,23 @@
 package com.nishasimran.betweenus.Repositories;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.DAOs.UserDao;
 import com.nishasimran.betweenus.Database.UserRoomDatabase;
+import com.nishasimran.betweenus.Strings.CommonStrings;
 
 import java.util.List;
 
 public class UserRepository {
 
     private final UserDao userDao;
-    private LiveData<List<User>> allUsers;
+    private final LiveData<List<User>> allUsers;
+    private final LiveData<User> currentUser;
 
     // Note that in order to unit test the UserRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -23,6 +27,10 @@ public class UserRepository {
         UserRoomDatabase db = UserRoomDatabase.getDatabase(application);
         userDao = db.userDao();
         allUsers = userDao.getAlphabetizedUsers();
+
+        SharedPreferences prefs = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        String uid = prefs.getString(CommonStrings.SHARED_PREFERENCE_UID, CommonStrings.NULL);
+        currentUser = userDao.getCurrentUser(uid);
     }
 
     // Room executes all queries on a separate thread.
@@ -47,5 +55,9 @@ public class UserRepository {
 
     public void deleteAll() {
         UserRoomDatabase.databaseWriteExecutor.execute(userDao::deleteAll);
+    }
+
+    public LiveData<User> getCurrentUser() {
+        return currentUser;
     }
 }
