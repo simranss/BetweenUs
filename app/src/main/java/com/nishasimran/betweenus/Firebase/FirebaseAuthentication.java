@@ -7,13 +7,11 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class FirebaseAuthentication {
 
@@ -21,10 +19,9 @@ public class FirebaseAuthentication {
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    public static FirebaseAuthentication INSTANCE = null;
+    private static FirebaseAuthentication INSTANCE = null;
 
     public void signIn(Activity activity, String number) {
-        AtomicReference<FirebaseUser> user = new AtomicReference<>();
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(auth)
                         .setPhoneNumber(number)
