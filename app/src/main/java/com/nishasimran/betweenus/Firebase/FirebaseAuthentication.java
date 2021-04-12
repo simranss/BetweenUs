@@ -26,7 +26,8 @@ public class FirebaseAuthentication {
         this.context = context;
     }
 
-    public void signIn(String number) {
+    public FirebaseUser signIn(String number) {
+        AtomicReference<FirebaseUser> user = new AtomicReference<>();
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(auth)
                         .setPhoneNumber(number)
@@ -36,7 +37,7 @@ public class FirebaseAuthentication {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                                 Log.d(TAG, "Verification success");
-                                signInWithPhoneAuthCredential(phoneAuthCredential);
+                                user.set(signInWithPhoneAuthCredential(phoneAuthCredential));
                             }
 
                             @Override
@@ -46,10 +47,11 @@ public class FirebaseAuthentication {
                         })
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
+        return user.get();
     }
 
     private FirebaseUser signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        AtomicReference<FirebaseUser> user = null;
+        AtomicReference<FirebaseUser> user = new AtomicReference<>();
         auth.signInWithCredential(credential)
                 .addOnSuccessListener(authResult -> {
                     user.set(authResult.getUser());
