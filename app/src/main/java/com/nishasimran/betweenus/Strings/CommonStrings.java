@@ -21,10 +21,14 @@ public class CommonStrings {
     public final static String STATE_NEW_USER = "state_1";
     public final static String STATE_OLD_USER = "state_2";
 
+    public final static String CONNECTION_CONNECTED = "connection_0";
+    public final static String CONNECTION_NOT_CONNECTED = "connection_1";
+
     public final static String SHARED_PREFERENCE = "MyPreferences";
     public final static String SHARED_PREFERENCE_UID = "uid";
     public final static String SHARED_PREFERENCE_SERVER_UID = "server_uid";
     public final static String SHARED_PREFERENCE_STATE = "state";
     public final static String SHARED_PREFERENCE_SERVER_LAST_SEEN = "server_last_seen";
+    public final static String SHARED_PREFERENCE_CONNECTION = "connection";
 
 }
