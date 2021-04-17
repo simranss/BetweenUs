@@ -13,7 +13,7 @@ import java.util.List;
 public class SpecialDayRepository {
 
     private final SpecialDayDao dao;
-    private LiveData<List<SpecialDay>> allSpecialDays;
+    private final LiveData<List<SpecialDay>> allSpecialDays;
 
     // Note that in order to unit test the SpecialDayRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.

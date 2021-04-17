@@ -13,7 +13,7 @@ import java.util.List;
 public class MemoryRepository {
 
     private final MemoryDao dao;
-    private LiveData<List<Memory>> allMemories;
+    private final LiveData<List<Memory>> allMemories;
 
     // Note that in order to unit test the MemoryRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.

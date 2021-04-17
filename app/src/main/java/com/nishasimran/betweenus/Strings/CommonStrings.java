@@ -17,9 +17,9 @@ public class CommonStrings {
     public final static String STATUS_SEEN = "status_3";
     public final static String STATUS_ONLINE = "status_4";
 
-    public final static String STATE_LOGGED_IN = "state_0";
-    public final static String STATE_NEW_USER = "state_1";
-    public final static String STATE_OLD_USER = "state_2";
+    public final static String STATE_LOGGED_IN_NO_REG = "state_0";
+    public final static String STATE_LOGGED_IN_WITH_REG = "state_1";
+    public final static String STATE_NOT_LOGGED_IN = "state_2";
 
     public final static String CONNECTION_CONNECTED = "connection_0";
     public final static String CONNECTION_NOT_CONNECTED = "connection_1";

@@ -13,7 +13,7 @@ import java.util.List;
 public class MessageRepository {
 
     private final MessageDao messageDao;
-    private LiveData<List<Message>> allMessages;
+    private final LiveData<List<Message>> allMessages;
 
     // Note that in order to unit test the MessageRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
