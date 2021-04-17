@@ -26,6 +26,10 @@ public class FirebaseDb {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference root = database.getReference();
 
+    final MutableLiveData<String> lastSeen = new MutableLiveData<>();
+    MutableLiveData<Boolean> connected = new MutableLiveData<>();
+    final DatabaseReference connectedRef = database.getReference(FirebaseStrings.NETWORK_STATE_PATH);
+
     private static FirebaseDb INSTANCE = null;
 
     public static FirebaseDb getInstance() {
@@ -36,7 +40,6 @@ public class FirebaseDb {
     }
 
     public LiveData<String> addListenerForServerLastSeen(String uid) {
-        final MutableLiveData<String> lastSeen = new MutableLiveData<>();
         lastSeen.setValue(null);
         root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN).addValueEventListener(new ValueEventListener() {
             @Override
@@ -64,8 +67,7 @@ public class FirebaseDb {
     }
 
     public LiveData<Boolean> listenersForConnectionChanges(String uid, Application application) {
-        MutableLiveData<Boolean> connected = new MutableLiveData<>();
-        final DatabaseReference connectedRef = database.getReference(FirebaseStrings.NETWORK_STATE_PATH);
+        connected.setValue(false);
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NotNull DataSnapshot snapshot) {
