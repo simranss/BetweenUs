@@ -13,7 +13,7 @@ import java.util.List;
 public class KeyRepository {
 
     private final KeyDao keyDao;
-    private LiveData<List<Key>> allKeys;
+    private final LiveData<List<Key>> allKeys;
 
     // Note that in order to unit test the KeyRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
