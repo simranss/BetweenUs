@@ -79,15 +79,15 @@ public class Encryption {
     }
 
 
-    public static String decryptText(String serverPublicKey, String ivStr, String encryptedText) {
+    public static String decryptText(String serverPublicKey, String private_key, String ivStr, String encryptedText) {
         String decryptedMessage = null;
         byte[] serverKey = stringByteArrayToByteArray(serverPublicKey);
+        byte[] privateKey = stringByteArrayToByteArray(private_key);
         byte[] cipherText = stringByteArrayToByteArray(encryptedText);
         byte[] iv = stringByteArrayToByteArray(ivStr);
 
         SecureRandom random = new SecureRandom();
 
-        byte[] privateKey = ECDHCurve25519.generate_secret_key(random);
         byte[] sharedKey = ECDHCurve25519.generate_shared_secret(privateKey, serverKey);
 
         SecretKey decryptionKey = new SecretKeySpec(sharedKey, 0, sharedKey.length, EncryptionString.ALGORITHM_AES);
