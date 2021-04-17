@@ -2,8 +2,10 @@ package com.nishasimran.betweenus.Repositories;
 
 import android.app.Application;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.Strings.CommonStrings;
 import com.nishasimran.betweenus.Utils.Utils;
 
@@ -31,13 +33,21 @@ public class StateRepository {
     public String getServerUid() {
         return serverUid;
     }
-    public MutableLiveData<String> getState() {
+    public LiveData<String> getState() {
         return state;
     }
 
     public void updateState(String state) {
         Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_STATE, state);
         this.state.setValue(state);
+    }
+
+    public LiveData<String> addListenerForServerLastSeen() {
+        return FirebaseDb.getInstance().addListenerForServerLastSeen(serverUid);
+    }
+
+    public LiveData<Boolean> addListenerForConnectionChanges() {
+        return FirebaseDb.getInstance().listenersForConnectionChanges(serverUid, application);
     }
 
 }
