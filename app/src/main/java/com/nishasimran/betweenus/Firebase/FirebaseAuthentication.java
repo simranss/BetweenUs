@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class FirebaseAuthentication {
 
     private final String TAG = "FirebaseAuthentication";
+    private String verificationId;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -38,6 +39,13 @@ public class FirebaseAuthentication {
                             public void onVerificationFailed(@NonNull FirebaseException e) {
                                 Log.d(TAG, "verificationFailed: " + e.getMessage());
                             }
+
+                            @Override
+                            public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                super.onCodeSent(verificationId, forceResendingToken);
+
+                                FirebaseAuthentication.this.verificationId = verificationId;
+                            }
                         })
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
@@ -47,6 +55,11 @@ public class FirebaseAuthentication {
         auth.signInWithCredential(credential)
                 .addOnSuccessListener(authResult -> Log.d(TAG, "Verification success"))
                 .addOnFailureListener(e -> Log.d(TAG, "VerificationFailed: " + e.getMessage()));
+    }
+
+    public void signInWithCode(String code) {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        signInWithPhoneAuthCredential(credential);
     }
 
     public void signOut() {
