@@ -14,7 +14,7 @@ public class AlbumViewModel extends AndroidViewModel {
 
     private final AlbumRepository repository;
 
-    private LiveData<List<Album>> allAlbums;
+    private final LiveData<List<Album>> allAlbums;
 
     public AlbumViewModel (Application application) {
         super(application);

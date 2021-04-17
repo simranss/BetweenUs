@@ -14,7 +14,7 @@ public class SpecialDayViewModel extends AndroidViewModel {
 
     private final SpecialDayRepository repository;
 
-    private LiveData<List<SpecialDay>> allSpecialDays;
+    private final LiveData<List<SpecialDay>> allSpecialDays;
 
     public SpecialDayViewModel (Application application) {
         super(application);

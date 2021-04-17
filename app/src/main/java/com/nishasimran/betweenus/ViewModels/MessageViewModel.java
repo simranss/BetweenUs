@@ -14,7 +14,7 @@ public class MessageViewModel extends AndroidViewModel {
 
     private final MessageRepository mRepository;
 
-    private LiveData<List<Message>> mAllMessages;
+    private final LiveData<List<Message>> mAllMessages;
 
     public MessageViewModel (Application application) {
         super(application);

@@ -14,7 +14,7 @@ public class KeyViewModel extends AndroidViewModel {
 
     private final KeyRepository repository;
 
-    private LiveData<List<Key>> allKeys;
+    private final LiveData<List<Key>> allKeys;
 
     public KeyViewModel (Application application) {
         super(application);

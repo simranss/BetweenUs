@@ -14,7 +14,7 @@ public class MemoryViewModel extends AndroidViewModel {
 
     private final MemoryRepository repository;
 
-    private LiveData<List<Memory>> allMemories;
+    private final LiveData<List<Memory>> allMemories;
 
     public MemoryViewModel (Application application) {
         super(application);
