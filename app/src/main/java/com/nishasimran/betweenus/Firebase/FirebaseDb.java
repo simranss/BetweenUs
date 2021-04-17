@@ -3,6 +3,10 @@ package com.nishasimran.betweenus.Firebase;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,8 +26,6 @@ public class FirebaseDb {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference root = database.getReference();
 
-    private String lastSeen = null;
-
     private static FirebaseDb INSTANCE = null;
 
     public static FirebaseDb getInstance() {
@@ -33,45 +35,70 @@ public class FirebaseDb {
         return INSTANCE;
     }
 
-    public String getServerLastSeen(String uid) {
-        lastSeen = null;
-        root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN).get()
-                .addOnSuccessListener(dataSnapshot -> {
-                    if (dataSnapshot.exists()) {
-                        lastSeen = dataSnapshot.getValue(String.class);
-                    }
-                })
-                .addOnFailureListener(e -> lastSeen = null);
-        return lastSeen;
-    }
-
-    public void listenersForConnectionChanges(String uid, Application application) {
-        final DatabaseReference connectedRef = database.getReference(FirebaseStrings.NETWORK_STATE_PATH);
-        connectedRef.addValueEventListener(new ValueEventListener() {
+    public LiveData<String> addListenerForServerLastSeen(String uid) {
+        final MutableLiveData<String> lastSeen = new MutableLiveData<>();
+        lastSeen.setValue(null);
+        root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NotNull DataSnapshot snapshot) {
-                Object connected = snapshot.getValue();
-                if (connected instanceof Boolean) {
-                    if ((boolean) connected) {
-                        // When I disconnect, update the last time I was seen online
-                        final DatabaseReference lastOnlineRef = root.child(FirebaseStrings.USERS).child(uid);
-                        lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
-
-                        lastOnlineRef.setValue(CommonStrings.STATUS_ONLINE);
-
-                        Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_CONNECTION, CommonStrings.CONNECTION_CONNECTED);
-
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Object object = snapshot.getValue();
+                    if (object != null) {
+                        if (object instanceof String) {
+                            lastSeen.setValue((String) object);
+                        } else if (object instanceof Long) {
+                            lastSeen.setValue(String.valueOf((long) object));
+                        }
                     } else {
-                        Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_CONNECTION, CommonStrings.CONNECTION_NOT_CONNECTED);
+                        lastSeen.setValue(null);
                     }
                 }
             }
 
             @Override
-            public void onCancelled(@NotNull DatabaseError error) {
-                Log.w(TAG, "Listener was cancelled at .info/connected");
+            public void onCancelled(@NonNull DatabaseError error) {
+                lastSeen.setValue(null);
             }
         });
+        return lastSeen;
+    }
+
+    public LiveData<Boolean> listenersForConnectionChanges(String uid, Application application) {
+        MutableLiveData<Boolean> connected = new MutableLiveData<>();
+        final DatabaseReference connectedRef = database.getReference(FirebaseStrings.NETWORK_STATE_PATH);
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Object object = snapshot.getValue();
+                    if (object instanceof Boolean) {
+                        if ((boolean) object) {
+                            // When I disconnect, update the last time I was seen online
+                            final DatabaseReference lastOnlineRef = root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN);
+                            lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
+
+                            lastOnlineRef.setValue(CommonStrings.STATUS_ONLINE);
+
+                            Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_CONNECTION, CommonStrings.CONNECTION_CONNECTED);
+                            connected.setValue(true);
+
+                        } else {
+                            Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_CONNECTION, CommonStrings.CONNECTION_NOT_CONNECTED);
+                            connected.setValue(false);
+                        }
+                    }
+                } else {
+                    connected.setValue(false);
+                }
+            }
+            @Override
+            public void onCancelled(@NotNull DatabaseError error) {
+                Log.w(TAG, "Listener was cancelled at .info/connected");
+                connected.setValue(false);
+            }
+        });
+
+        return connected;
     }
 
     public void goOnline() {
