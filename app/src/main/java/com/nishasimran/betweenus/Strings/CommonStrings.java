@@ -15,6 +15,11 @@ public class CommonStrings {
     public final static String STATUS_SENT = "status_1";
     public final static String STATUS_DELIVERED = "status_2";
     public final static String STATUS_SEEN = "status_3";
+    public final static String STATUS_ONLINE = "status_4";
+
+    public final static String STATE_LOGGED_IN = "state_0";
+    public final static String STATE_NEW_USER = "state_1";
+    public final static String STATE_OLD_USER = "state_2";
 
     public final static String SHARED_PREFERENCE = "MyPreferences";
     public final static String SHARED_PREFERENCE_UID = "uid";
