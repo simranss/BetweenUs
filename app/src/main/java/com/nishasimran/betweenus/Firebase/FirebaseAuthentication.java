@@ -18,7 +18,7 @@ public class FirebaseAuthentication {
     private final String TAG = "FirebaseAuthentication";
     private String verificationId;
 
-    FirebaseAuth auth = FirebaseAuth.getInstance();
+    final FirebaseAuth auth = FirebaseAuth.getInstance();
 
     private static FirebaseAuthentication INSTANCE = null;
 

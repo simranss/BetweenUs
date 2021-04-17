@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey;
 
 import com.nishasimran.betweenus.Strings.DatabaseStrings;
 
-import java.sql.Blob;
-
 @Entity(tableName = DatabaseStrings.TABLE_ALBUMS)
 public class Album {
 
