@@ -99,4 +99,14 @@ public class Utils {
         SharedPreferences preferences = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         return preferences.getLong(key, 0);
     }
+
+    public static byte @NotNull [] stringByteArrayToByteArray(@NotNull String stringByteArray) {
+        String[] byteValues = stringByteArray.substring(1, stringByteArray.length() - 1).split(",");
+        byte[] bytes = new byte[byteValues.length];
+        int length = bytes.length;
+        for (int i = 0; i < length; i++) {
+            bytes[i] = Byte.parseByte(byteValues[i].trim());
+        }
+        return bytes;
+    }
 }

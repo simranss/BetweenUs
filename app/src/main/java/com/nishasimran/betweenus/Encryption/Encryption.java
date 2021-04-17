@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.nishasimran.betweenus.Strings.CommonStrings;
 import com.nishasimran.betweenus.Strings.EncryptionString;
+import com.nishasimran.betweenus.Utils.Utils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -50,7 +51,7 @@ public class Encryption {
 
         byte[] privateKey = ECDHCurve25519.generate_secret_key(random);
         byte[] publicKey = ECDHCurve25519.generate_public_key(privateKey);
-        byte[] serverKey = stringByteArrayToByteArray(serverPublicKey);
+        byte[] serverKey = Utils.stringByteArrayToByteArray(serverPublicKey);
         byte[] sharedKey = ECDHCurve25519.generate_shared_secret(privateKey, serverKey);
 
         SecretKey encryptionKey = new SecretKeySpec(sharedKey, 0, sharedKey.length, EncryptionString.ALGORITHM_AES);
@@ -81,10 +82,10 @@ public class Encryption {
 
     public static String decryptText(String serverPublicKey, String private_key, String ivStr, String encryptedText) {
         String decryptedMessage = null;
-        byte[] serverKey = stringByteArrayToByteArray(serverPublicKey);
-        byte[] privateKey = stringByteArrayToByteArray(private_key);
-        byte[] cipherText = stringByteArrayToByteArray(encryptedText);
-        byte[] iv = stringByteArrayToByteArray(ivStr);
+        byte[] serverKey = Utils.stringByteArrayToByteArray(serverPublicKey);
+        byte[] privateKey = Utils.stringByteArrayToByteArray(private_key);
+        byte[] cipherText = Utils.stringByteArrayToByteArray(encryptedText);
+        byte[] iv = Utils.stringByteArrayToByteArray(ivStr);
 
         SecureRandom random = new SecureRandom();
 
@@ -106,19 +107,6 @@ public class Encryption {
         }
 
         return decryptedMessage;
-    }
-
-
-
-
-    private static byte @NotNull [] stringByteArrayToByteArray(@NotNull String stringByteArray) {
-        String[] byteValues = stringByteArray.substring(1, stringByteArray.length() - 1).split(",");
-        byte[] bytes = new byte[byteValues.length];
-        int length = bytes.length;
-        for (int i = 0; i < length; i++) {
-            bytes[i] = Byte.parseByte(byteValues[i].trim());
-        }
-        return bytes;
     }
 
 }
