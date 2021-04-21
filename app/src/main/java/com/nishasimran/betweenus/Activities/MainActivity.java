@@ -19,9 +19,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
 
-    boolean isInternetAvail = false;
+    private boolean isInternetAvail = false;
+    private int fragmentIndex = 0;
 
-    Fragment loginFragment, registrationFragment, mainFragment;
+    private Fragment loginFragment, registrationFragment, mainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +45,15 @@ public class MainActivity extends AppCompatActivity {
                     updateState(CommonValues.STATE_NOT_LOGGED_IN);
                     break;
                 case CommonValues.STATE_NOT_LOGGED_IN:
+                    fragmentIndex = 0;
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, loginFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_NO_REG:
+                    fragmentIndex = 1;
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, registrationFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_WITH_REG:
+                    fragmentIndex = 2;
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, mainFragment);
                     break;
             }
@@ -65,5 +69,10 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         FirebaseDb.getInstance().goOffline();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
