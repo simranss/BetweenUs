@@ -32,7 +32,11 @@ public class KeyViewModel extends AndroidViewModel {
 
     public void deleteAll() { repository.deleteAll(); }
 
-    List<Key> findKeys(long currMillis) {
-        return repository.findKeys(currMillis);
+    Key findKeys(long currMillis, String serverPublic) {
+        return repository.findKeys(currMillis, serverPublic);
+    }
+
+    Key findKeys(long currMillis, byte[] serverPublic) {
+        return repository.findKeys(currMillis, serverPublic);
     }
 }

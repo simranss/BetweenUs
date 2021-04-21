@@ -8,6 +8,7 @@ import com.nishasimran.betweenus.DAOs.KeyDao;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.Database.UserRoomDatabase;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class KeyRepository {
@@ -49,7 +50,35 @@ public class KeyRepository {
         UserRoomDatabase.databaseWriteExecutor.execute(keyDao::deleteAll);
     }
 
-    public List<Key> findKeys(long currMillis) {
-        return keyDao.findKeys(currMillis);
+    public Key findKeys(long currMillis, byte[] server_public) {
+        List<Key> keys = keyDao.findKeys(currMillis);
+        if (keys.isEmpty()) {
+            return null;
+        } else if (keys.size() == 1) {
+            return keys.get(0);
+        } else {
+            for (Key key : keys) {
+                if (key.getServerPublic().equals(Arrays.toString(server_public))) {
+                    return key;
+                }
+            }
+            return keys.get(0);
+        }
+    }
+
+    public Key findKeys(long currMillis, String server_public) {
+        List<Key> keys = keyDao.findKeys(currMillis);
+        if (keys.isEmpty()) {
+            return null;
+        } else if (keys.size() == 1) {
+            return keys.get(0);
+        } else {
+            for (Key key : keys) {
+                if (key.getServerPublic().equals(server_public)) {
+                    return key;
+                }
+            }
+            return keys.get(0);
+        }
     }
 }
