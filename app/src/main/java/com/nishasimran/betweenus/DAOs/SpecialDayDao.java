@@ -9,7 +9,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.nishasimran.betweenus.DataClasses.SpecialDay;
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import java.util.List;
 
@@ -25,13 +25,13 @@ public interface SpecialDayDao {
     @Delete
     void delete(SpecialDay specialDay);
 
-    @Query("DELETE FROM " + DatabaseStrings.TABLE_SPECIAL_DAY)
+    @Query("DELETE FROM " + DatabaseValues.TABLE_SPECIAL_DAY)
     void deleteAll();
 
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_SPECIAL_DAY + " ORDER BY " + DatabaseStrings.COLUMN_CURR_MILLIS + " ASC")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_SPECIAL_DAY + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<SpecialDay>> getAllSpecialDays();
 
     // Query with parameter that returns a specific word or words.
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_SPECIAL_DAY + " WHERE " + DatabaseStrings.COLUMN_TITLE + " LIKE :text ")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_SPECIAL_DAY + " WHERE " + DatabaseValues.COLUMN_TITLE + " LIKE :text ")
     List<SpecialDay> findSpecialDays(String text);
 }

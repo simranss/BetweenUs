@@ -38,16 +38,16 @@ public class MainActivity extends AppCompatActivity {
         StateViewModel.getInstance(this, getApplication()).getState().observe(this, s -> {
             Log.d(TAG, "state: " + s);
             switch(s) {
-                case CommonStrings.NULL:
-                    StateViewModel.getInstance(this, getApplication()).updateState(CommonStrings.STATE_NOT_LOGGED_IN);
+                case CommonValues.NULL:
+                    updateState(CommonValues.STATE_NOT_LOGGED_IN);
                     break;
-                case CommonStrings.STATE_NOT_LOGGED_IN:
+                case CommonValues.STATE_NOT_LOGGED_IN:
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, loginFragment);
                     break;
-                case CommonStrings.STATE_LOGGED_IN_NO_REG:
+                case CommonValues.STATE_LOGGED_IN_NO_REG:
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, registrationFragment);
                     break;
-                case CommonStrings.STATE_LOGGED_IN_WITH_REG:
+                case CommonValues.STATE_LOGGED_IN_WITH_REG:
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, mainFragment);
                     break;
             }

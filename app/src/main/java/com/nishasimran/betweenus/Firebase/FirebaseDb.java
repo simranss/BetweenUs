@@ -13,8 +13,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.nishasimran.betweenus.Strings.CommonStrings;
-import com.nishasimran.betweenus.Strings.FirebaseStrings;
+import com.nishasimran.betweenus.Values.CommonValues;
+import com.nishasimran.betweenus.Values.FirebaseStrings;
 import com.nishasimran.betweenus.Utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -81,13 +81,13 @@ public class FirebaseDb {
                             final DatabaseReference lastOnlineRef = root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN);
                             lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
 
-                            lastOnlineRef.setValue(CommonStrings.STATUS_ONLINE);
+                            lastOnlineRef.setValue(CommonValues.STATUS_ONLINE);
 
-                            Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_CONNECTION, CommonStrings.CONNECTION_CONNECTED);
+                            Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_CONNECTION, CommonValues.CONNECTION_CONNECTED);
                             connected.setValue(true);
 
                         } else {
-                            Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_CONNECTION, CommonStrings.CONNECTION_NOT_CONNECTED);
+                            Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_CONNECTION, CommonValues.CONNECTION_NOT_CONNECTED);
                             connected.setValue(false);
                         }
                     }

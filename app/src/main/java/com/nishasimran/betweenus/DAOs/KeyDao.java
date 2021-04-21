@@ -9,7 +9,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.nishasimran.betweenus.DataClasses.Key;
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import java.util.List;
 
@@ -25,12 +25,12 @@ public interface KeyDao {
     @Delete
     void delete(Key key);
 
-    @Query("DELETE FROM " + DatabaseStrings.TABLE_KEYS)
+    @Query("DELETE FROM " + DatabaseValues.TABLE_KEYS)
     void deleteAll();
 
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_KEYS + " ORDER BY " + DatabaseStrings.COLUMN_CURR_MILLIS + " ASC")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_KEYS + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Key>> getAllKeys();
 
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_KEYS + " WHERE " + DatabaseStrings.COLUMN_CURR_MILLIS + " LIKE :currMillis ")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_KEYS + " WHERE " + DatabaseValues.COLUMN_CURR_MILLIS + " LIKE :currMillis ")
     List<Key> findKeys(long currMillis);
 }

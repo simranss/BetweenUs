@@ -10,7 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.nishasimran.betweenus.DAOs.MessageDao;
 import com.nishasimran.betweenus.DataClasses.Message;
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,7 +31,7 @@ public abstract class MessageRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(
                             context.getApplicationContext(),
                             MessageRoomDatabase.class,
-                            DatabaseStrings.DATABASE_MESSAGES
+                            DatabaseValues.DATABASE_MESSAGES
                     )
                             .addCallback(sRoomDatabaseCallback)
                             .build();

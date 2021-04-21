@@ -12,7 +12,7 @@ import com.nishasimran.betweenus.DAOs.KeyDao;
 import com.nishasimran.betweenus.DAOs.UserDao;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,7 +34,7 @@ public abstract class UserRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(
                             context.getApplicationContext(),
                             UserRoomDatabase.class,
-                            DatabaseStrings.DATABASE_USERS
+                            DatabaseValues.DATABASE_USERS
                     )
                             .addCallback(sRoomDatabaseCallback)
                             .build();

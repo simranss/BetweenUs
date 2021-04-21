@@ -5,22 +5,22 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
-@Entity(tableName = DatabaseStrings.TABLE_KEYS)
+@Entity(tableName = DatabaseValues.TABLE_KEYS)
 public class Key {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = DatabaseStrings.COLUMN_ID)
+    @ColumnInfo(name = DatabaseValues.COLUMN_ID)
     private final String id;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_MY_PRIVATE)
+    @ColumnInfo(name = DatabaseValues.COLUMN_MY_PRIVATE)
     private String myPrivate;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_MY_PUBLIC)
+    @ColumnInfo(name = DatabaseValues.COLUMN_MY_PUBLIC)
     private String myPublic;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_SERVER_PUBLIC)
+    @ColumnInfo(name = DatabaseValues.COLUMN_SERVER_PUBLIC)
     private String serverPublic;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_CURR_MILLIS)
+    @ColumnInfo(name = DatabaseValues.COLUMN_CURR_MILLIS)
     private long currMillis;
 
 

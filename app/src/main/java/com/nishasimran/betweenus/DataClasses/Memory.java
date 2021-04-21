@@ -5,22 +5,22 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
-@Entity(tableName = DatabaseStrings.TABLE_MEMORIES)
+@Entity(tableName = DatabaseValues.TABLE_MEMORIES)
 public class Memory {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = DatabaseStrings.COLUMN_ID)
+    @ColumnInfo(name = DatabaseValues.COLUMN_ID)
     private final String id;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_ALBUM_NAME)
+    @ColumnInfo(name = DatabaseValues.COLUMN_ALBUM_NAME)
     private String albumName;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_CURR_MILLIS)
+    @ColumnInfo(name = DatabaseValues.COLUMN_CURR_MILLIS)
     private long currMillis;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_IMAGE)
+    @ColumnInfo(name = DatabaseValues.COLUMN_IMAGE)
     private String image;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_DESC)
+    @ColumnInfo(name = DatabaseValues.COLUMN_DESC)
     private String desc;
 
 

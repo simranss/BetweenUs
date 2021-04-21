@@ -1,4 +1,4 @@
-package com.nishasimran.betweenus.Strings;
+package com.nishasimran.betweenus.Values;
 
 public class EncryptionString {
 

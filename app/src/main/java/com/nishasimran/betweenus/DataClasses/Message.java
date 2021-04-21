@@ -5,26 +5,26 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
-@Entity(tableName = DatabaseStrings.TABLE_MESSAGES)
+@Entity(tableName = DatabaseValues.TABLE_MESSAGES)
 public class Message {
 
     @PrimaryKey()
     @NonNull
-    @ColumnInfo(name = DatabaseStrings.COLUMN_ID)
+    @ColumnInfo(name = DatabaseValues.COLUMN_ID)
     private final String id;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_MESSAGE)
+    @ColumnInfo(name = DatabaseValues.COLUMN_MESSAGE)
     private String message;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_FROM)
+    @ColumnInfo(name = DatabaseValues.COLUMN_FROM)
     private String from;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_TO)
+    @ColumnInfo(name = DatabaseValues.COLUMN_TO)
     private String to;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_M_TYPE)
+    @ColumnInfo(name = DatabaseValues.COLUMN_M_TYPE)
     private String messageType;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_STATUS)
+    @ColumnInfo(name = DatabaseValues.COLUMN_STATUS)
     private String status;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_CURR_MILLIS)
+    @ColumnInfo(name = DatabaseValues.COLUMN_CURR_MILLIS)
     private long currMillis;
 
 

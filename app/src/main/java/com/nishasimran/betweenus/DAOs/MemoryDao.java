@@ -9,7 +9,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.nishasimran.betweenus.DataClasses.Memory;
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import java.util.List;
 
@@ -25,13 +25,13 @@ public interface MemoryDao {
     @Delete
     void delete(Memory memory);
 
-    @Query("DELETE FROM " + DatabaseStrings.TABLE_MEMORIES)
+    @Query("DELETE FROM " + DatabaseValues.TABLE_MEMORIES)
     void deleteAll();
 
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_MEMORIES + " ORDER BY " + DatabaseStrings.COLUMN_CURR_MILLIS + " ASC")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_MEMORIES + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Memory>> getAllMemories();
 
     // Query with parameter that returns a specific word or words.
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_MEMORIES + " WHERE `" + DatabaseStrings.COLUMN_DESC + "` LIKE :text ")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_MEMORIES + " WHERE `" + DatabaseValues.COLUMN_DESC + "` LIKE :text ")
     List<Memory> findMemories(String text);
 }

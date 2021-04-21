@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.DAOs.UserDao;
 import com.nishasimran.betweenus.Database.UserRoomDatabase;
-import com.nishasimran.betweenus.Strings.CommonStrings;
+import com.nishasimran.betweenus.Values.CommonValues;
 
 import java.util.List;
 
@@ -28,8 +28,8 @@ public class UserRepository {
         userDao = db.userDao();
         allUsers = userDao.getAlphabetizedUsers();
 
-        SharedPreferences prefs = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        String uid = prefs.getString(CommonStrings.SHARED_PREFERENCE_UID, CommonStrings.NULL);
+        SharedPreferences prefs = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        String uid = prefs.getString(CommonValues.SHARED_PREFERENCE_UID, CommonValues.NULL);
         currentUser = userDao.getCurrentUser(uid);
     }
 

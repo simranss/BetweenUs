@@ -5,28 +5,28 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import org.jetbrains.annotations.NotNull;
 
-@Entity(tableName = DatabaseStrings.TABLE_SPECIAL_DAY)
+@Entity(tableName = DatabaseValues.TABLE_SPECIAL_DAY)
 public class SpecialDay {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = DatabaseStrings.COLUMN_ID)
+    @ColumnInfo(name = DatabaseValues.COLUMN_ID)
     private final String id;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_DAY)
+    @ColumnInfo(name = DatabaseValues.COLUMN_DAY)
     private String day;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_MONTH)
+    @ColumnInfo(name = DatabaseValues.COLUMN_MONTH)
     private String month;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_YEAR)
+    @ColumnInfo(name = DatabaseValues.COLUMN_YEAR)
     private String year;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_TITLE)
+    @ColumnInfo(name = DatabaseValues.COLUMN_TITLE)
     private String title;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_DESC)
+    @ColumnInfo(name = DatabaseValues.COLUMN_DESC)
     private String desc;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_CURR_MILLIS)
+    @ColumnInfo(name = DatabaseValues.COLUMN_CURR_MILLIS)
     private long currMillis;
 
 

@@ -9,7 +9,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.nishasimran.betweenus.DataClasses.User;
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import java.util.List;
 
@@ -25,12 +25,12 @@ public interface UserDao {
     @Delete
     void delete(User user);
 
-    @Query("DELETE FROM " + DatabaseStrings.TABLE_USERS)
+    @Query("DELETE FROM " + DatabaseValues.TABLE_USERS)
     void deleteAll();
 
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_USERS + " ORDER BY " + DatabaseStrings.COLUMN_ID + " ASC")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_USERS + " ORDER BY " + DatabaseValues.COLUMN_ID + " ASC")
     LiveData<List<User>> getAlphabetizedUsers();
 
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_USERS + " WHERE " + DatabaseStrings.COLUMN_ID + "=:uid")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_USERS + " WHERE " + DatabaseValues.COLUMN_ID + "=:uid")
     LiveData<User> getCurrentUser(String uid);
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
-import com.nishasimran.betweenus.Strings.CommonStrings;
+import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,15 +19,15 @@ public class StateRepository {
 
     public StateRepository(@NotNull Application application) {
         this.application = application;
-        uid = Utils.getStringFromSharedPreference(application, CommonStrings.SHARED_PREFERENCE_UID);
-        serverUid = Utils.getStringFromSharedPreference(application, CommonStrings.SHARED_PREFERENCE_SERVER_UID);
+        uid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID);
+        serverUid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_SERVER_UID);
         if (state == null) {
             state = new MutableLiveData<>();
         }
-        String stateValue = Utils.getStringFromSharedPreference(application, CommonStrings.SHARED_PREFERENCE_STATE);
+        String stateValue = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_STATE);
         if (stateValue == null) {
-            Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_STATE, CommonStrings.STATE_NOT_LOGGED_IN);
-            stateValue = Utils.getStringFromSharedPreference(application, CommonStrings.SHARED_PREFERENCE_STATE);
+            Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_STATE, CommonValues.STATE_NOT_LOGGED_IN);
+            stateValue = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_STATE);
         }
         state.setValue(stateValue);
     }
@@ -43,7 +43,7 @@ public class StateRepository {
     }
 
     public void updateState(String state) {
-        Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_STATE, state);
+        Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_STATE, state);
         this.state.setValue(state);
     }
 

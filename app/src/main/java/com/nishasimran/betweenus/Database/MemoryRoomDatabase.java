@@ -14,7 +14,7 @@ import com.nishasimran.betweenus.DAOs.SpecialDayDao;
 import com.nishasimran.betweenus.DataClasses.Album;
 import com.nishasimran.betweenus.DataClasses.Memory;
 import com.nishasimran.betweenus.DataClasses.SpecialDay;
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,7 +37,7 @@ public abstract class MemoryRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(
                             context.getApplicationContext(),
                             MemoryRoomDatabase.class,
-                            DatabaseStrings.DATABASE_MEMORIES
+                            DatabaseValues.DATABASE_MEMORIES
                     )
                             .addCallback(sRoomDatabaseCallback)
                             .build();

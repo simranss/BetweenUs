@@ -1,6 +1,6 @@
-package com.nishasimran.betweenus.Strings;
+package com.nishasimran.betweenus.Values;
 
-public class CommonStrings {
+public class CommonValues {
 
     public final static String NULL = "null";
 

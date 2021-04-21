@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.nishasimran.betweenus.Strings.CommonStrings;
+import com.nishasimran.betweenus.Values.CommonValues;
 
 import java.util.Date;
 import java.util.Locale;
@@ -62,53 +62,53 @@ public class Utils {
 
 
     public static void writeToSharedPreference(@NonNull Application application, String key, String value) {
-        SharedPreferences.Editor editor = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
         editor.putString(key, value);
         editor.apply();
     }
 
 
     public static void writeToSharedPreference(@NonNull Application application, String key, boolean value) {
-        SharedPreferences.Editor editor = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
 
     public static void writeToSharedPreference(@NonNull Application application, String key, int value) {
-        SharedPreferences.Editor editor = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
         editor.putInt(key, value);
         editor.apply();
     }
 
 
     public static void writeToSharedPreference(@NonNull Application application, String key, long value) {
-        SharedPreferences.Editor editor = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
         editor.putLong(key, value);
         editor.apply();
     }
 
 
     public static String getStringFromSharedPreference(@NonNull Application application, String key) {
-        SharedPreferences preferences = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        return preferences.getString(key, CommonStrings.NULL);
+        SharedPreferences preferences = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        return preferences.getString(key, CommonValues.NULL);
     }
 
 
     public static boolean getBooleanFromSharedPreference(@NonNull Application application, String key) {
-        SharedPreferences preferences = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences preferences = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         return preferences.getBoolean(key, false);
     }
 
 
     public static int getIntFromSharedPreference(@NonNull Application application, String key) {
-        SharedPreferences preferences = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences preferences = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         return preferences.getInt(key, 0);
     }
 
 
     public static long getLongFromSharedPreference(@NonNull Application application, String key) {
-        SharedPreferences preferences = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences preferences = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         return preferences.getLong(key, 0);
     }
 

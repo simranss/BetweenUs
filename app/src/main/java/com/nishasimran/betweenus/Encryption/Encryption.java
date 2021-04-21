@@ -2,8 +2,8 @@ package com.nishasimran.betweenus.Encryption;
 
 import android.util.Log;
 
-import com.nishasimran.betweenus.Strings.CommonStrings;
-import com.nishasimran.betweenus.Strings.EncryptionString;
+import com.nishasimran.betweenus.Values.CommonValues;
+import com.nishasimran.betweenus.Values.EncryptionString;
 import com.nishasimran.betweenus.Utils.Utils;
 
 import java.nio.charset.StandardCharsets;
@@ -66,11 +66,11 @@ public class Encryption {
             Log.d(TAG, "cipherText: " + Arrays.toString(ciphertext));
 
             map = new HashMap<>();
-            map.put(CommonStrings.MY_PRIVATE_KEY, Arrays.toString(privateKey));
-            map.put(CommonStrings.MY_PUBLIC_KEY, Arrays.toString(publicKey));
-            map.put(CommonStrings.SERVER_KEY, serverPublicKey);
-            map.put(CommonStrings.ENCRYPTED_MESSAGE, Arrays.toString(ciphertext));
-            map.put(CommonStrings.IV, Arrays.toString(iv));
+            map.put(CommonValues.MY_PRIVATE_KEY, Arrays.toString(privateKey));
+            map.put(CommonValues.MY_PUBLIC_KEY, Arrays.toString(publicKey));
+            map.put(CommonValues.SERVER_KEY, serverPublicKey);
+            map.put(CommonValues.ENCRYPTED_MESSAGE, Arrays.toString(ciphertext));
+            map.put(CommonValues.IV, Arrays.toString(iv));
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException e) {
             e.printStackTrace();

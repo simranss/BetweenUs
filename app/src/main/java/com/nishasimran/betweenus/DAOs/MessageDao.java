@@ -9,7 +9,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.nishasimran.betweenus.DataClasses.Message;
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import java.util.List;
 
@@ -25,13 +25,13 @@ public interface MessageDao {
     @Delete
     void delete(Message message);
 
-    @Query("DELETE FROM " + DatabaseStrings.TABLE_MESSAGES)
+    @Query("DELETE FROM " + DatabaseValues.TABLE_MESSAGES)
     void deleteAll();
 
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_MESSAGES + " ORDER BY " + DatabaseStrings.COLUMN_CURR_MILLIS + " ASC")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_MESSAGES + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Message>> getAllMessages();
 
     // Query with parameter that returns a specific word or words.
-    @Query("SELECT * FROM " + DatabaseStrings.TABLE_MESSAGES + " WHERE " + DatabaseStrings.COLUMN_MESSAGE + " LIKE :text ")
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_MESSAGES + " WHERE " + DatabaseValues.COLUMN_MESSAGE + " LIKE :text ")
     List<Message> findMessages(String text);
 }

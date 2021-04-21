@@ -1,6 +1,6 @@
-package com.nishasimran.betweenus.Strings;
+package com.nishasimran.betweenus.Values;
 
-public class DatabaseStrings {
+public class DatabaseValues {
 
     public final static String COLUMN_ID = "_id";
     public final static String COLUMN_NAME = "name";

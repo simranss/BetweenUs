@@ -5,28 +5,28 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.nishasimran.betweenus.Strings.DatabaseStrings;
+import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import org.jetbrains.annotations.NotNull;
 
-@Entity(tableName = DatabaseStrings.TABLE_USERS)
+@Entity(tableName = DatabaseValues.TABLE_USERS)
 public class User {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = DatabaseStrings.COLUMN_ID)
+    @ColumnInfo(name = DatabaseValues.COLUMN_ID)
     private final String id;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_NAME)
+    @ColumnInfo(name = DatabaseValues.COLUMN_NAME)
     private String name;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_DOB)
+    @ColumnInfo(name = DatabaseValues.COLUMN_DOB)
     private final long dob;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_EMAIL)
+    @ColumnInfo(name = DatabaseValues.COLUMN_EMAIL)
     private String email;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_PHONE)
+    @ColumnInfo(name = DatabaseValues.COLUMN_PHONE)
     private String phone;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_ZODIAC)
+    @ColumnInfo(name = DatabaseValues.COLUMN_ZODIAC)
     private final String zodiac;
-    @ColumnInfo(name = DatabaseStrings.COLUMN_PHOTO)
+    @ColumnInfo(name = DatabaseValues.COLUMN_PHOTO)
     private String photo;
 
 
