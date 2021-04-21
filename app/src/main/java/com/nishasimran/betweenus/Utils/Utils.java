@@ -6,9 +6,13 @@ import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 
-import com.nishasimran.betweenus.Strings.CommonStrings;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import org.jetbrains.annotations.NotNull;
+import com.nishasimran.betweenus.Strings.CommonStrings;
 
 import java.util.Date;
 import java.util.Locale;
@@ -49,58 +53,67 @@ public class Utils {
     }
 
 
-    public static void writeToSharedPreference(@NotNull Application application, String key, String value) {
+    public static void showFragment(@NonNull FragmentManager fragManager, @IdRes int id, Fragment fragment) {
+        FragmentTransaction transaction = fragManager.beginTransaction();
+
+        transaction.replace(id, fragment);
+        transaction.commit();
+    }
+
+
+    public static void writeToSharedPreference(@NonNull Application application, String key, String value) {
         SharedPreferences.Editor editor = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
         editor.putString(key, value);
         editor.apply();
     }
 
 
-    public static void writeToSharedPreference(@NotNull Application application, String key, boolean value) {
+    public static void writeToSharedPreference(@NonNull Application application, String key, boolean value) {
         SharedPreferences.Editor editor = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
 
-    public static void writeToSharedPreference(@NotNull Application application, String key, int value) {
+    public static void writeToSharedPreference(@NonNull Application application, String key, int value) {
         SharedPreferences.Editor editor = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
         editor.putInt(key, value);
         editor.apply();
     }
 
 
-    public static void writeToSharedPreference(@NotNull Application application, String key, long value) {
+    public static void writeToSharedPreference(@NonNull Application application, String key, long value) {
         SharedPreferences.Editor editor = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE).edit();
         editor.putLong(key, value);
         editor.apply();
     }
 
 
-    public static String getStringFromSharedPreference(@NotNull Application application, String key) {
+    public static String getStringFromSharedPreference(@NonNull Application application, String key) {
         SharedPreferences preferences = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         return preferences.getString(key, CommonStrings.NULL);
     }
 
 
-    public static boolean getBooleanFromSharedPreference(@NotNull Application application, String key) {
+    public static boolean getBooleanFromSharedPreference(@NonNull Application application, String key) {
         SharedPreferences preferences = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         return preferences.getBoolean(key, false);
     }
 
 
-    public static int getIntFromSharedPreference(@NotNull Application application, String key) {
+    public static int getIntFromSharedPreference(@NonNull Application application, String key) {
         SharedPreferences preferences = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         return preferences.getInt(key, 0);
     }
 
 
-    public static long getLongFromSharedPreference(@NotNull Application application, String key) {
+    public static long getLongFromSharedPreference(@NonNull Application application, String key) {
         SharedPreferences preferences = application.getSharedPreferences(CommonStrings.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         return preferences.getLong(key, 0);
     }
 
-    public static byte @NotNull [] stringByteArrayToByteArray(@NotNull String stringByteArray) {
+    @NonNull
+    public static byte [] stringByteArrayToByteArray(@NonNull String stringByteArray) {
         String[] byteValues = stringByteArray.substring(1, stringByteArray.length() - 1).split(",");
         byte[] bytes = new byte[byteValues.length];
         int length = bytes.length;
