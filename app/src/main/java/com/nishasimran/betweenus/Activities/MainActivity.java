@@ -11,7 +11,7 @@ import com.nishasimran.betweenus.Fragments.LoginFragment;
 import com.nishasimran.betweenus.Fragments.MainFragment;
 import com.nishasimran.betweenus.Fragments.RegistrationFragment;
 import com.nishasimran.betweenus.R;
-import com.nishasimran.betweenus.Strings.CommonStrings;
+import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.ViewModels.StateViewModel;
 
@@ -21,14 +21,16 @@ public class MainActivity extends AppCompatActivity {
 
     boolean isInternetAvail = false;
 
-    Fragment loginFragment = new LoginFragment();
-    Fragment registrationFragment = new RegistrationFragment();
-    Fragment mainFragment = new MainFragment();
+    Fragment loginFragment, registrationFragment, mainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loginFragment = new LoginFragment(this);
+        registrationFragment = new RegistrationFragment();
+        mainFragment = new MainFragment();
 
         // initialising the view model
         StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().observe(this, aBoolean -> {
@@ -52,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         });
+    }
+
+    public void updateState(String state) {
+        StateViewModel.getInstance(this, getApplication()).updateState(state);
     }
 
     @Override

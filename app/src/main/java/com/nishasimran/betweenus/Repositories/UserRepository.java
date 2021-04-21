@@ -57,7 +57,7 @@ public class UserRepository {
         UserRoomDatabase.databaseWriteExecutor.execute(userDao::deleteAll);
     }
 
-    public LiveData<User> getCurrentUser() {
-        return currentUser;
+    public User getCurrentUser() {
+        return currentUser.getValue();
     }
 }

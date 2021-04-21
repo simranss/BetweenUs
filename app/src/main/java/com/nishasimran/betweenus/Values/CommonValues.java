@@ -4,6 +4,8 @@ public class CommonValues {
 
     public final static String NULL = "null";
 
+    public final static String COUNTRY_CODE = "+91";
+
     public final static String MY_PRIVATE_KEY = "my_private_key";
     public final static String MY_PUBLIC_KEY = "my_public_key";
     public final static String SERVER_KEY = "server_key";
@@ -30,5 +32,8 @@ public class CommonValues {
     public final static String SHARED_PREFERENCE_STATE = "state";
     public final static String SHARED_PREFERENCE_SERVER_LAST_SEEN = "server_last_seen";
     public final static String SHARED_PREFERENCE_CONNECTION = "connection";
+
+    public final static int PHONE_LENGTH = 10;
+    public final static int OTP_LENGTH = 6;
 
 }
