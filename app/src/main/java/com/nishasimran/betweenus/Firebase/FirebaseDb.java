@@ -39,9 +39,9 @@ public class FirebaseDb {
         return INSTANCE;
     }
 
-    public LiveData<String> addListenerForServerLastSeen(String uid) {
+    public LiveData<String> addListenerForServerLastSeen(String serverUid) {
         lastSeen.setValue(null);
-        root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN).addValueEventListener(new ValueEventListener() {
+        root.child(FirebaseStrings.USERS).child(serverUid).child(FirebaseStrings.LAST_SEEN).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -73,7 +73,9 @@ public class FirebaseDb {
             public void onDataChange(@NotNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     Object object = snapshot.getValue();
+                    Log.d(TAG, "connected: " + object);
                     if (object instanceof Boolean) {
+                        Log.d(TAG, "connected: " + (boolean) object);
                         if ((boolean) object) {
                             // When I disconnect, update the last time I was seen online
                             final DatabaseReference lastOnlineRef = root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN);

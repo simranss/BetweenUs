@@ -24,7 +24,12 @@ public class StateRepository {
         if (state == null) {
             state = new MutableLiveData<>();
         }
-        state.setValue(Utils.getStringFromSharedPreference(application, CommonStrings.SHARED_PREFERENCE_STATE));
+        String stateValue = Utils.getStringFromSharedPreference(application, CommonStrings.SHARED_PREFERENCE_STATE);
+        if (stateValue == null) {
+            Utils.writeToSharedPreference(application, CommonStrings.SHARED_PREFERENCE_STATE, CommonStrings.STATE_NOT_LOGGED_IN);
+            stateValue = Utils.getStringFromSharedPreference(application, CommonStrings.SHARED_PREFERENCE_STATE);
+        }
+        state.setValue(stateValue);
     }
 
     public String getUid() {
@@ -47,7 +52,7 @@ public class StateRepository {
     }
 
     public LiveData<Boolean> addListenerForConnectionChanges() {
-        return FirebaseDb.getInstance().listenersForConnectionChanges(serverUid, application);
+        return FirebaseDb.getInstance().listenersForConnectionChanges(uid, application);
     }
 
 }

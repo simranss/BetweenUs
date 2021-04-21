@@ -31,7 +31,6 @@ public interface KeyDao {
     @Query("SELECT * FROM " + DatabaseStrings.TABLE_KEYS + " ORDER BY " + DatabaseStrings.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Key>> getAllKeys();
 
-    // Query with parameter that returns a specific word or words.
     @Query("SELECT * FROM " + DatabaseStrings.TABLE_KEYS + " WHERE " + DatabaseStrings.COLUMN_CURR_MILLIS + " LIKE :currMillis ")
     List<Key> findKeys(long currMillis);
 }
