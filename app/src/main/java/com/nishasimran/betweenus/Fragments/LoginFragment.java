@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +44,7 @@ public class LoginFragment extends Fragment {
     private final AppCompatActivity activity;
 
     private EditText phoneEditText, codeEditText;
+    private ProgressBar progressBar;
     private Button submitButton;
 
     public LoginFragment(AppCompatActivity activity) {
@@ -70,11 +72,13 @@ public class LoginFragment extends Fragment {
     private void initViews(@NotNull View parent) {
         phoneEditText = parent.findViewById(R.id.frag_log_phone);
         codeEditText = parent.findViewById(R.id.frag_log_code);
+        progressBar = parent.findViewById(R.id.frag_log_progress);
         submitButton = parent.findViewById(R.id.frag_log_submit);
     }
 
     private void setDefaults() {
         hideView(codeEditText);
+        hideView(progressBar);
         submitButton.setText(R.string.submit);
         submitButton.setOnClickListener(v -> {
             if (codeSent) {
@@ -89,6 +93,10 @@ public class LoginFragment extends Fragment {
         String phone = validateEditText(phoneEditText, CommonValues.PHONE_LENGTH);
         if (phone != null) {
             phone = CommonValues.COUNTRY_CODE + phone;
+            hideView(codeEditText);
+            disableView(phoneEditText);
+            showView(progressBar);
+            disableView(submitButton);
             signIn(activity, phone, generateCallbacks());
         } else {
             phoneEditText.setError(getString(R.string.phone_error));
@@ -98,6 +106,10 @@ public class LoginFragment extends Fragment {
     private void submitCode() {
         String code = validateEditText(codeEditText, CommonValues.OTP_LENGTH);
         if (code != null) {
+            showView(progressBar);
+            disableView(codeEditText);
+            disableView(phoneEditText);
+            disableView(submitButton);
             signInWithCode(activity.getApplication(), code, verificationId);
         } else {
             codeEditText.setError(getString(R.string.otp_error));
@@ -119,12 +131,20 @@ public class LoginFragment extends Fragment {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                 Log.d(TAG, "Verification success");
+                disableView(phoneEditText);
+                hideView(codeEditText);
+                hideView(progressBar);
+                disableView(submitButton);
                 signInWithPhoneAuthCredential(activity.getApplication(), phoneAuthCredential);
             }
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
                 Log.d(TAG, "verificationFailed: " + e.getMessage());
+                hideView(codeEditText);
+                hideView(progressBar);
+                enableView(phoneEditText);
+                enableView(submitButton);
             }
 
             @Override
@@ -132,7 +152,10 @@ public class LoginFragment extends Fragment {
                 super.onCodeSent(verificationId, forceResendingToken);
 
                 codeSent = true;
+                disableView(phoneEditText);
                 showView(codeEditText);
+                hideView(progressBar);
+                enableView(submitButton);
                 LoginFragment.this.verificationId = verificationId;
             }
         };
@@ -159,6 +182,10 @@ public class LoginFragment extends Fragment {
         auth.signInWithCredential(credential)
                 .addOnSuccessListener(authResult -> {
                     Log.d(TAG, "Verification success");
+                    hideView(progressBar);
+                    disableView(codeEditText);
+                    disableView(phoneEditText);
+                    disableView(submitButton);
                     updateState(CommonValues.STATE_LOGGED_IN_NO_REG);
                     if (authResult.getUser() != null) {
                         Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID, authResult.getUser().getUid());
@@ -167,7 +194,13 @@ public class LoginFragment extends Fragment {
                     }
 
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "VerificationFailed: " + e.getMessage()));
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "VerificationFailed: " + e.getMessage());
+                    enableView(submitButton);
+                    disableView(phoneEditText);
+                    enableView(codeEditText);
+                    hideView(progressBar);
+                });
     }
 
     public void signInWithCode(Application application, String code, String verificationId) {
@@ -181,5 +214,27 @@ public class LoginFragment extends Fragment {
 
     private void hideView(@NotNull View view) {
         view.setVisibility(View.GONE);
+    }
+
+    private void enableView(@NotNull View view) {
+        if (view instanceof EditText) {
+            view.setFocusableInTouchMode(true);
+        } else if (view instanceof Button) {
+            view.setEnabled(true);
+            view.setClickable(true);
+        } else {
+            view.setEnabled(true);
+        }
+    }
+
+    private void disableView(@NotNull View view) {
+        if (view instanceof EditText) {
+            view.setFocusable(false);
+        } else if (view instanceof Button) {
+            view.setEnabled(false);
+            view.setClickable(false);
+        } else {
+            view.setEnabled(false);
+        }
     }
 }
