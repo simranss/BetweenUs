@@ -13,7 +13,15 @@
     <!-- Hint strings -->
     <string name="phone_hint">phone no.</string>
     <string name="code_hint">OTP</string>
+    <string name="name_hint">Enter your name</string>
+    <string name="email_hint">Enter your email</string>
+    <string name="dob_hint">Enter your date of birth</string>
+    <string name="server_phone_hint">Your partner\'s phone no.</string>
+    <string name="server_name_hint">Enter your partner\'s name</string>
+    <string name="server_email_hint">Enter your partner\'s email</string>
+    <string name="server_dob_hint">Enter your partner\'s date of birth</string>
 
     <!-- Standard strings -->
     <string name="submit">Submit</string>
+    <string name="save">Save</string>
 </resources>
