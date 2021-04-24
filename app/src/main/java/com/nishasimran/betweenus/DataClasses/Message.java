@@ -26,11 +26,17 @@ public class Message {
     private String status;
     @ColumnInfo(name = DatabaseValues.COLUMN_CURR_MILLIS)
     private long currMillis;
+    @ColumnInfo(name = DatabaseValues.COLUMN_SENT_CURR_MILLIS)
+    private long sentCurrMillis;
+    @ColumnInfo(name = DatabaseValues.COLUMN_DELIVERED_CURR_MILLIS)
+    private long deliveredCurrMillis;
+    @ColumnInfo(name = DatabaseValues.COLUMN_READ_CURR_MILLIS)
+    private long readCurrMillis;
 
 
 
 
-    public Message(@NonNull String id, String message, String from, String to, String messageType, String status, long currMillis) {
+    public Message(@NonNull String id, String message, String from, String to, String messageType, String status, long currMillis, long sentCurrMillis, long deliveredCurrMillis, long readCurrMillis) {
         this.id = id;
         this.message = message;
         this.from = from;
@@ -38,6 +44,9 @@ public class Message {
         this.messageType = messageType;
         this.status = status;
         this.currMillis = currMillis;
+        this.sentCurrMillis = sentCurrMillis;
+        this.deliveredCurrMillis = deliveredCurrMillis;
+        this.readCurrMillis = readCurrMillis;
     }
 
 
@@ -65,6 +74,15 @@ public class Message {
     public long getCurrMillis() {
         return currMillis;
     }
+    public long getSentCurrMillis() {
+        return sentCurrMillis;
+    }
+    public long getDeliveredCurrMillis() {
+        return deliveredCurrMillis;
+    }
+    public long getReadCurrMillis() {
+        return readCurrMillis;
+    }
 
     // setters
     public void setMessage(String message) {
@@ -84,5 +102,14 @@ public class Message {
     }
     public void setCurrMillis(long currMillis) {
         this.currMillis = currMillis;
+    }
+    public void setSentCurrMillis(long sentCurrMillis) {
+        this.sentCurrMillis = sentCurrMillis;
+    }
+    public void setDeliveredCurrMillis(long deliveredCurrMillis) {
+        this.deliveredCurrMillis = deliveredCurrMillis;
+    }
+    public void setReadCurrMillis(long readCurrMillis) {
+        this.readCurrMillis = readCurrMillis;
     }
 }
