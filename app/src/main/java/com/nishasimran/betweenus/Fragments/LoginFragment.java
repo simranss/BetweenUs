@@ -5,7 +5,6 @@ import android.app.Application;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -41,13 +40,13 @@ public class LoginFragment extends Fragment {
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    private final AppCompatActivity activity;
+    private final Activity activity;
 
     private EditText phoneEditText, codeEditText;
     private ProgressBar progressBar;
     private Button submitButton;
 
-    public LoginFragment(AppCompatActivity activity) {
+    public LoginFragment(Activity activity) {
         this.activity = activity;
         // Required empty public constructor
     }

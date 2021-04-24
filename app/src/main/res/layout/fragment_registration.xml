@@ -10,7 +10,7 @@
     tools:context=".Fragments.RegistrationFragment">
 
     <EditText
-        android:id="@+id/frag_reg_my_name"
+        android:id="@+id/frag_reg_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
@@ -25,23 +25,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/frag_reg_my_dob"
+        android:id="@+id/frag_reg_dob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
         android:layout_marginTop="12dp"
         android:autofillHints="@string/dob_hint"
         android:background="@drawable/edit_text_background"
+        android:focusable="false"
         android:hint="@string/dob_hint"
         android:inputType="date"
         android:paddingHorizontal="12dp"
         android:paddingVertical="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frag_reg_my_name" />
+        app:layout_constraintTop_toBottomOf="@id/frag_reg_name" />
 
     <EditText
-        android:id="@+id/frag_reg_my_email"
+        android:id="@+id/frag_reg_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
@@ -54,9 +55,22 @@
         android:paddingVertical="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frag_reg_my_dob" />
+        app:layout_constraintTop_toBottomOf="@id/frag_reg_dob" />
+
+    <ProgressBar
+        android:id="@+id/frag_reg_progress"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"
+        app:layout_constraintBottom_toTopOf="@id/frag_reg_save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frag_reg_email"
+        app:layout_constraintVertical_bias="0.7" />
 
     <Button
+        android:id="@+id/frag_reg_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
