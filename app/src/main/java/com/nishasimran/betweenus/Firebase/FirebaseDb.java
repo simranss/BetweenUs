@@ -78,10 +78,12 @@ public class FirebaseDb {
                         Log.d(TAG, "connected: " + (boolean) object);
                         if ((boolean) object) {
                             // When I disconnect, update the last time I was seen online
-                            final DatabaseReference lastOnlineRef = root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN);
-                            lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
+                            if (uid != null && !uid.equals(CommonValues.NULL)) {
+                                final DatabaseReference lastOnlineRef = root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN);
+                                lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
 
-                            lastOnlineRef.setValue(CommonValues.STATUS_ONLINE);
+                                lastOnlineRef.setValue(CommonValues.STATUS_ONLINE);
+                            }
 
                             Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_CONNECTION, CommonValues.CONNECTION_CONNECTED);
                             connected.setValue(true);
