@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.nishasimran.betweenus.DataClasses.Key;
+import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.Fragments.LoginFragment;
 import com.nishasimran.betweenus.Fragments.MainFragment;
@@ -13,7 +15,9 @@ import com.nishasimran.betweenus.Fragments.RegistrationFragment;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Utils.Utils;
+import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.ViewModels.StateViewModel;
+import com.nishasimran.betweenus.ViewModels.UserViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         loginFragment = new LoginFragment(this);
-        registrationFragment = new RegistrationFragment();
+        registrationFragment = new RegistrationFragment(this);
         mainFragment = new MainFragment();
 
         // initialising the view model
@@ -60,8 +64,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public boolean isInternetAvail() {
+        return isInternetAvail;
+    }
+
     public void updateState(String state) {
         StateViewModel.getInstance(this, getApplication()).updateState(state);
+    }
+
+    public void insertUser(User user) {
+        UserViewModel.getInstance(this, getApplication()).insert(user);
+    }
+
+    public void insertKey(Key key) {
+        KeyViewModel.getInstance(this, getApplication()).insert(key);
     }
 
     @Override

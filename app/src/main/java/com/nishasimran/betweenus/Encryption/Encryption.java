@@ -49,10 +49,10 @@ public class Encryption {
         byte[] bM = text.getBytes(StandardCharsets.ISO_8859_1);
         SecureRandom random = new SecureRandom();
 
-        byte[] privateKey = ECDHCurve25519.generate_secret_key(random);
-        byte[] publicKey = ECDHCurve25519.generate_public_key(privateKey);
+        byte[] privateKey = generatePrivateKey(random);
+        byte[] publicKey = generatePublicKey(privateKey);
         byte[] serverKey = Utils.stringByteArrayToByteArray(serverPublicKey);
-        byte[] sharedKey = ECDHCurve25519.generate_shared_secret(privateKey, serverKey);
+        byte[] sharedKey = generateSharedKey(privateKey, serverKey);
 
         SecretKey encryptionKey = new SecretKeySpec(sharedKey, 0, sharedKey.length, EncryptionString.ALGORITHM_AES);
 
@@ -89,7 +89,7 @@ public class Encryption {
 
         SecureRandom random = new SecureRandom();
 
-        byte[] sharedKey = ECDHCurve25519.generate_shared_secret(privateKey, serverKey);
+        byte[] sharedKey = generateSharedKey(privateKey, serverKey);
 
         SecretKey decryptionKey = new SecretKeySpec(sharedKey, 0, sharedKey.length, EncryptionString.ALGORITHM_AES);
 
@@ -107,6 +107,23 @@ public class Encryption {
         }
 
         return decryptedMessage;
+    }
+
+
+
+
+    public static byte[] generatePrivateKey(SecureRandom random) {
+        return ECDHCurve25519.generate_secret_key(random);
+    }
+
+
+    public static byte[] generatePublicKey(byte[] privateKey) {
+        return ECDHCurve25519.generate_public_key(privateKey);
+    }
+
+
+    public static byte[] generateSharedKey(byte[] privateKey, byte[] serverKey) {
+        return ECDHCurve25519.generate_shared_secret(privateKey, serverKey);
     }
 
 }

@@ -2,8 +2,11 @@ package com.nishasimran.betweenus.ViewModels;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.Repositories.KeyRepository;
@@ -11,6 +14,9 @@ import com.nishasimran.betweenus.Repositories.KeyRepository;
 import java.util.List;
 
 public class KeyViewModel extends AndroidViewModel {
+
+    private final String TAG = "KeyVM";
+    private static KeyViewModel INSTANCE = null;
 
     private final KeyRepository repository;
 
@@ -20,6 +26,14 @@ public class KeyViewModel extends AndroidViewModel {
         super(application);
         repository = new KeyRepository(application);
         allKeys = repository.getAllKeys();
+    }
+
+    public static KeyViewModel getInstance(@NonNull ViewModelStoreOwner owner, @NonNull Application application) {
+        if (INSTANCE == null) {
+            ViewModelProvider.AndroidViewModelFactory factory = new ViewModelProvider.AndroidViewModelFactory(application);
+            INSTANCE = new ViewModelProvider(owner, factory).get(KeyViewModel.class);
+        }
+        return INSTANCE;
     }
 
     LiveData<List<Key>> getAllKeys() { return allKeys; }
