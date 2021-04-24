@@ -7,7 +7,6 @@ public class DatabaseValues {
     public final static String COLUMN_DOB = "dob";
     public final static String COLUMN_EMAIL = "email";
     public final static String COLUMN_PHONE = "phone";
-    public final static String COLUMN_ZODIAC = "zodiac";
     public final static String COLUMN_PHOTO = "photo";
     public final static String COLUMN_MESSAGE = "message";
     public final static String COLUMN_FROM = "from";

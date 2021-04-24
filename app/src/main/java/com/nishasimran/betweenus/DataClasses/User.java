@@ -24,20 +24,17 @@ public class User {
     private String email;
     @ColumnInfo(name = DatabaseValues.COLUMN_PHONE)
     private String phone;
-    @ColumnInfo(name = DatabaseValues.COLUMN_ZODIAC)
-    private final String zodiac;
     @ColumnInfo(name = DatabaseValues.COLUMN_PHOTO)
     private String photo;
 
 
 
-    public User(@NonNull String id, String name, long dob, String email, String phone, String zodiac, String photo) {
+    public User(@NonNull String id, String name, long dob, String email, String phone, String photo) {
         this.id = id;
         this.name = name;
         this.dob = dob;
         this.email = email;
         this.phone = phone;
-        this.zodiac = zodiac;
         this.photo = photo;
     }
 
@@ -58,9 +55,6 @@ public class User {
     }
     public String getPhone() {
         return phone;
-    }
-    public String getZodiac() {
-        return zodiac;
     }
     public String getPhoto() {
         return photo;
