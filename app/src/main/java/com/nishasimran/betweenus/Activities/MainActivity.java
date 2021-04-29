@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.nishasimran.betweenus.DataClasses.FirebaseKey;
 import com.nishasimran.betweenus.DataClasses.Key;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference userRef = database.getReference().child(FirebaseStrings.USERS), keyRef = database.getReference().child(FirebaseStrings.KEYS);
+    ChildEventListener userChildEventListener, keyChildEventListener;
 
     private boolean isInternetAvail = false;
     private int fragmentIndex = 0;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mainFragment = new MainFragment(this);
 
         // adding a listener for new key and new user data
+        initChildEventListeners();
         addListenerForUserAndKeyData();
 
         // initialising the view model
@@ -83,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean isInternetAvail() {
         Log.d(TAG, "isInternetAvail: " + isInternetAvail);
         if (!isInternetAvail) {
-            FirebaseDb.getInstance().goOnline();
+            removeListenerForUserAndKeyData();
+            addListenerForUserAndKeyData();
         }
         return isInternetAvail;
     }
@@ -100,59 +105,65 @@ public class MainActivity extends AppCompatActivity {
         KeyViewModel.getInstance(this, getApplication()).insert(key);
     }
 
-    private void addListenerForUserAndKeyData() {
-        database.getReference()
-                .child(FirebaseStrings.USERS)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        if (snapshot.exists()) {
-                            User user = snapshot.getValue(User.class);
-                            if (user != null) {
-                                if (uid.equals(CommonValues.NULL)) {
-                                    updateState(CommonValues.STATE_NOT_LOGGED_IN);
-                                } else {
-                                    if (!uid.equals(user.getId())) {
-                                        insertUser(user);
-                                        snapshot.getRef().removeValue();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
-
-        database.getReference()
-                .child(FirebaseStrings.KEYS)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        if (snapshot.exists()) {
-                            FirebaseKey fKey = snapshot.getValue(FirebaseKey.class);
-                            if (fKey != null) {
-                                Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
-                                insertKey(key);
+    private void initChildEventListeners() {
+        userChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.exists()) {
+                    User user = snapshot.getValue(User.class);
+                    if (user != null) {
+                        if (uid.equals(CommonValues.NULL)) {
+                            updateState(CommonValues.STATE_NOT_LOGGED_IN);
+                        } else {
+                            if (!uid.equals(user.getId())) {
+                                insertUser(user);
                                 snapshot.getRef().removeValue();
                             }
                         }
                     }
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
+                }
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        };
+
+        keyChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.exists()) {
+                    FirebaseKey fKey = snapshot.getValue(FirebaseKey.class);
+                    if (fKey != null) {
+                        Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
+                        insertKey(key);
+                        snapshot.getRef().removeValue();
+                    }
+                }
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        };
+    }
+
+    public void removeListenerForUserAndKeyData() {
+        userRef.removeEventListener(userChildEventListener);
+        keyRef.removeEventListener(keyChildEventListener);
+    }
+
+    public void addListenerForUserAndKeyData() {
+        userRef.addChildEventListener(userChildEventListener);
+        keyRef.addChildEventListener(keyChildEventListener);
     }
 
     @Override

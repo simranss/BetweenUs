@@ -74,18 +74,12 @@ public class RegistrationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
 
         FirebaseDb.getInstance().goOnline();
+        isInternetAvailable();
 
         initViews(view);
         setDefaults();
 
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        FirebaseDb.getInstance().goOnline();
     }
 
     private void initViews(@NotNull View parent) {
