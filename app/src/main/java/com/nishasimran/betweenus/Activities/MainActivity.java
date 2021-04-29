@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         loginFragment = new LoginFragment(this);
         registrationFragment = new RegistrationFragment(this);
-        mainFragment = new MainFragment();
+        mainFragment = new MainFragment(this);
 
         // initialising the view model
         StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().observe(this, aBoolean -> {
@@ -65,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isInternetAvail() {
+        Log.d(TAG, "isInternetAvail: " + isInternetAvail);
+        if (!isInternetAvail) {
+            FirebaseDb.getInstance().goOnline();
+        }
         return isInternetAvail;
     }
 

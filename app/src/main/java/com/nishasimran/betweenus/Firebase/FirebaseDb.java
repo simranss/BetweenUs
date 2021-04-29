@@ -79,7 +79,7 @@ public class FirebaseDb {
                         if ((boolean) object) {
                             // When I disconnect, update the last time I was seen online
                             if (uid != null && !uid.equals(CommonValues.NULL)) {
-                                final DatabaseReference lastOnlineRef = root.child(FirebaseStrings.USERS).child(uid).child(FirebaseStrings.LAST_SEEN);
+                                final DatabaseReference lastOnlineRef = root.child(FirebaseStrings.LAST_SEEN).child(uid);
                                 lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
 
                                 lastOnlineRef.setValue(CommonValues.STATUS_ONLINE);

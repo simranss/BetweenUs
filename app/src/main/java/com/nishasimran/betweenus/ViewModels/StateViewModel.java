@@ -32,9 +32,7 @@ public class StateViewModel extends AndroidViewModel {
     }
 
     public LiveData<Boolean> addConnectionChangeListener() {
-        LiveData<Boolean> connected = repository.addListenerForConnectionChanges();
-        Log.d(TAG, "addConnectionChangeListener: " + connected.getValue());
-        return connected;
+        return repository.addListenerForConnectionChanges();
     }
 
     public LiveData<String> addServerLastSeenChangeListener() {

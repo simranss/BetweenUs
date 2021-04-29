@@ -21,21 +21,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.nishasimran.betweenus.Activities.MainActivity;
+import com.nishasimran.betweenus.DataClasses.FirebaseKey;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Encryption.Encryption;
+import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
-import com.nishasimran.betweenus.Values.DatabaseValues;
 import com.nishasimran.betweenus.Values.FirebaseStrings;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class RegistrationFragment extends Fragment {
@@ -74,10 +73,19 @@ public class RegistrationFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
 
+        FirebaseDb.getInstance().goOnline();
+
         initViews(view);
         setDefaults();
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        FirebaseDb.getInstance().goOnline();
     }
 
     private void initViews(@NotNull View parent) {
@@ -99,7 +107,8 @@ public class RegistrationFragment extends Fragment {
             // date picker dialog
             datePicker = new DatePickerDialog(getContext(), (view, year1, monthOfYear, dayOfMonth) -> {
 
-                Log.d(TAG, "day: " + dayOfMonth + ", month: " + (monthOfYear + 1) + ", year: " + year1);Calendar myCalendar = Calendar.getInstance();
+                Log.d(TAG, "day: " + dayOfMonth + ", month: " + (monthOfYear + 1) + ", year: " + year1);
+                Calendar myCalendar = Calendar.getInstance();
                 myCalendar.set(Calendar.YEAR, year1);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -141,12 +150,10 @@ public class RegistrationFragment extends Fragment {
                                 .addOnSuccessListener(aVoid -> {
                                     insertUser(user);
 
-                                    Map<String, String> keyMap = new HashMap<>();
-                                    keyMap.put(FirebaseStrings.PUBLIC_KEY, key.getMyPublic());
-                                    keyMap.put(DatabaseValues.COLUMN_CURR_MILLIS, String.valueOf(keyCurrMillis));
+                                    FirebaseKey fKey = new FirebaseKey(keyId, key.getMyPublic(), keyCurrMillis);
 
                                     database.getReference()
-                                            .child(FirebaseStrings.KEYS).child(id).setValue(keyMap)
+                                            .child(FirebaseStrings.KEYS).child(id).setValue(fKey)
                                             .addOnSuccessListener(aVoid1 -> {
                                                 insertKey(key);
                                                 updateState(CommonValues.STATE_LOGGED_IN_WITH_REG);
