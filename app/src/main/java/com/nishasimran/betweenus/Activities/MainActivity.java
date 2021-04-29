@@ -1,11 +1,18 @@
 package com.nishasimran.betweenus.Activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.nishasimran.betweenus.DataClasses.FirebaseKey;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
@@ -15,6 +22,7 @@ import com.nishasimran.betweenus.Fragments.RegistrationFragment;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Utils.Utils;
+import com.nishasimran.betweenus.Values.FirebaseStrings;
 import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.ViewModels.StateViewModel;
 import com.nishasimran.betweenus.ViewModels.UserViewModel;
@@ -23,8 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
 
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     private boolean isInternetAvail = false;
     private int fragmentIndex = 0;
+    private String uid;
 
     private Fragment loginFragment, registrationFragment, mainFragment;
 
@@ -33,9 +44,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
+
         loginFragment = new LoginFragment(this);
         registrationFragment = new RegistrationFragment(this);
         mainFragment = new MainFragment(this);
+
+        // adding a listener for new key and new user data
+        addListenerForUserAndKeyData();
 
         // initialising the view model
         StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().observe(this, aBoolean -> {
@@ -82,6 +98,61 @@ public class MainActivity extends AppCompatActivity {
 
     public void insertKey(Key key) {
         KeyViewModel.getInstance(this, getApplication()).insert(key);
+    }
+
+    private void addListenerForUserAndKeyData() {
+        database.getReference()
+                .child(FirebaseStrings.USERS)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        if (snapshot.exists()) {
+                            User user = snapshot.getValue(User.class);
+                            if (user != null) {
+                                if (uid.equals(CommonValues.NULL)) {
+                                    updateState(CommonValues.STATE_NOT_LOGGED_IN);
+                                } else {
+                                    if (!uid.equals(user.getId())) {
+                                        insertUser(user);
+                                        snapshot.getRef().removeValue();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+
+        database.getReference()
+                .child(FirebaseStrings.KEYS)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        if (snapshot.exists()) {
+                            FirebaseKey fKey = snapshot.getValue(FirebaseKey.class);
+                            if (fKey != null) {
+                                Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
+                                insertKey(key);
+                                snapshot.getRef().removeValue();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
     }
 
     @Override
