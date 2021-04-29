@@ -2,6 +2,8 @@ package com.nishasimran.betweenus.DataClasses;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 public class FirebaseKey {
 
     private String id;
@@ -39,5 +41,15 @@ public class FirebaseKey {
     }
     public void setMyPublic(String myPublic) {
         this.myPublic = myPublic;
+    }
+
+    @Override
+    @NotNull
+    public String toString() {
+        return "FirebaseKey{ " +
+                "id='" + id + '\'' +
+                ", myPublic='" + myPublic + '\'' +
+                ", currMillis=" + currMillis +
+                " }";
     }
 }

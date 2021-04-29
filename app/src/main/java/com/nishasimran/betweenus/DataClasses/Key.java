@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey;
 
 import com.nishasimran.betweenus.Values.DatabaseValues;
 
+import org.jetbrains.annotations.NotNull;
+
 @Entity(tableName = DatabaseValues.TABLE_KEYS)
 public class Key {
 
@@ -72,4 +74,15 @@ public class Key {
         this.serverPublic = serverPublic;
     }
 
+    @Override
+    @NotNull
+    public String toString() {
+        return "Key{ " +
+                "id='" + id + '\'' +
+                ", myPrivate='" + myPrivate + '\'' +
+                ", myPublic='" + myPublic + '\'' +
+                ", serverPublic='" + serverPublic + '\'' +
+                ", currMillis=" + currMillis +
+                " }";
+    }
 }
