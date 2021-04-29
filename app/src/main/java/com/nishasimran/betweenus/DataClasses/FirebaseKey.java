@@ -4,9 +4,14 @@ import androidx.annotation.NonNull;
 
 public class FirebaseKey {
 
-    private final String id;
+    private String id;
     private String myPublic;
     private long currMillis;
+
+
+    public FirebaseKey() {
+        // required no argument constructor
+    }
 
 
     public FirebaseKey(@NonNull String id, String myPublic, long currMillis) {

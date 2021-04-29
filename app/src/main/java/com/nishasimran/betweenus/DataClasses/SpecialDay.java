@@ -13,9 +13,8 @@ import org.jetbrains.annotations.NotNull;
 public class SpecialDay {
 
     @PrimaryKey
-    @NonNull
     @ColumnInfo(name = DatabaseValues.COLUMN_ID)
-    private final String id;
+    private String id;
     @ColumnInfo(name = DatabaseValues.COLUMN_DAY)
     private String day;
     @ColumnInfo(name = DatabaseValues.COLUMN_MONTH)
@@ -28,6 +27,12 @@ public class SpecialDay {
     private String desc;
     @ColumnInfo(name = DatabaseValues.COLUMN_CURR_MILLIS)
     private long currMillis;
+
+
+
+    public SpecialDay() {
+        // required no argument constructor
+    }
 
 
 

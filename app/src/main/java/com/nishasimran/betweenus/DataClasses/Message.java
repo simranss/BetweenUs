@@ -10,10 +10,9 @@ import com.nishasimran.betweenus.Values.DatabaseValues;
 @Entity(tableName = DatabaseValues.TABLE_MESSAGES)
 public class Message {
 
-    @PrimaryKey()
-    @NonNull
+    @PrimaryKey
     @ColumnInfo(name = DatabaseValues.COLUMN_ID)
-    private final String id;
+    private String id;
     @ColumnInfo(name = DatabaseValues.COLUMN_MESSAGE)
     private String message;
     @ColumnInfo(name = DatabaseValues.COLUMN_FROM)
@@ -32,6 +31,13 @@ public class Message {
     private long deliveredCurrMillis;
     @ColumnInfo(name = DatabaseValues.COLUMN_READ_CURR_MILLIS)
     private long readCurrMillis;
+
+
+
+
+    public Message() {
+        // required no argument constructor
+    }
 
 
 

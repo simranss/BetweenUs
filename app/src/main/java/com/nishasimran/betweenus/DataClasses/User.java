@@ -13,19 +13,24 @@ import org.jetbrains.annotations.NotNull;
 public class User {
 
     @PrimaryKey
-    @NonNull
     @ColumnInfo(name = DatabaseValues.COLUMN_ID)
-    private final String id;
+    private String id;
     @ColumnInfo(name = DatabaseValues.COLUMN_NAME)
     private String name;
     @ColumnInfo(name = DatabaseValues.COLUMN_DOB)
-    private final long dob;
+    private long dob;
     @ColumnInfo(name = DatabaseValues.COLUMN_EMAIL)
     private String email;
     @ColumnInfo(name = DatabaseValues.COLUMN_PHONE)
     private String phone;
     @ColumnInfo(name = DatabaseValues.COLUMN_PHOTO)
     private String photo;
+
+
+
+    public User() {
+        // required no argument constructor
+    }
 
 
 

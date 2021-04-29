@@ -11,9 +11,8 @@ import com.nishasimran.betweenus.Values.DatabaseValues;
 public class Key {
 
     @PrimaryKey
-    @NonNull
     @ColumnInfo(name = DatabaseValues.COLUMN_ID)
-    private final String id;
+    private String id;
     @ColumnInfo(name = DatabaseValues.COLUMN_MY_PRIVATE)
     private String myPrivate;
     @ColumnInfo(name = DatabaseValues.COLUMN_MY_PUBLIC)
@@ -22,6 +21,12 @@ public class Key {
     private String serverPublic;
     @ColumnInfo(name = DatabaseValues.COLUMN_CURR_MILLIS)
     private long currMillis;
+
+
+
+    public Key() {
+        // required no argument constructor
+    }
 
 
 

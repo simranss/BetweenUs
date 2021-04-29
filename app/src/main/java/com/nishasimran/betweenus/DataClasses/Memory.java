@@ -11,9 +11,8 @@ import com.nishasimran.betweenus.Values.DatabaseValues;
 public class Memory {
 
     @PrimaryKey
-    @NonNull
     @ColumnInfo(name = DatabaseValues.COLUMN_ID)
-    private final String id;
+    private String id;
     @ColumnInfo(name = DatabaseValues.COLUMN_ALBUM_NAME)
     private String albumName;
     @ColumnInfo(name = DatabaseValues.COLUMN_CURR_MILLIS)
@@ -22,6 +21,12 @@ public class Memory {
     private String image;
     @ColumnInfo(name = DatabaseValues.COLUMN_DESC)
     private String desc;
+
+
+
+    public Memory() {
+        // required no argument constructor
+    }
 
 
 
