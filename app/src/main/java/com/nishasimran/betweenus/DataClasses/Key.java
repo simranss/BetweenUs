@@ -3,6 +3,7 @@ package com.nishasimran.betweenus.DataClasses;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.nishasimran.betweenus.Values.DatabaseValues;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class Key {
 
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = DatabaseValues.COLUMN_ID)
     private String id;
     @ColumnInfo(name = DatabaseValues.COLUMN_MY_PRIVATE)
@@ -26,6 +28,7 @@ public class Key {
 
 
 
+    @Ignore
     public Key() {
         // required no argument constructor
     }
@@ -61,6 +64,9 @@ public class Key {
     }
 
     // setters
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
     public void setMyPrivate(String myPrivate) {
         this.myPrivate = myPrivate;
     }

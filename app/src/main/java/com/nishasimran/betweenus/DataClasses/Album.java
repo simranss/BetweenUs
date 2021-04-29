@@ -3,6 +3,7 @@ package com.nishasimran.betweenus.DataClasses;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.nishasimran.betweenus.Values.DatabaseValues;
@@ -11,6 +12,7 @@ import com.nishasimran.betweenus.Values.DatabaseValues;
 public class Album {
 
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = DatabaseValues.COLUMN_ID)
     private String id;
     @ColumnInfo(name = DatabaseValues.COLUMN_ALBUM_NAME)
@@ -22,6 +24,7 @@ public class Album {
 
 
 
+    @Ignore
     public Album() {
         // required no argument constructor
     }
@@ -53,6 +56,9 @@ public class Album {
     }
 
     // setters
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
     public void setAlbumName(String albumName) {
         this.albumName = albumName;
     }

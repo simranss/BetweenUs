@@ -68,10 +68,12 @@ public class MainActivity extends AppCompatActivity {
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, loginFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_NO_REG:
+                    this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
                     fragmentIndex = 1;
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, registrationFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_WITH_REG:
+                    this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
                     fragmentIndex = 2;
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, mainFragment);
                     break;
@@ -107,9 +109,11 @@ public class MainActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     User user = snapshot.getValue(User.class);
                     if (user != null) {
+                        Log.d(TAG, "User: " + user);
                         if (uid.equals(CommonValues.NULL)) {
                             updateState(CommonValues.STATE_NOT_LOGGED_IN);
                         } else {
+                            Log.d(TAG, "User: " + user);
                             if (!uid.equals(user.getId())) {
                                 insertUser(user);
                                 snapshot.getRef().removeValue();
@@ -134,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     FirebaseKey fKey = snapshot.getValue(FirebaseKey.class);
                     if (fKey != null) {
+                        Log.d(TAG, "Key: " + fKey);
                         Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
                         insertKey(key);
                         snapshot.getRef().removeValue();

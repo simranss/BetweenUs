@@ -3,6 +3,7 @@ package com.nishasimran.betweenus.DataClasses;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.nishasimran.betweenus.Values.DatabaseValues;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class SpecialDay {
 
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = DatabaseValues.COLUMN_ID)
     private String id;
     @ColumnInfo(name = DatabaseValues.COLUMN_DAY)
@@ -30,6 +32,7 @@ public class SpecialDay {
 
 
 
+    @Ignore
     public SpecialDay() {
         // required no argument constructor
     }
@@ -73,6 +76,9 @@ public class SpecialDay {
     }
 
     // setters
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
     public void setDay(String day) {
         this.day = day;
     }

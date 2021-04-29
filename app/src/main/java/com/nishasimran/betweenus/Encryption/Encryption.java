@@ -31,7 +31,7 @@ public class Encryption {
     private final static String TAG = "Encryption";
 
     static {
-        String TAG = "MainActivity";
+        String TAG = "Encryption";
         // Load native library ECDH-Curve25519-Mobile implementing Diffie-Hellman key
         // exchange with elliptic curve 25519.
         try {

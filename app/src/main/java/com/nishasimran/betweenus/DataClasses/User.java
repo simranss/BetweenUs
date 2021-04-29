@@ -3,6 +3,7 @@ package com.nishasimran.betweenus.DataClasses;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.nishasimran.betweenus.Values.DatabaseValues;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class User {
 
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = DatabaseValues.COLUMN_ID)
     private String id;
     @ColumnInfo(name = DatabaseValues.COLUMN_NAME)
@@ -28,6 +30,7 @@ public class User {
 
 
 
+    @Ignore
     public User() {
         // required no argument constructor
     }
@@ -66,6 +69,13 @@ public class User {
     }
 
     // setters
+
+    public void setId(@NotNull String id) {
+        this.id = id;
+    }
+    public void setDob(long dob) {
+        this.dob = dob;
+    }
     public void setName(String name) {
         this.name = name;
     }

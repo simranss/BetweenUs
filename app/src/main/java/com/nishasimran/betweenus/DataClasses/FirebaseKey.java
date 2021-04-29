@@ -36,6 +36,9 @@ public class FirebaseKey {
     }
 
     // setters
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
     public void setCurrMillis(long currMillis) {
         this.currMillis = currMillis;
     }
