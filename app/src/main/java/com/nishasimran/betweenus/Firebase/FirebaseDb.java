@@ -29,6 +29,7 @@ public class FirebaseDb {
     final MutableLiveData<String> lastSeen = new MutableLiveData<>();
     MutableLiveData<Boolean> connected = new MutableLiveData<>();
     final DatabaseReference connectedRef = FirebaseValues.CONNECTED_REF;
+    ValueEventListener connectionChangeListener = null;
 
     private static FirebaseDb INSTANCE = null;
 
@@ -66,9 +67,8 @@ public class FirebaseDb {
         return lastSeen;
     }
 
-    public LiveData<Boolean> listenersForConnectionChanges(String uid, Application application) {
-        connected.setValue(false);
-        connectedRef.addValueEventListener(new ValueEventListener() {
+    private void initListenerForConnectionChange(String uid, Application application) {
+        connectionChangeListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NotNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -102,9 +102,24 @@ public class FirebaseDb {
                 Log.w(TAG, "Listener was cancelled at .info/connected");
                 connected.setValue(false);
             }
-        });
+        };
+    }
+
+    public LiveData<Boolean> listenersForConnectionChanges(String uid, Application application) {
+        connected.setValue(false);
+        if (connectionChangeListener != null) {
+            removeConnectionChangeListener();
+            connectedRef.addValueEventListener(connectionChangeListener);
+        } else {
+            initListenerForConnectionChange(uid, application);
+            connected.setValue(listenersForConnectionChanges(uid, application).getValue());
+        }
 
         return connected;
+    }
+
+    public void removeConnectionChangeListener() {
+        connectedRef.removeEventListener(connectionChangeListener);
     }
 
     public void goOnline() {

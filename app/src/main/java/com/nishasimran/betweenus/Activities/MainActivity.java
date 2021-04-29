@@ -56,10 +56,7 @@ public class MainActivity extends AppCompatActivity {
         addListenerForUserAndKeyData();
 
         // initialising the view model
-        StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().observe(this, aBoolean -> {
-            isInternetAvail = aBoolean;
-            Log.d(TAG, "connected: " + isInternetAvail);
-        });
+        restartListenerForConnectionChange();
         StateViewModel.getInstance(this, getApplication()).getState().observe(this, s -> {
             Log.d(TAG, "state: " + s);
             switch(s) {
@@ -162,6 +159,13 @@ public class MainActivity extends AppCompatActivity {
     public void addListenerForUserAndKeyData() {
         userRef.addChildEventListener(userChildEventListener);
         keyRef.addChildEventListener(keyChildEventListener);
+    }
+
+    public void restartListenerForConnectionChange() {
+        StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().observe(this, aBoolean -> {
+            isInternetAvail = aBoolean;
+            Log.d(TAG, "connected: " + isInternetAvail);
+        });
     }
 
     @Override
