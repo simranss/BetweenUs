@@ -24,7 +24,7 @@ import com.nishasimran.betweenus.Activities.MainActivity;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
-import com.nishasimran.betweenus.Values.FirebaseStrings;
+import com.nishasimran.betweenus.Values.FirebaseValues;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -189,7 +189,7 @@ public class LoginFragment extends Fragment {
                     if (authResult.getUser() != null) {
                         Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID, authResult.getUser().getUid());
                     } else {
-                        Log.w(TAG, "signInWithPhoneAuthCredential", new NullPointerException(FirebaseStrings.USER_NULL));
+                        Log.w(TAG, "signInWithPhoneAuthCredential", new NullPointerException(FirebaseValues.USER_NULL));
                     }
 
                 })

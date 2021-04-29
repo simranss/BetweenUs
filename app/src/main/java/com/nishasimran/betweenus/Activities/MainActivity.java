@@ -12,7 +12,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.nishasimran.betweenus.DataClasses.FirebaseKey;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
@@ -23,7 +22,7 @@ import com.nishasimran.betweenus.Fragments.RegistrationFragment;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Utils.Utils;
-import com.nishasimran.betweenus.Values.FirebaseStrings;
+import com.nishasimran.betweenus.Values.FirebaseValues;
 import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.ViewModels.StateViewModel;
 import com.nishasimran.betweenus.ViewModels.UserViewModel;
@@ -32,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference userRef = database.getReference().child(FirebaseStrings.USERS), keyRef = database.getReference().child(FirebaseStrings.KEYS);
+    DatabaseReference userRef = FirebaseValues.USER_REF, keyRef = FirebaseValues.KEY_REF;
     ChildEventListener userChildEventListener, keyChildEventListener;
 
     private boolean isInternetAvail = false;

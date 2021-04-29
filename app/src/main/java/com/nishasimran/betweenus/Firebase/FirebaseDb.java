@@ -14,7 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.nishasimran.betweenus.Values.CommonValues;
-import com.nishasimran.betweenus.Values.FirebaseStrings;
+import com.nishasimran.betweenus.Values.FirebaseValues;
 import com.nishasimran.betweenus.Utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public class FirebaseDb {
 
     final MutableLiveData<String> lastSeen = new MutableLiveData<>();
     MutableLiveData<Boolean> connected = new MutableLiveData<>();
-    final DatabaseReference connectedRef = database.getReference(FirebaseStrings.NETWORK_STATE_PATH);
+    final DatabaseReference connectedRef = FirebaseValues.CONNECTED_REF;
 
     private static FirebaseDb INSTANCE = null;
 
@@ -41,7 +41,7 @@ public class FirebaseDb {
 
     public LiveData<String> addListenerForServerLastSeen(String serverUid) {
         lastSeen.setValue(null);
-        root.child(FirebaseStrings.USERS).child(serverUid).child(FirebaseStrings.LAST_SEEN).addValueEventListener(new ValueEventListener() {
+        root.child(FirebaseValues.LAST_SEEN).child(serverUid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -79,7 +79,7 @@ public class FirebaseDb {
                         if ((boolean) object) {
                             // When I disconnect, update the last time I was seen online
                             if (uid != null && !uid.equals(CommonValues.NULL)) {
-                                final DatabaseReference lastOnlineRef = root.child(FirebaseStrings.LAST_SEEN).child(uid);
+                                final DatabaseReference lastOnlineRef = root.child(FirebaseValues.LAST_SEEN).child(uid);
                                 lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
 
                                 lastOnlineRef.setValue(CommonValues.STATUS_ONLINE);

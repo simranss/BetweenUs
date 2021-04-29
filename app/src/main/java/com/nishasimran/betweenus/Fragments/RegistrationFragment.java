@@ -29,7 +29,7 @@ import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
-import com.nishasimran.betweenus.Values.FirebaseStrings;
+import com.nishasimran.betweenus.Values.FirebaseValues;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -140,14 +140,14 @@ public class RegistrationFragment extends Fragment {
                         Key key = new Key(keyId, privateKey, publicKey, null, keyCurrMillis);
 
                         database.getReference()
-                                .child(FirebaseStrings.USERS).child(id).setValue(user)
+                                .child(FirebaseValues.USERS).child(id).setValue(user)
                                 .addOnSuccessListener(aVoid -> {
                                     insertUser(user);
 
                                     FirebaseKey fKey = new FirebaseKey(keyId, key.getMyPublic(), keyCurrMillis);
 
                                     database.getReference()
-                                            .child(FirebaseStrings.KEYS).child(id).setValue(fKey)
+                                            .child(FirebaseValues.KEYS).child(id).setValue(fKey)
                                             .addOnSuccessListener(aVoid1 -> {
                                                 insertKey(key);
                                                 updateState(CommonValues.STATE_LOGGED_IN_WITH_REG);
