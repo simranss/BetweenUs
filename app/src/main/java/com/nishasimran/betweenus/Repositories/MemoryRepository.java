@@ -1,6 +1,7 @@
 package com.nishasimran.betweenus.Repositories;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -12,6 +13,8 @@ import com.nishasimran.betweenus.Database.MemoryRoomDatabase;
 import java.util.List;
 
 public class MemoryRepository {
+
+    private final String TAG = "MemoryRepo";
 
     private final MemoryDao dao;
     private final LiveData<List<Memory>> allMemories;
@@ -50,13 +53,13 @@ public class MemoryRepository {
         MemoryRoomDatabase.databaseWriteExecutor.execute(dao::deleteAll);
     }
 
-    public Memory findMemory(String id) {
-        if (allMemories != null ) {
-            if (allMemories.getValue() != null) {
-                for (Memory memory : allMemories.getValue()) {
-                    if (id.equals(memory.getId())) {
-                        return memory;
-                    }
+    public Memory findMemory(String id, List<Memory> memories) {
+        if (memories != null) {
+            Log.d(TAG, "findMemory: memories not null");
+            Log.d(TAG, "Memories: " + memories);
+            for (Memory memory : memories) {
+                if (id.equals(memory.getId())) {
+                    return memory;
                 }
             }
         }

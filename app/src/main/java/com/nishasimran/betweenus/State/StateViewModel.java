@@ -1,4 +1,4 @@
-package com.nishasimran.betweenus.ViewModels;
+package com.nishasimran.betweenus.State;
 
 import android.app.Application;
 import android.util.Log;
@@ -8,8 +8,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
-
-import com.nishasimran.betweenus.Repositories.StateRepository;
 
 public class StateViewModel extends AndroidViewModel {
 

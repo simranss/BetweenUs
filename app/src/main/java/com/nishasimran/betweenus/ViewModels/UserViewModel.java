@@ -21,13 +21,11 @@ public class UserViewModel extends AndroidViewModel {
     private final UserRepository mRepository;
 
     private final LiveData<List<User>> mAllUsers;
-    private final User currentUser;
 
     public UserViewModel (Application application) {
         super(application);
         mRepository = new UserRepository(application);
         mAllUsers = mRepository.getAllUsers();
-        currentUser = mRepository.getCurrentUser();
     }
 
     public static UserViewModel getInstance(@NonNull ViewModelStoreOwner owner, @NonNull Application application) {
@@ -48,7 +46,7 @@ public class UserViewModel extends AndroidViewModel {
 
     public void deleteAll() { mRepository.deleteAll(); }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public User getCurrentUser(List<User> users) {
+        return mRepository.getCurrentUser(users);
     }
 }

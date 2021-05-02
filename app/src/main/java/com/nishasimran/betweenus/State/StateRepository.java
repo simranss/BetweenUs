@@ -1,4 +1,4 @@
-package com.nishasimran.betweenus.Repositories;
+package com.nishasimran.betweenus.State;
 
 import android.app.Application;
 

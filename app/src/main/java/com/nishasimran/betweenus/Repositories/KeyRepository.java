@@ -1,6 +1,7 @@
 package com.nishasimran.betweenus.Repositories;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -13,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class KeyRepository {
+
+    private final String TAG = "KeyRepo";
 
     private final KeyDao keyDao;
     private final LiveData<List<Key>> allKeys;
@@ -51,13 +54,14 @@ public class KeyRepository {
         UserRoomDatabase.databaseWriteExecutor.execute(keyDao::deleteAll);
     }
 
-    public Key findKey(String id) {
-        if (allKeys != null) {
-            if (allKeys.getValue() != null) {
-                for (Key key : allKeys.getValue()) {
-                    if (id.equals(key.getId())) {
-                        return key;
-                    }
+    public Key findKey(String id, List<Key> keys) {
+        Log.d(TAG, "findKey: inside");
+        if (keys != null) {
+            Log.d(TAG, "findKey: keys not null");
+            Log.d(TAG, "Keys: " + keys);
+            for (Key key : keys) {
+                if (id.equals(key.getId())) {
+                    return key;
                 }
             }
         }

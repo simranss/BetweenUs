@@ -50,13 +50,11 @@ public class MessageRepository {
         MessageRoomDatabase.databaseWriteExecutor.execute(messageDao::deleteAll);
     }
 
-    public Message findMessage(String id) {
-        if (allMessages != null) {
-            if (allMessages.getValue() != null) {
-                for (Message message : allMessages.getValue()) {
-                    if (id.equals(message.getId())) {
-                        return message;
-                    }
+    public Message findMessage(String id, List<Message> messages) {
+        if (messages != null) {
+            for (Message message : messages) {
+                if (id.equals(message.getId())) {
+                    return message;
                 }
             }
         }

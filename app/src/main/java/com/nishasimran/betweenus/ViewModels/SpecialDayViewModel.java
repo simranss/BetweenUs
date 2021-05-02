@@ -2,8 +2,11 @@ package com.nishasimran.betweenus.ViewModels;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.nishasimran.betweenus.DataClasses.SpecialDay;
 import com.nishasimran.betweenus.Repositories.SpecialDayRepository;
@@ -11,6 +14,9 @@ import com.nishasimran.betweenus.Repositories.SpecialDayRepository;
 import java.util.List;
 
 public class SpecialDayViewModel extends AndroidViewModel {
+
+    private final String TAG = "SpecialDayVM";
+    private static SpecialDayViewModel INSTANCE = null;
 
     private final SpecialDayRepository repository;
 
@@ -20,6 +26,14 @@ public class SpecialDayViewModel extends AndroidViewModel {
         super(application);
         repository = new SpecialDayRepository(application);
         allSpecialDays = repository.getAllSpecialDays();
+    }
+
+    public static SpecialDayViewModel getInstance(@NonNull ViewModelStoreOwner owner, @NonNull Application application) {
+        if (INSTANCE == null) {
+            ViewModelProvider.AndroidViewModelFactory factory = new ViewModelProvider.AndroidViewModelFactory(application);
+            INSTANCE = new ViewModelProvider(owner, factory).get(SpecialDayViewModel.class);
+        }
+        return INSTANCE;
     }
 
     LiveData<List<SpecialDay>> getAllSpecialDays() { return allSpecialDays; }
@@ -32,7 +46,7 @@ public class SpecialDayViewModel extends AndroidViewModel {
 
     public void deleteAll() { repository.deleteAll(); }
 
-    SpecialDay findSpecialDay(String dayId) {
-        return repository.findSpecialDay(dayId);
+    SpecialDay findSpecialDay(String dayId, List<SpecialDay> specialDays) {
+        return repository.findSpecialDay(dayId, specialDays);
     }
 }

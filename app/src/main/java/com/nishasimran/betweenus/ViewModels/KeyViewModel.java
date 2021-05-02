@@ -1,6 +1,7 @@
 package com.nishasimran.betweenus.ViewModels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -36,7 +37,7 @@ public class KeyViewModel extends AndroidViewModel {
         return INSTANCE;
     }
 
-    LiveData<List<Key>> getAllKeys() { return allKeys; }
+    public LiveData<List<Key>> getAllKeys() { return allKeys; }
 
     public void insert(Key key) { repository.insert(key); }
 
@@ -46,7 +47,8 @@ public class KeyViewModel extends AndroidViewModel {
 
     public void deleteAll() { repository.deleteAll(); }
 
-    public Key findKey(String keyId) {
-        return repository.findKey(keyId);
+    public Key findKey(String keyId, List<Key> keys) {
+        Log.d(TAG, "findKey: inside");
+        return repository.findKey(keyId, keys);
     }
 }

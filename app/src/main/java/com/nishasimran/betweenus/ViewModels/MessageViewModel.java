@@ -46,7 +46,7 @@ public class MessageViewModel extends AndroidViewModel {
 
     public void deleteAll() { mRepository.deleteAll(); }
 
-    Message findMessage(String messageId) {
-        return mRepository.findMessage(messageId);
+    Message findMessage(String messageId, List<Message> messages) {
+        return mRepository.findMessage(messageId, messages);
     }
 }

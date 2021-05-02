@@ -17,7 +17,6 @@ public class UserRepository {
 
     private final UserDao userDao;
     private final LiveData<List<User>> allUsers;
-    private LiveData<User> currentUser;
     private final String uid;
 
     // Note that in order to unit test the UserRepository, you have to remove the Application
@@ -57,13 +56,11 @@ public class UserRepository {
         UserRoomDatabase.databaseWriteExecutor.execute(userDao::deleteAll);
     }
 
-    public User getCurrentUser() {
-        if (allUsers != null) {
-            if (allUsers.getValue() != null) {
-                for (User user : allUsers.getValue()) {
-                    if (uid.equals(user.getId())) {
-                        return user;
-                    }
+    public User getCurrentUser(List<User> users) {
+        if (users != null) {
+            for (User user : users) {
+                if (uid.equals(user.getId())) {
+                    return user;
                 }
             }
         }
