@@ -30,8 +30,4 @@ public interface SpecialDayDao {
 
     @Query("SELECT * FROM " + DatabaseValues.TABLE_SPECIAL_DAY + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<SpecialDay>> getAllSpecialDays();
-
-    // Query with parameter that returns a specific word or words.
-    @Query("SELECT * FROM " + DatabaseValues.TABLE_SPECIAL_DAY + " WHERE " + DatabaseValues.COLUMN_ID + " = :id ")
-    LiveData<SpecialDay> findSpecialDay(String id);
 }

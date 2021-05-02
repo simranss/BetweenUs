@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DAOs.KeyDao;
+import com.nishasimran.betweenus.DataClasses.Album;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.Database.UserRoomDatabase;
 
@@ -50,7 +51,16 @@ public class KeyRepository {
         UserRoomDatabase.databaseWriteExecutor.execute(keyDao::deleteAll);
     }
 
-    public LiveData<Key> findKey(String id) {
-        return keyDao.findKey(id);
+    public Key findKey(String id) {
+        if (allKeys != null) {
+            if (allKeys.getValue() != null) {
+                for (Key key : allKeys.getValue()) {
+                    if (id.equals(key.getId())) {
+                        return key;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

@@ -30,8 +30,4 @@ public interface AlbumDao {
 
     @Query("SELECT * FROM " + DatabaseValues.TABLE_ALBUMS + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Album>> getAllAlbums();
-
-    // Query with parameter that returns a specific word or words.
-    @Query("SELECT * FROM " + DatabaseValues.TABLE_ALBUMS + " WHERE " + DatabaseValues.COLUMN_ID + " = :albumId ")
-    LiveData<Album> findAlbum(String albumId);
 }

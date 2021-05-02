@@ -32,7 +32,7 @@ public class SpecialDayViewModel extends AndroidViewModel {
 
     public void deleteAll() { repository.deleteAll(); }
 
-    LiveData<SpecialDay> findSpecialDay(String dayId) {
+    SpecialDay findSpecialDay(String dayId) {
         return repository.findSpecialDay(dayId);
     }
 }

@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DAOs.MemoryDao;
+import com.nishasimran.betweenus.DataClasses.Album;
 import com.nishasimran.betweenus.DataClasses.Memory;
 import com.nishasimran.betweenus.Database.MemoryRoomDatabase;
 
@@ -49,7 +50,16 @@ public class MemoryRepository {
         MemoryRoomDatabase.databaseWriteExecutor.execute(dao::deleteAll);
     }
 
-    public LiveData<Memory> findMemory(String id) {
-        return dao.findMemory(id);
+    public Memory findMemory(String id) {
+        if (allMemories != null ) {
+            if (allMemories.getValue() != null) {
+                for (Memory memory : allMemories.getValue()) {
+                    if (id.equals(memory.getId())) {
+                        return memory;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

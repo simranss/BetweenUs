@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DAOs.MessageDao;
+import com.nishasimran.betweenus.DataClasses.Album;
 import com.nishasimran.betweenus.DataClasses.Message;
 import com.nishasimran.betweenus.Database.MessageRoomDatabase;
 
@@ -49,7 +50,16 @@ public class MessageRepository {
         MessageRoomDatabase.databaseWriteExecutor.execute(messageDao::deleteAll);
     }
 
-    public LiveData<Message> findMessage(String id) {
-        return messageDao.findMessage(id);
+    public Message findMessage(String id) {
+        if (allMessages != null) {
+            if (allMessages.getValue() != null) {
+                for (Message message : allMessages.getValue()) {
+                    if (id.equals(message.getId())) {
+                        return message;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

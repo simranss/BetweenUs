@@ -17,7 +17,8 @@ public class UserRepository {
 
     private final UserDao userDao;
     private final LiveData<List<User>> allUsers;
-    private final LiveData<User> currentUser;
+    private LiveData<User> currentUser;
+    private final String uid;
 
     // Note that in order to unit test the UserRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -29,8 +30,7 @@ public class UserRepository {
         allUsers = userDao.getAlphabetizedUsers();
 
         SharedPreferences prefs = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        String uid = prefs.getString(CommonValues.SHARED_PREFERENCE_UID, CommonValues.NULL);
-        currentUser = userDao.findUser(uid);
+        uid = prefs.getString(CommonValues.SHARED_PREFERENCE_UID, CommonValues.NULL);
     }
 
     // Room executes all queries on a separate thread.
@@ -58,6 +58,15 @@ public class UserRepository {
     }
 
     public User getCurrentUser() {
-        return currentUser.getValue();
+        if (allUsers != null) {
+            if (allUsers.getValue() != null) {
+                for (User user : allUsers.getValue()) {
+                    if (uid.equals(user.getId())) {
+                        return user;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

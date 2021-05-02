@@ -32,7 +32,7 @@ public class AlbumViewModel extends AndroidViewModel {
 
     void deleteAll() { repository.deleteAll(); }
 
-    LiveData<Album> findAlbum(String albumId) {
+    Album findAlbum(String albumId) {
         return repository.findAlbum(albumId);
     }
 }

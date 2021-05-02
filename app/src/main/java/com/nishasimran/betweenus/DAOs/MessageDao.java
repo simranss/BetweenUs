@@ -30,8 +30,4 @@ public interface MessageDao {
 
     @Query("SELECT * FROM " + DatabaseValues.TABLE_MESSAGES + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Message>> getAllMessages();
-
-    // Query with parameter that returns a specific word or words.
-    @Query("SELECT * FROM " + DatabaseValues.TABLE_MESSAGES + " WHERE " + DatabaseValues.COLUMN_ID + " = :id ")
-    LiveData<Message> findMessage(String id);
 }

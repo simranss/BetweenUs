@@ -49,7 +49,16 @@ public class SpecialDayRepository {
         MemoryRoomDatabase.databaseWriteExecutor.execute(dao::deleteAll);
     }
 
-    public LiveData<SpecialDay> findSpecialDay(String id) {
-        return dao.findSpecialDay(id);
+    public SpecialDay findSpecialDay(String id) {
+        if (allSpecialDays != null) {
+            if (allSpecialDays.getValue() != null) {
+                for (SpecialDay specialDay : allSpecialDays.getValue()) {
+                    if (id.equals(specialDay.getId())) {
+                        return specialDay;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

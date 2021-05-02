@@ -30,7 +30,4 @@ public interface UserDao {
 
     @Query("SELECT * FROM " + DatabaseValues.TABLE_USERS + " ORDER BY " + DatabaseValues.COLUMN_ID + " ASC")
     LiveData<List<User>> getAlphabetizedUsers();
-
-    @Query("SELECT * FROM " + DatabaseValues.TABLE_USERS + " WHERE " + DatabaseValues.COLUMN_ID + "=:uid")
-    LiveData<User> findUser(String uid);
 }

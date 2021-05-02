@@ -46,7 +46,7 @@ public class MessageViewModel extends AndroidViewModel {
 
     public void deleteAll() { mRepository.deleteAll(); }
 
-    LiveData<Message> findMessage(String messageId) {
+    Message findMessage(String messageId) {
         return mRepository.findMessage(messageId);
     }
 }

@@ -30,8 +30,4 @@ public interface MemoryDao {
 
     @Query("SELECT * FROM " + DatabaseValues.TABLE_MEMORIES + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Memory>> getAllMemories();
-
-    // Query with parameter that returns a specific word or words.
-    @Query("SELECT * FROM " + DatabaseValues.TABLE_MEMORIES + " WHERE `" + DatabaseValues.COLUMN_ID + "` = :id ")
-    LiveData<Memory> findMemory(String id);
 }
