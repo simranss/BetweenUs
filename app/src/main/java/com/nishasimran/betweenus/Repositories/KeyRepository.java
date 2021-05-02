@@ -50,35 +50,7 @@ public class KeyRepository {
         UserRoomDatabase.databaseWriteExecutor.execute(keyDao::deleteAll);
     }
 
-    public Key findKeys(long currMillis, byte[] server_public) {
-        List<Key> keys = keyDao.findKeys(currMillis);
-        if (keys.isEmpty()) {
-            return null;
-        } else if (keys.size() == 1) {
-            return keys.get(0);
-        } else {
-            for (Key key : keys) {
-                if (key.getServerPublic().equals(Arrays.toString(server_public))) {
-                    return key;
-                }
-            }
-            return keys.get(0);
-        }
-    }
-
-    public Key findKeys(long currMillis, String server_public) {
-        List<Key> keys = keyDao.findKeys(currMillis);
-        if (keys.isEmpty()) {
-            return null;
-        } else if (keys.size() == 1) {
-            return keys.get(0);
-        } else {
-            for (Key key : keys) {
-                if (key.getServerPublic().equals(server_public)) {
-                    return key;
-                }
-            }
-            return keys.get(0);
-        }
+    public LiveData<Key> findKey(String id) {
+        return keyDao.findKey(id);
     }
 }

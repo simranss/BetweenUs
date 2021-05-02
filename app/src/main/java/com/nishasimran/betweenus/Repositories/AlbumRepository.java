@@ -49,7 +49,7 @@ public class AlbumRepository {
         MemoryRoomDatabase.databaseWriteExecutor.execute(dao::deleteAll);
     }
 
-    public List<Album> findAlbums(String text) {
-        return dao.findAlbums(text);
+    public LiveData<Album> findAlbum(String id) {
+        return dao.findAlbum(id);
     }
 }

@@ -49,7 +49,7 @@ public class MessageRepository {
         MessageRoomDatabase.databaseWriteExecutor.execute(messageDao::deleteAll);
     }
 
-    public List<Message> findMessages(String text) {
-        return messageDao.findMessages(text);
+    public LiveData<Message> findMessage(String id) {
+        return messageDao.findMessage(id);
     }
 }

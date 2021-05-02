@@ -49,7 +49,7 @@ public class MemoryRepository {
         MemoryRoomDatabase.databaseWriteExecutor.execute(dao::deleteAll);
     }
 
-    public List<Memory> findMemories(String text) {
-        return dao.findMemories(text);
+    public LiveData<Memory> findMemory(String id) {
+        return dao.findMemory(id);
     }
 }

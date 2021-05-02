@@ -24,15 +24,15 @@ public class AlbumViewModel extends AndroidViewModel {
 
     LiveData<List<Album>> getAllAlbums() { return allAlbums; }
 
-    public void insert(Album album) { repository.insert(album); }
+    void insert(Album album) { repository.insert(album); }
 
-    public void update(Album album) { repository.update(album); }
+    void update(Album album) { repository.update(album); }
 
-    public void delete(Album album) { repository.delete(album); }
+    void delete(Album album) { repository.delete(album); }
 
-    public void deleteAll() { repository.deleteAll(); }
+    void deleteAll() { repository.deleteAll(); }
 
-    List<Album> findAlbums(String text) {
-        return repository.findAlbums(text);
+    LiveData<Album> findAlbum(String albumId) {
+        return repository.findAlbum(albumId);
     }
 }

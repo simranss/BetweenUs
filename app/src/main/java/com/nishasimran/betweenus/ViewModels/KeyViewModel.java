@@ -46,11 +46,7 @@ public class KeyViewModel extends AndroidViewModel {
 
     public void deleteAll() { repository.deleteAll(); }
 
-    Key findKeys(long currMillis, String serverPublic) {
-        return repository.findKeys(currMillis, serverPublic);
-    }
-
-    Key findKeys(long currMillis, byte[] serverPublic) {
-        return repository.findKeys(currMillis, serverPublic);
+    public LiveData<Key> findKey(String keyId) {
+        return repository.findKey(keyId);
     }
 }

@@ -32,6 +32,6 @@ public interface MessageDao {
     LiveData<List<Message>> getAllMessages();
 
     // Query with parameter that returns a specific word or words.
-    @Query("SELECT * FROM " + DatabaseValues.TABLE_MESSAGES + " WHERE " + DatabaseValues.COLUMN_MESSAGE + " LIKE :text ")
-    List<Message> findMessages(String text);
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_MESSAGES + " WHERE " + DatabaseValues.COLUMN_ID + " = :id ")
+    LiveData<Message> findMessage(String id);
 }

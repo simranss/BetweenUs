@@ -32,5 +32,5 @@ public interface UserDao {
     LiveData<List<User>> getAlphabetizedUsers();
 
     @Query("SELECT * FROM " + DatabaseValues.TABLE_USERS + " WHERE " + DatabaseValues.COLUMN_ID + "=:uid")
-    LiveData<User> getCurrentUser(String uid);
+    LiveData<User> findUser(String uid);
 }

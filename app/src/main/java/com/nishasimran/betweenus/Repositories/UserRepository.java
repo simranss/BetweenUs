@@ -30,7 +30,7 @@ public class UserRepository {
 
         SharedPreferences prefs = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         String uid = prefs.getString(CommonValues.SHARED_PREFERENCE_UID, CommonValues.NULL);
-        currentUser = userDao.getCurrentUser(uid);
+        currentUser = userDao.findUser(uid);
     }
 
     // Room executes all queries on a separate thread.

@@ -31,6 +31,6 @@ public interface KeyDao {
     @Query("SELECT * FROM " + DatabaseValues.TABLE_KEYS + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Key>> getAllKeys();
 
-    @Query("SELECT * FROM " + DatabaseValues.TABLE_KEYS + " WHERE " + DatabaseValues.COLUMN_CURR_MILLIS + " LIKE :currMillis ")
-    List<Key> findKeys(long currMillis);
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_KEYS + " WHERE " + DatabaseValues.COLUMN_ID + " = :id ")
+    LiveData<Key> findKey(String id);
 }

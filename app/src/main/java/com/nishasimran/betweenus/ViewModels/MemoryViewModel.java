@@ -32,7 +32,7 @@ public class MemoryViewModel extends AndroidViewModel {
 
     public void deleteAll() { repository.deleteAll(); }
 
-    List<Memory> findMemories(String text) {
-        return repository.findMemories(text);
+    LiveData<Memory> findMemory(String memoryId) {
+        return repository.findMemory(memoryId);
     }
 }

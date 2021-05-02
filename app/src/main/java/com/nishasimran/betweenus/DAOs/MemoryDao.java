@@ -32,6 +32,6 @@ public interface MemoryDao {
     LiveData<List<Memory>> getAllMemories();
 
     // Query with parameter that returns a specific word or words.
-    @Query("SELECT * FROM " + DatabaseValues.TABLE_MEMORIES + " WHERE `" + DatabaseValues.COLUMN_DESC + "` LIKE :text ")
-    List<Memory> findMemories(String text);
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_MEMORIES + " WHERE `" + DatabaseValues.COLUMN_ID + "` = :id ")
+    LiveData<Memory> findMemory(String id);
 }
