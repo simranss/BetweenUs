@@ -36,4 +36,6 @@ public class CommonValues {
     public final static int PHONE_LENGTH = 10;
     public final static int OTP_LENGTH = 6;
 
+    public final static long MIN_DOB = 989519400000L;
+
 }
