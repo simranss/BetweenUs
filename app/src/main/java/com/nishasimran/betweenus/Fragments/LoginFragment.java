@@ -98,7 +98,7 @@ public class LoginFragment extends Fragment {
             disableView(submitButton);
             signIn(activity, phone, generateCallbacks());
         } else {
-            phoneEditText.setError(getString(R.string.phone_error));
+            phoneEditText.setError(CommonValues.ERROR_PHONE);
         }
     }
 
@@ -111,7 +111,7 @@ public class LoginFragment extends Fragment {
             disableView(submitButton);
             signInWithCode(activity.getApplication(), code, verificationId);
         } else {
-            codeEditText.setError(getString(R.string.otp_error));
+            codeEditText.setError(CommonValues.ERROR_OTP);
         }
     }
 

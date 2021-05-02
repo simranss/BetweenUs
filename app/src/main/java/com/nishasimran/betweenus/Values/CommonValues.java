@@ -30,8 +30,12 @@ public class CommonValues {
     public final static String SHARED_PREFERENCE_UID = "uid";
     public final static String SHARED_PREFERENCE_SERVER_UID = "server_uid";
     public final static String SHARED_PREFERENCE_STATE = "state";
-    public final static String SHARED_PREFERENCE_SERVER_LAST_SEEN = "server_last_seen";
     public final static String SHARED_PREFERENCE_CONNECTION = "connection";
+
+    public final static String ERROR_PHONE = "Please enter a valid phone number";
+    public final static String ERROR_OTP = "Invalid OTP";
+    public final static String ERROR_REQUIRED = "Required";
+    public final static String ERROR_EMAIL = "Please enter a valid email";
 
     public final static int PHONE_LENGTH = 10;
     public final static int OTP_LENGTH = 6;
