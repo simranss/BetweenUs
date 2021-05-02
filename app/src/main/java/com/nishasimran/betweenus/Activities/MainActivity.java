@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -25,8 +24,10 @@ import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.FirebaseValues;
 import com.nishasimran.betweenus.ViewModels.KeyViewModel;
-import com.nishasimran.betweenus.ViewModels.StateViewModel;
+import com.nishasimran.betweenus.State.StateViewModel;
 import com.nishasimran.betweenus.ViewModels.UserViewModel;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseReference userRef = FirebaseValues.USER_REF, keyRef = FirebaseValues.KEY_REF;
     ChildEventListener userChildEventListener, keyChildEventListener;
+
+    private List<Key> keys;
 
     private boolean isInternetAvail = false;
     private int fragmentIndex = 0;
@@ -79,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, mainFragment);
                     break;
             }
+        });
+
+        KeyViewModel.getInstance(this, getApplication()).getAllKeys().observe(this, keys -> {
+            this.keys = keys;
+            Log.d(TAG, "Keys updated: " + keys);
         });
     }
 
@@ -140,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseKey fKey = snapshot.getValue(FirebaseKey.class);
                     if (fKey != null) {
                         Log.d(TAG, "Key: " + fKey);
-                        Key tmpKey = KeyViewModel.getInstance(MainActivity.this, getApplication()).findKey(fKey.getId());
+                        Key tmpKey = KeyViewModel.getInstance(MainActivity.this, getApplication()).findKey(fKey.getId(), keys);
                         if (tmpKey != null) {
                             Log.d(TAG, "database key: " + tmpKey);
                             if (!tmpKey.getMyPublic().equals(fKey.getMyPublic())) {
@@ -149,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                                 snapshot.getRef().removeValue();
                             }
                         } else {
+                            Log.d(TAG, "database key: null");
                             Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
                             insertKey(key);
                             snapshot.getRef().removeValue();

@@ -43,7 +43,7 @@ public class RegistrationFragment extends Fragment {
 
     private final Activity activity;
 
-    private FirebaseAuth auth;
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -80,6 +80,13 @@ public class RegistrationFragment extends Fragment {
         setDefaults();
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        currentUser = auth.getCurrentUser();
     }
 
     private void initViews(@NotNull View parent) {
@@ -120,9 +127,6 @@ public class RegistrationFragment extends Fragment {
                 progressBar.setVisibility(View.VISIBLE);
                 if (validateInputs()) {
 
-                    auth = FirebaseAuth.getInstance();
-                    currentUser = auth.getCurrentUser();
-
                     if (currentUser != null) {
                         id = currentUser.getUid();
                         phone = currentUser.getPhoneNumber();
@@ -139,17 +143,18 @@ public class RegistrationFragment extends Fragment {
 
                         Key key = new Key(keyId, privateKey, publicKey, null, keyCurrMillis);
 
+                        insertUser(user);
+                        insertKey(key);
+
                         database.getReference()
                                 .child(FirebaseValues.USERS).child(id).setValue(user)
                                 .addOnSuccessListener(aVoid -> {
-                                    insertUser(user);
 
                                     FirebaseKey fKey = new FirebaseKey(keyId, key.getMyPublic(), keyCurrMillis);
 
                                     database.getReference()
                                             .child(FirebaseValues.KEYS).child(keyId).setValue(fKey)
                                             .addOnSuccessListener(aVoid1 -> {
-                                                insertKey(key);
                                                 updateState(CommonValues.STATE_LOGGED_IN_WITH_REG);
                                                 progressBar.setVisibility(View.GONE);
                                             })
@@ -179,23 +184,23 @@ public class RegistrationFragment extends Fragment {
 
     private boolean validateInputs() {
         if (nameEditText.getText().toString().trim().isEmpty()) {
-            nameEditText.setError(getString(R.string.required));
+            nameEditText.setError(CommonValues.ERROR_REQUIRED);
             return false;
         }
         if (dobEditText.getText().toString().trim().isEmpty()) {
-            dobEditText.setError(getString(R.string.required));
+            dobEditText.setError(CommonValues.ERROR_REQUIRED);
             return false;
         }
         if (dob == 0) {
-            dobEditText.setError(getString(R.string.required));
+            dobEditText.setError(CommonValues.ERROR_REQUIRED);
             return false;
         }
         if (emailEditText.getText().toString().trim().isEmpty()) {
-            emailEditText.setError(getString(R.string.required));
+            emailEditText.setError(CommonValues.ERROR_REQUIRED);
             return false;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText().toString().trim()).matches()) {
-            emailEditText.setError(getString(R.string.email_error));
+            emailEditText.setError(CommonValues.ERROR_EMAIL);
             return false;
         }
         return true;
