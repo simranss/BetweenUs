@@ -97,7 +97,6 @@ public class RegistrationFragment extends Fragment {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH);
             int year = calendar.get(Calendar.YEAR);
-            long tmpDob = calendar.getTimeInMillis();
             // date picker dialog
             datePicker = new DatePickerDialog(getContext(), (view, year1, monthOfYear, dayOfMonth) -> {
 
@@ -106,7 +105,8 @@ public class RegistrationFragment extends Fragment {
                 myCalendar.set(Calendar.YEAR, year1);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                if (myCalendar.getTimeInMillis() != tmpDob) {
+                Log.d(TAG, "selected date millis: " + myCalendar.getTimeInMillis());
+                if (myCalendar.getTimeInMillis() < CommonValues.MIN_DOB) {
                     dob = myCalendar.getTimeInMillis();
                     dobEditText.setText(Utils.getFormattedDate(myCalendar.getTimeInMillis()));
                 }
@@ -147,7 +147,7 @@ public class RegistrationFragment extends Fragment {
                                     FirebaseKey fKey = new FirebaseKey(keyId, key.getMyPublic(), keyCurrMillis);
 
                                     database.getReference()
-                                            .child(FirebaseValues.KEYS).child(id).setValue(fKey)
+                                            .child(FirebaseValues.KEYS).child(keyId).setValue(fKey)
                                             .addOnSuccessListener(aVoid1 -> {
                                                 insertKey(key);
                                                 updateState(CommonValues.STATE_LOGGED_IN_WITH_REG);
