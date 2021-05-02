@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -139,9 +140,19 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseKey fKey = snapshot.getValue(FirebaseKey.class);
                     if (fKey != null) {
                         Log.d(TAG, "Key: " + fKey);
-                        Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
-                        insertKey(key);
-                        snapshot.getRef().removeValue();
+                        Key tmpKey = KeyViewModel.getInstance(MainActivity.this, getApplication()).findKey(fKey.getId());
+                        if (tmpKey != null) {
+                            Log.d(TAG, "database key: " + tmpKey);
+                            if (!tmpKey.getMyPublic().equals(fKey.getMyPublic())) {
+                                Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
+                                insertKey(key);
+                                snapshot.getRef().removeValue();
+                            }
+                        } else {
+                            Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
+                            insertKey(key);
+                            snapshot.getRef().removeValue();
+                        }
                     }
                 }
             }
