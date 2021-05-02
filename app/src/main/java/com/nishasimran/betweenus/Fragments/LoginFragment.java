@@ -187,6 +187,8 @@ public class LoginFragment extends Fragment {
                     disableView(submitButton);
                     updateState(CommonValues.STATE_LOGGED_IN_NO_REG);
                     if (authResult.getUser() != null) {
+                        ((MainActivity) activity).removeListenerForUserAndKeyData();
+                        ((MainActivity) activity).addListenerForUserAndKeyData();
                         Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID, authResult.getUser().getUid());
                     } else {
                         Log.w(TAG, "signInWithPhoneAuthCredential", new NullPointerException(FirebaseValues.USER_NULL));
