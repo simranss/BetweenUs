@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference userRef = FirebaseValues.USER_REF, keyRef = FirebaseValues.KEY_REF;
     ChildEventListener userChildEventListener, keyChildEventListener;
 
+    Observer<Boolean> connectionObserver;
+
     private List<Key> keys;
 
     private boolean isInternetAvail = false;
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         addListenerForUserAndKeyData();
 
         // initialising the view model
+        initConnectionObserver();
         restartListenerForConnectionChange();
         StateViewModel.getInstance(this, getApplication()).getState().observe(this, s -> {
             Log.d(TAG, "state: " + s);
@@ -176,6 +180,13 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    private void initConnectionObserver() {
+        connectionObserver = aBoolean -> {
+            isInternetAvail = aBoolean;
+            Log.d(TAG, "connected: " + isInternetAvail);
+        };
+    }
+
     public void removeListenerForUserAndKeyData() {
         userRef.removeEventListener(userChildEventListener);
         keyRef.removeEventListener(keyChildEventListener);
@@ -187,10 +198,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void restartListenerForConnectionChange() {
-        StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().observe(this, aBoolean -> {
-            isInternetAvail = aBoolean;
-            Log.d(TAG, "connected: " + isInternetAvail);
-        });
+        StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().removeObserver(connectionObserver);
+        StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().observe(this, connectionObserver);
     }
 
     @Override

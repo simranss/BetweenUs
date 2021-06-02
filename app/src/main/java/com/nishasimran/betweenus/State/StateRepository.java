@@ -14,7 +14,8 @@ import org.jetbrains.annotations.NotNull;
 public class StateRepository {
 
     private final Application application;
-    private final String uid, serverUid;
+    private String uid;
+    private final String serverUid;
     private MutableLiveData<String> state;
 
     public StateRepository(@NotNull Application application) {
@@ -52,6 +53,7 @@ public class StateRepository {
     }
 
     public LiveData<Boolean> addListenerForConnectionChanges() {
+        uid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID);
         return FirebaseDb.getInstance().listenersForConnectionChanges(uid, application);
     }
 
