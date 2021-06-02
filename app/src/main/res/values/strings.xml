@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Between Us</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Coming Soon</string>
 
     <!-- Description strings -->
     <string name="icon_desc">App logo</string>
@@ -16,4 +16,9 @@
     <!-- Standard strings -->
     <string name="submit">Submit</string>
     <string name="save">Save</string>
+
+    <!-- Navigation drawer strings -->
+    <string name="nav_chat">Chat</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_ds">DS</string>
 </resources>
