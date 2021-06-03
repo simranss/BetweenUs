@@ -38,8 +38,7 @@ public class MainFragment extends Fragment {
     private final AppCompatActivity activity;
 
     // navigation UI
-    DrawerLayout drawerLayout;
-    NavigationView navView;
+    private DrawerLayout drawerLayout;
 
     // viewPager
     private ViewPager2 viewPager;
@@ -65,7 +64,7 @@ public class MainFragment extends Fragment {
 
         // initialize the drawer layout
         drawerLayout = parent.findViewById(R.id.main_drawer);
-        navView = parent.findViewById(R.id.main_nav_view);
+        NavigationView navView = parent.findViewById(R.id.main_nav_view);
 
         viewPager = parent.findViewById(R.id.main_view_pager);
 
