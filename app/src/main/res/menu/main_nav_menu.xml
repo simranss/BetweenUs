@@ -15,6 +15,10 @@
             android:id="@+id/menu_settings"
             android:title="@string/nav_settings" />
 
+        <item
+            android:id="@+id/menu_logout"
+            android:title="@string/nav_logout" />
+
     </group>
 
 </menu>

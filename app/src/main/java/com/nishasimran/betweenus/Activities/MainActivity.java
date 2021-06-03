@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private int fragmentIndex = 0;
     private String uid;
 
-    private Fragment loginFragment, registrationFragment, mainFragment;
+    private Fragment loginFragment, registrationFragment;
+    private MainFragment mainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,5 +213,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+
+        if (mainFragment.isDrawerOpen()) {
+            mainFragment.closeDrawer();
+
+        } else if (!mainFragment.isHomeFragment()) {
+            mainFragment.loadFragment(0);
+
+        } else {
+            super.onBackPressed();
+        }
     }
 }
