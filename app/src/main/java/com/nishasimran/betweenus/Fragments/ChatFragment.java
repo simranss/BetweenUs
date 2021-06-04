@@ -76,7 +76,7 @@ public class ChatFragment extends Fragment {
     private void blurBackground() {
         if (getContext() != null) {
             if (root.getWidth() > 0) {
-                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), R.drawable.background_01_img, 0.9f, 3f);
+                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), R.drawable.background_01_img, 0.7f, null);
                 root.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
             } else {
                 root.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
@@ -87,14 +87,18 @@ public class ChatFragment extends Fragment {
     private void initOnGlobalLayoutListener() {
         if (getContext() != null)
             onGlobalLayoutListener = () -> {
-                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), R.drawable.background_01_img, 0.9f, 3f);
-                root.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
+                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), R.drawable.background_01_img, 0.7f, null);
+                if (blurredBitmap != null) {
+                    root.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
+                } else {
+                    root.setBackgroundResource(R.drawable.background_01_img);
+                }
             };
     }
 
     @Override
-    public void onDestroyView() {
+    public void onPause() {
         root.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
-        super.onDestroyView();
+        super.onPause();
     }
 }
