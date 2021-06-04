@@ -18,39 +18,62 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/frag_log_phone"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/frag_log_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="32dp"
-        android:autofillHints="@string/phone_hint"
-        android:background="@drawable/edit_text_background"
-        android:hint="@string/phone_hint"
-        android:inputType="phone"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frag_log_icon" />
-
-    <EditText
-        android:id="@+id/frag_log_code"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/white_30"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="16dp"
-        android:autofillHints="@string/code_hint"
-        android:background="@drawable/edit_text_background"
-        android:hint="@string/code_hint"
-        android:inputType="number"
-        android:maxLength="6"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frag_log_phone" />
+        app:layout_constraintTop_toBottomOf="@id/frag_log_icon">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/white_40"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="28dp">
+
+            <EditText
+                android:id="@+id/frag_log_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:autofillHints="@string/phone_hint"
+                android:background="@drawable/edit_text_background"
+                android:hint="@string/phone_hint"
+                android:inputType="phone"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/frag_log_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:autofillHints="@string/code_hint"
+                android:background="@drawable/edit_text_background"
+                android:hint="@string/code_hint"
+                android:inputType="number"
+                android:maxLength="6"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/frag_log_phone" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <ProgressBar
         android:id="@+id/frag_log_progress"
@@ -61,7 +84,7 @@
         app:layout_constraintBottom_toTopOf="@id/frag_log_submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frag_log_code"
+        app:layout_constraintTop_toBottomOf="@id/frag_log_card"
         app:layout_constraintVertical_bias="0.75" />
 
     <Button

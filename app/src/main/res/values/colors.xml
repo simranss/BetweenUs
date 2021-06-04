@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#103a5c</color>
-    <color name="primaryLightColor">#436489</color>
-    <color name="primaryDarkColor">#001432</color>
-    <color name="secondaryColor">#41688e</color>
-    <color name="secondaryLightColor">#7196be</color>
-    <color name="secondaryDarkColor">#0a3e60</color>
-    <color name="primaryTextColor">@color/white</color>
-    <color name="secondaryTextColor">@color/white</color>
-    <color name="surfaceColor">#a6cee8</color>
-    <color name="surfaceTextColor">#429bdb</color>
-    <color name="backgroundColor">#e1e2e1</color>
+    <color name="primaryColor">#f6b8c3</color>
+    <color name="primaryLightColor">#ffebf6</color>
+    <color name="primaryDarkColor">#c28893</color>
+    <color name="secondaryColor">#f48fb1</color>
+    <color name="secondaryLightColor">#ffc1e3</color>
+    <color name="secondaryDarkColor">#bf5f82</color>
+    <color name="primaryTextColor">@color/black</color>
+    <color name="secondaryTextColor">@color/black</color>
+    <color name="surfaceColor">#ece0e0</color>
+    <color name="surfaceTextColor">@color/black</color>
 
     <color name="white">#ffffff</color>
     <color name="grey">#777777</color>
+    <color name="black">#000000</color>
+
+    <color name="white_10">#19ffffff</color>
+    <color name="white_20">#33ffffff</color>
+    <color name="white_30">#4cffffff</color>
+    <color name="white_40">#66FFFFFF</color>
+    <color name="white_50">#7fFFFFFF</color>
+    <color name="white_60">#</color>
 
 </resources>
