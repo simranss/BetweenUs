@@ -16,11 +16,20 @@ public class BlurBuilder {
     private static final float BITMAP_SCALE = 0.4f;
     private static final float BLUR_RADIUS = 7.5f;
 
-    public static Bitmap blur(Context context, @DrawableRes int drawableId) {
+    public static Bitmap blur(Context context, @DrawableRes int drawableId, Float scale, Float radius) {
         Bitmap image = BitmapFactory.decodeResource(context.getResources(), drawableId);
 
-        int width = Math.round(image.getWidth() * BITMAP_SCALE);
-        int height = Math.round(image.getHeight() * BITMAP_SCALE);
+        int width, height;
+        if (scale != null) {
+            width = Math.round(image.getWidth() * scale);
+        } else {
+            width = Math.round(image.getWidth() * BITMAP_SCALE);
+        }
+        if (radius != null) {
+            height = Math.round(image.getHeight() * radius);
+        } else {
+            height = Math.round(image.getHeight() * BITMAP_SCALE);
+        }
 
         Bitmap inputBitmap = Bitmap.createScaledBitmap(image, width, height, false);
         Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap);
