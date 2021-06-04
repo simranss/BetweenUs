@@ -5,6 +5,10 @@
 
     <!-- Description strings -->
     <string name="icon_desc">App logo</string>
+    <string name="nav_drawer_desc">Open Navigation drawer</string>
+    <string name="send_desc">Send</string>
+    <string name="dp_desc">Profile picture</string>
+    <string name="call_desc">Call</string>
 
     <!-- Hint strings -->
     <string name="phone_hint">phone no.</string>
@@ -12,12 +16,14 @@
     <string name="name_hint">Enter your name</string>
     <string name="email_hint">Enter your email</string>
     <string name="dob_hint">Enter your date of birth</string>
+    <string name="message_hint">Message</string>
 
     <!-- Standard strings -->
     <string name="submit">Submit</string>
     <string name="save">Save</string>
 
     <!-- Navigation drawer strings -->
+    <string name="nav_general">General</string>
     <string name="nav_chat">Chat</string>
     <string name="nav_docs">Docs</string>
     <string name="nav_for_us">For Us</string>
