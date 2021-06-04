@@ -98,6 +98,26 @@ public class MainFragment extends Fragment {
                 if (isDocsExpanded) {
                     if (viewPager.getCurrentItem() != 5 && viewPager.getCurrentItem() != 6 && viewPager.getCurrentItem() != 7) {
                         setDocsExpanded(false);
+                        switch (viewPager.getCurrentItem()) {
+                            case 0:
+                                checkMenuItem(R.id.menu_chat);
+                                break;
+                            case 1:
+                                checkMenuItem(R.id.menu_memories);
+                                break;
+                            case 2:
+                                checkMenuItem(R.id.menu_calendar);
+                                break;
+                            case 3:
+                                checkMenuItem(R.id.menu_tasks);
+                                break;
+                            case 4:
+                                checkMenuItem(R.id.menu_ds);
+                                break;
+                            case 8:
+                                checkMenuItem(R.id.menu_settings);
+                                break;
+                        }
                     }
                 }
             }
@@ -115,45 +135,30 @@ public class MainFragment extends Fragment {
                     loadFragment(0);
 
                     closeDrawer();
-                    if (isDocsExpanded) {
-                        setDocsExpanded(false);
-                    }
                     break;
                 case R.id.menu_memories:
                     Log.d(TAG, "Memories clicked");
                     loadFragment(1);
 
                     closeDrawer();
-                    if (isDocsExpanded) {
-                        setDocsExpanded(false);
-                    }
                     break;
                 case R.id.menu_calendar:
                     Log.d(TAG, "Calendar clicked");
                     loadFragment(2);
 
                     closeDrawer();
-                    if (isDocsExpanded) {
-                        setDocsExpanded(false);
-                    }
                     break;
                 case R.id.menu_tasks:
                     Log.d(TAG, "Tasks clicked");
                     loadFragment(3);
 
                     closeDrawer();
-                    if (isDocsExpanded) {
-                        setDocsExpanded(false);
-                    }
                     break;
                 case R.id.menu_ds:
                     Log.d(TAG, "DS clicked");
                     loadFragment(4);
 
                     closeDrawer();
-                    if (isDocsExpanded) {
-                        setDocsExpanded(false);
-                    }
                     break;
                 case R.id.menu_docs:
                     Log.d(TAG, "Docs clicked");
@@ -182,9 +187,6 @@ public class MainFragment extends Fragment {
                     loadFragment(8);
 
                     closeDrawer();
-                    if (isDocsExpanded) {
-                        setDocsExpanded(false);
-                    }
                     break;
                 case R.id.menu_logout:
                     Log.d(TAG, "Logout clicked");
@@ -196,9 +198,6 @@ public class MainFragment extends Fragment {
                     loadFragment(0);
 
                     closeDrawer();
-                    if (isDocsExpanded) {
-                        setDocsExpanded(false);
-                    }
             }
 
             return true;
@@ -250,7 +249,7 @@ public class MainFragment extends Fragment {
 
     // load a fragment
     public void loadFragment(int index) {
-        viewPager.setCurrentItem(index, true);
+        viewPager.setCurrentItem(index, false);
     }
 
     public void openDrawer() {
