@@ -12,11 +12,11 @@ import com.nishasimran.betweenus.R;
 
 import org.jetbrains.annotations.NotNull;
 
-public class SettingsFragment extends Fragment {
+public class DocsDreamsFragment extends Fragment {
 
     private final MainFragment mainFragment;
 
-    public SettingsFragment(MainFragment fragment) {
+    public DocsDreamsFragment(MainFragment fragment) {
         mainFragment = fragment;
     }
 
@@ -27,12 +27,12 @@ public class SettingsFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mainFragment.isDocsExpanded()) {
-            mainFragment.setDocsExpanded(false);
+        if (!mainFragment.isDocsExpanded()) {
+            mainFragment.setDocsExpanded(true);
         }
-        mainFragment.checkMenuItem(R.id.menu_settings);
+        mainFragment.checkMenuItem(R.id.menu_docs_dreams);
         // Inflate the layout for this fragment
-        View parent = inflater.inflate(R.layout.fragment_settings, container, false);
+        View parent = inflater.inflate(R.layout.fragment_docs_dreams, container, false);
 
         return parent;
     }

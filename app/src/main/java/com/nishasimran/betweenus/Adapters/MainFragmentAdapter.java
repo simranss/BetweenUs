@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.nishasimran.betweenus.Fragments.MainFragment;
+import com.nishasimran.betweenus.R;
 
 import java.util.ArrayList;
 
@@ -31,5 +32,6 @@ public class MainFragmentAdapter extends FragmentStateAdapter {
 
     public void addFrag(Fragment fragment) {
         fragments.add(fragment);
+        notifyDataSetChanged();
     }
 }

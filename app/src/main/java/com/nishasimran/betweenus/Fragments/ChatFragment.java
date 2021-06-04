@@ -25,6 +25,10 @@ public class ChatFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (mainFragment.isDocsExpanded()) {
+            mainFragment.setDocsExpanded(false);
+        }
+        mainFragment.checkMenuItem(R.id.menu_chat);
         // Inflate the layout for this fragment
         View parent = inflater.inflate(R.layout.fragment_chat, container, false);
 

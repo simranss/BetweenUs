@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 
 import com.nishasimran.betweenus.R;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DsFragment extends Fragment {
 
     private final MainFragment mainFragment;
@@ -24,7 +26,11 @@ public class DsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (mainFragment.isDocsExpanded()) {
+            mainFragment.setDocsExpanded(false);
+        }
+        mainFragment.checkMenuItem(R.id.menu_ds);
         // Inflate the layout for this fragment
         View parent = inflater.inflate(R.layout.fragment_ds, container, false);
 

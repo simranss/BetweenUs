@@ -2,6 +2,7 @@ package com.nishasimran.betweenus.Fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,12 +13,12 @@ import com.nishasimran.betweenus.R;
 
 import org.jetbrains.annotations.NotNull;
 
-public class SettingsFragment extends Fragment {
+public class MemoriesFragment extends Fragment {
 
     private final MainFragment mainFragment;
 
-    public SettingsFragment(MainFragment fragment) {
-        mainFragment = fragment;
+    public MemoriesFragment(MainFragment fragment) {
+        this.mainFragment = fragment;
     }
 
     @Override
@@ -30,9 +31,9 @@ public class SettingsFragment extends Fragment {
         if (mainFragment.isDocsExpanded()) {
             mainFragment.setDocsExpanded(false);
         }
-        mainFragment.checkMenuItem(R.id.menu_settings);
+        mainFragment.checkMenuItem(R.id.menu_memories);
         // Inflate the layout for this fragment
-        View parent = inflater.inflate(R.layout.fragment_settings, container, false);
+        View parent = inflater.inflate(R.layout.fragment_memories, container, false);
 
         return parent;
     }

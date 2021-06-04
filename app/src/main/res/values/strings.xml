@@ -19,7 +19,14 @@
 
     <!-- Navigation drawer strings -->
     <string name="nav_chat">Chat</string>
+    <string name="nav_docs">Docs</string>
+    <string name="nav_for_us">For Us</string>
+    <string name="nav_poems">Poems</string>
+    <string name="nav_dreams">Dreams</string>
     <string name="nav_settings">Settings</string>
-    <string name="nav_ds">DS</string>
+    <string name="nav_calendar">Calendar</string>
+    <string name="nav_memories">Memories</string>
+    <string name="nav_tasks">Tasks</string>
+    <string name="nav_ds">DS Zone</string>
     <string name="nav_logout">Logout</string>
 </resources>

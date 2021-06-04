@@ -12,11 +12,11 @@ import com.nishasimran.betweenus.R;
 
 import org.jetbrains.annotations.NotNull;
 
-public class SettingsFragment extends Fragment {
+public class TasksFragment extends Fragment {
 
     private final MainFragment mainFragment;
 
-    public SettingsFragment(MainFragment fragment) {
+    public TasksFragment(MainFragment fragment) {
         mainFragment = fragment;
     }
 
@@ -30,9 +30,9 @@ public class SettingsFragment extends Fragment {
         if (mainFragment.isDocsExpanded()) {
             mainFragment.setDocsExpanded(false);
         }
-        mainFragment.checkMenuItem(R.id.menu_settings);
+        mainFragment.checkMenuItem(R.id.menu_tasks);
         // Inflate the layout for this fragment
-        View parent = inflater.inflate(R.layout.fragment_settings, container, false);
+        View parent = inflater.inflate(R.layout.fragment_tasks, container, false);
 
         return parent;
     }

@@ -8,9 +8,55 @@
         <item
             android:id="@+id/menu_chat"
             android:title="@string/nav_chat" />
+
+        <item
+            android:id="@+id/menu_memories"
+            android:title="@string/nav_memories" />
+
+        <item
+            android:id="@+id/menu_calendar"
+            android:title="@string/nav_calendar" />
+
+        <item
+            android:id="@+id/menu_tasks"
+            android:title="@string/nav_tasks" />
+
         <item
             android:id="@+id/menu_ds"
             android:title="@string/nav_ds" />
+
+        <item
+            android:id="@+id/menu_docs"
+            android:title="@string/nav_docs" />
+
+        <item
+            android:id="@+id/menu_docs_expand"
+            android:title="@string/nav_docs">
+
+            <menu>
+
+                <group
+                    android:id="@+id/menu_docs_grp"
+                    android:checkableBehavior="single">
+
+                    <item
+                        android:id="@+id/menu_docs_forus"
+                        android:title="@string/nav_for_us" />
+
+                    <item
+                        android:id="@+id/menu_docs_poems"
+                        android:title="@string/nav_poems" />
+
+                    <item
+                        android:id="@+id/menu_docs_dreams"
+                        android:title="@string/nav_dreams" />
+
+                </group>
+
+            </menu>
+
+        </item>
+
         <item
             android:id="@+id/menu_settings"
             android:title="@string/nav_settings" />
