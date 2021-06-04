@@ -27,13 +27,18 @@ public class DsFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mainFragment.isDocsExpanded()) {
-            mainFragment.setDocsExpanded(false);
-        }
-        mainFragment.checkMenuItem(R.id.menu_ds);
         // Inflate the layout for this fragment
         View parent = inflater.inflate(R.layout.fragment_ds, container, false);
 
         return parent;
+    }
+
+    @Override
+    public void onResume() {
+        if (mainFragment.isDocsExpanded()) {
+            mainFragment.setDocsExpanded(false);
+        }
+        mainFragment.checkMenuItem(R.id.menu_ds);
+        super.onResume();
     }
 }

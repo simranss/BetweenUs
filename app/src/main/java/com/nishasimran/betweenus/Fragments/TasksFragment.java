@@ -27,13 +27,18 @@ public class TasksFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mainFragment.isDocsExpanded()) {
-            mainFragment.setDocsExpanded(false);
-        }
-        mainFragment.checkMenuItem(R.id.menu_tasks);
         // Inflate the layout for this fragment
         View parent = inflater.inflate(R.layout.fragment_tasks, container, false);
 
         return parent;
+    }
+
+    @Override
+    public void onResume() {
+        if (mainFragment.isDocsExpanded()) {
+            mainFragment.setDocsExpanded(false);
+        }
+        mainFragment.checkMenuItem(R.id.menu_tasks);
+        super.onResume();
     }
 }

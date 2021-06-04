@@ -27,13 +27,18 @@ public class CalendarFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mainFragment.isDocsExpanded()) {
-            mainFragment.setDocsExpanded(false);
-        }
-        mainFragment.checkMenuItem(R.id.menu_calendar);
         // Inflate the layout for this fragment
         View parent = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         return parent;
+    }
+
+    @Override
+    public void onResume() {
+        if (mainFragment.isDocsExpanded()) {
+            mainFragment.setDocsExpanded(false);
+        }
+        mainFragment.checkMenuItem(R.id.menu_calendar);
+        super.onResume();
     }
 }

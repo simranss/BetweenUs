@@ -27,13 +27,18 @@ public class DocsForusFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (!mainFragment.isDocsExpanded()) {
-            mainFragment.setDocsExpanded(true);
-        }
-        mainFragment.checkMenuItem(R.id.menu_docs_forus);
         // Inflate the layout for this fragment
         View parent = inflater.inflate(R.layout.fragment_docs_forus, container, false);
 
         return parent;
+    }
+
+    @Override
+    public void onResume() {
+        if (!mainFragment.isDocsExpanded()) {
+            mainFragment.setDocsExpanded(true);
+        }
+        mainFragment.checkMenuItem(R.id.menu_docs_forus);
+        super.onResume();
     }
 }
