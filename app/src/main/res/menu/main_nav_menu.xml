@@ -5,29 +5,41 @@
 
     <group android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/menu_chat"
-            android:title="@string/nav_chat" />
+        <item android:title="@string/nav_general">
 
-        <item
-            android:id="@+id/menu_memories"
-            android:title="@string/nav_memories" />
+            <menu>
 
-        <item
-            android:id="@+id/menu_calendar"
-            android:title="@string/nav_calendar" />
+                <group android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/menu_tasks"
-            android:title="@string/nav_tasks" />
+                    <item
+                        android:id="@+id/menu_chat"
+                        android:title="@string/nav_chat" />
 
-        <item
-            android:id="@+id/menu_ds"
-            android:title="@string/nav_ds" />
+                    <item
+                        android:id="@+id/menu_memories"
+                        android:title="@string/nav_memories" />
 
-        <item
-            android:id="@+id/menu_docs"
-            android:title="@string/nav_docs" />
+                    <item
+                        android:id="@+id/menu_calendar"
+                        android:title="@string/nav_calendar" />
+
+                    <item
+                        android:id="@+id/menu_tasks"
+                        android:title="@string/nav_tasks" />
+
+                    <item
+                        android:id="@+id/menu_ds"
+                        android:title="@string/nav_ds" />
+
+                    <item
+                        android:id="@+id/menu_docs"
+                        android:title="@string/nav_docs" />
+
+                </group>
+
+            </menu>
+
+        </item>
 
         <item
             android:id="@+id/menu_docs_expand"
