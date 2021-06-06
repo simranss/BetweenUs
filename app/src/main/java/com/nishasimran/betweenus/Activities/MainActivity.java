@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         loginFragment = new LoginFragment(this);
         registrationFragment = new RegistrationFragment(this);
-        mainFragment = new MainFragment(this);
+        mainFragment = new MainFragment(this, uid);
 
         // adding a listener for new key and new user data
         initChildEventListeners();

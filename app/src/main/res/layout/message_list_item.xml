@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/message_root"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="1dp"
+    android:paddingVertical="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/message_come_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/message_come_back"
+        android:backgroundTint="@color/white_30"
+        android:maxWidth="275dp"
+        android:paddingVertical="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="12dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/message_come_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="5:30 PM" />
+
+        <TextView
+            android:id="@+id/message_come_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/message_come_time"
+            tools:text="Hi I am Simran and I am simply testing this textView out\nLet's see how it works" />
+
+        <TextView
+            android:id="@+id/message_come_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/message_come_text"
+            tools:text="05th Jun 2021" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/message_send_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/message_send_back"
+        android:backgroundTint="@color/white_30"
+        android:maxWidth="275dp"
+        android:paddingVertical="8dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/message_send_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="5:30 PM" />
+
+        <TextView
+            android:id="@+id/message_send_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/message_send_time"
+            tools:text="Hi I am Simran and I am simply testing this textView out\nLet's see how it works" />
+
+        <TextView
+            android:id="@+id/message_send_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/message_send_text"
+            tools:text="05th Jun 2021" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

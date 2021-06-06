@@ -30,7 +30,7 @@ public class MainFragment extends Fragment {
 
     private final String TAG = "MainFrag";
 
-    private final AppCompatActivity activity;
+    protected final AppCompatActivity activity;
 
     // navigation UI
     private DrawerLayout drawerLayout;
@@ -40,13 +40,16 @@ public class MainFragment extends Fragment {
     private ViewPager2 viewPager;
     private MainFragmentAdapter adapter;
 
+    private final String uid;
+
     // fragments
     private Fragment chatFragment, memoriesFragment, calendarFragment, tasksFragment, dsFragment, docsForusFragment, docsPoemsFragment, docsDreamsFragment, settingsFragment;
 
     private boolean isDocsExpanded = false;
 
-    public MainFragment(AppCompatActivity activity) {
+    public MainFragment(AppCompatActivity activity, String uid) {
         this.activity = activity;
+        this.uid = uid;
     }
 
     @Override
@@ -299,5 +302,9 @@ public class MainFragment extends Fragment {
 
         // set the viewPager with the adapter
         viewPager.setAdapter(adapter);
+    }
+
+    public String getUid() {
+        return uid;
     }
 }

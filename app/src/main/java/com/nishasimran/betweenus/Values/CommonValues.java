@@ -31,6 +31,7 @@ public class CommonValues {
     public final static String SHARED_PREFERENCE_SERVER_UID = "server_uid";
     public final static String SHARED_PREFERENCE_STATE = "state";
     public final static String SHARED_PREFERENCE_CONNECTION = "connection";
+    public final static String SHARED_PREFERENCE_BACKGROUND = "chat_back";
 
     public final static String ERROR_PHONE = "Please enter a valid phone number";
     public final static String ERROR_OTP = "Invalid OTP";
@@ -39,6 +40,7 @@ public class CommonValues {
 
     public final static int PHONE_LENGTH = 10;
     public final static int OTP_LENGTH = 6;
+    public final static int BACKGROUND_CUSTOM = 99;
 
     public final static long MIN_DOB = 989519400000L;
 

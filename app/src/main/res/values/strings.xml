@@ -9,6 +9,7 @@
     <string name="send_desc">Send</string>
     <string name="dp_desc">Profile picture</string>
     <string name="call_desc">Call</string>
+    <string name="menu_desc">Menu</string>
 
     <!-- Hint strings -->
     <string name="phone_hint">phone no.</string>
@@ -35,4 +36,7 @@
     <string name="nav_tasks">Tasks</string>
     <string name="nav_ds">DS Zone</string>
     <string name="nav_logout">Logout</string>
+
+    <!-- Data strings -->
+    <string name="data_name">Name</string>
 </resources>
