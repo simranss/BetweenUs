@@ -16,12 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.nishasimran.betweenus.Activities.MainActivity;
 import com.nishasimran.betweenus.Adapters.MainFragmentAdapter;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.R;
+import com.nishasimran.betweenus.Utils.Utils;
+import com.nishasimran.betweenus.Values.CommonValues;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -189,6 +192,10 @@ public class MainFragment extends Fragment {
                     break;
                 case R.id.menu_logout:
                     Log.d(TAG, "Logout clicked");
+
+                    FirebaseAuth.getInstance().signOut();
+                    Utils.resetSharedPref(activity.getApplication());
+                    updateState(CommonValues.STATE_NOT_LOGGED_IN);
 
                     closeDrawer();
                     break;
