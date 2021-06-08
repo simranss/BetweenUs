@@ -38,6 +38,17 @@
     <string name="nav_ds">DS Zone</string>
     <string name="nav_logout">Logout</string>
 
+    <!-- Chat menu strings -->
+    <string name="menu_clear_messages">Clear chat</string>
+    <string name="menu_export_chat">Export chat</string>
+    <string name="menu_add_shortcut">Add shortcut</string>
+
+    <!-- Chat send menu strings -->
+    <string name="menu_schedule_message">Schedule message</string>
+    <string name="menu_whatsapp">Whatsapp</string>
+    <string name="menu_sms">SMS</string>
+    <string name="menu_telegram">Telegram</string>
+
     <!-- Data strings -->
     <string name="data_name">Name</string>
 </resources>

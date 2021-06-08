@@ -61,7 +61,7 @@ public class ChatFragment extends Fragment {
     private CardView noMessagesCard;
     private RecyclerView recyclerView;
     private EditText messageEditText;
-    private PopupMenu popupMenu;
+    private PopupMenu popupMenu, sendPopupMenu;
 
     private ChatAdapter adapter;
 
@@ -206,9 +206,17 @@ public class ChatFragment extends Fragment {
             // TODO: add a switch statement that has all menu id(s) as cases
             return false;
         });
+        sendPopupMenu.setOnMenuItemClickListener(item -> {
+            // TODO: add a switch statement that has all menu id(s) as cases
+            return false;
+        });
         menuImageView.setOnClickListener(v -> popupMenu.show());
 
         sendImageView.setOnClickListener(v -> sendMessage());
+        sendImageView.setOnLongClickListener(v -> {
+            sendPopupMenu.show();
+            return false;
+        });
     }
 
     private void sendMessage() {
@@ -320,6 +328,9 @@ public class ChatFragment extends Fragment {
         if (getContext() != null) {
             popupMenu = new PopupMenu(getContext(), menuImageView);
             popupMenu.inflate(R.menu.chat_menu);
+
+            sendPopupMenu = new PopupMenu(getContext(), sendImageView);
+            sendPopupMenu.inflate(R.menu.chat_send_menu);
         }
     }
 

@@ -37,21 +37,39 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/chat_name"
+            <LinearLayout
+                android:id="@+id/chat_name_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="8dp"
-                android:paddingVertical="8dp"
-                android:text="@string/data_name"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:drawableStartCompat="@drawable/person"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/chat_call"
                 app:layout_constraintStart_toEndOf="@id/chat_nav_open"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/chat_dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/dp_desc"
+                    android:padding="4dp"
+                    android:src="@drawable/person" />
+
+                <TextView
+                    android:id="@+id/chat_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center"
+                    android:text="@string/data_name"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/chat_call"
@@ -170,6 +188,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white_40"
                 android:elevation="10dp"
+                android:paddingTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -178,8 +197,9 @@
                     android:id="@+id/chat_message"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp"
-                    android:layout_marginVertical="8dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:autofillHints="@string/message_hint"
                     android:background="@drawable/rounded_corners"
                     android:backgroundTint="@color/white_30"
@@ -196,15 +216,15 @@
 
                 <ImageView
                     android:id="@+id/chat_send"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginHorizontal="12dp"
                     android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:contentDescription="@string/send_desc"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    android:padding="4dp"
+                    android:padding="8dp"
                     android:src="@drawable/send"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
