@@ -13,7 +13,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.nishasimran.betweenus.DataClasses.FirebaseKey;
+import com.nishasimran.betweenus.FirebaseDataClasses.FirebaseKey;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         loginFragment = new LoginFragment(this);
         registrationFragment = new RegistrationFragment(this);
-        mainFragment = new MainFragment(this, uid);
+        mainFragment = new MainFragment(this);
 
         // adding a listener for new key and new user data
         initChildEventListeners();

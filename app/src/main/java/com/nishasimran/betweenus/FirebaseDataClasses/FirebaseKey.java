@@ -1,4 +1,4 @@
-package com.nishasimran.betweenus.DataClasses;
+package com.nishasimran.betweenus.FirebaseDataClasses;
 
 import androidx.annotation.NonNull;
 

@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.nishasimran.betweenus.Activities.MainActivity;
-import com.nishasimran.betweenus.DataClasses.FirebaseKey;
+import com.nishasimran.betweenus.FirebaseDataClasses.FirebaseKey;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Encryption.Encryption;
