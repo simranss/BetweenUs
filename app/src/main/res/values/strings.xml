@@ -22,6 +22,7 @@
     <!-- Standard strings -->
     <string name="submit">Submit</string>
     <string name="save">Save</string>
+    <string name="convo_start">Please start the conversation by sending a message</string>
 
     <!-- Navigation drawer strings -->
     <string name="nav_general">General</string>

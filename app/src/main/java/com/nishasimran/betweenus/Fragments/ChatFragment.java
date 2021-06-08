@@ -55,6 +55,7 @@ public class ChatFragment extends Fragment {
     private ConstraintLayout root;
     private ImageView navOpen, callImageView, menuImageView, sendImageView;
     private TextView nameTextView;
+    private CardView noMessagesCard;
     private RecyclerView recyclerView;
     private EditText messageEditText;
     private PopupMenu popupMenu;
@@ -155,10 +156,10 @@ public class ChatFragment extends Fragment {
                 messages.addAll(messages1);
                 adapter.notifyDataSetChanged();
                 recyclerView.scrollToPosition(messages.size() - 1);
-                // TODO: remove the cardView saying to start a conversation
+                noMessages(false);
             }
             if (messages1.isEmpty()) {
-                // TODO: add an else part and handle the empty recyclerview with some card saying to start a conversation
+                noMessages(true);
             }
         });
     }
@@ -259,6 +260,7 @@ public class ChatFragment extends Fragment {
         nameTextView = parent.findViewById(R.id.chat_name);
         callImageView = parent.findViewById(R.id.chat_call);
         menuImageView = parent.findViewById(R.id.chat_menu);
+        noMessagesCard = parent.findViewById(R.id.chat_no_messages);
         recyclerView = parent.findViewById(R.id.chat_recycler);
         messageEditText = parent.findViewById(R.id.chat_message);
         sendImageView = parent.findViewById(R.id.chat_send);
@@ -323,5 +325,9 @@ public class ChatFragment extends Fragment {
 
     private void updateMessage(Message message) {
         MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).update(message);
+    }
+
+    public void noMessages(boolean value) {
+        noMessagesCard.setVisibility(value?View.VISIBLE:View.GONE);
     }
 }

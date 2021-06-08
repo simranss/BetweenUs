@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nishasimran.betweenus.DataClasses.Message;
+import com.nishasimran.betweenus.Fragments.ChatFragment;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Utils.Utils;
 
@@ -21,12 +22,12 @@ import java.util.ArrayList;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
-    private ArrayList<Message> messages;
+    private final ArrayList<Message> messages;
     private final String uid;
     private final Context context;
-    private final Fragment fragment;
+    private final ChatFragment fragment;
 
-    public ChatAdapter(Fragment fragment, ArrayList<Message> messages, String uid) {
+    public ChatAdapter(ChatFragment fragment, ArrayList<Message> messages, String uid) {
         this.fragment = fragment;
         this.context = fragment.getContext();
         this.messages = messages;
@@ -38,7 +39,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public ChatViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.message_list_item, parent, false);
-        return new ChatViewHolder(context, view, this);
+        int width = (int) (parent.getWidth() * 0.75);
+        return new ChatViewHolder(context, view, this, width);
     }
 
     @Override
@@ -67,20 +69,26 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        int size = messages.size();
+        fragment.noMessages(size < 1);
+        return size;
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
 
-        private final ConstraintLayout sendContainer, comeContainer, root;
+        private final ConstraintLayout sendContainer;
+        private final ConstraintLayout comeContainer;
         private final TextView comeTimeTxt, sendTimeTxt, comeMessageTxt, sendMessageTxt, comeDateTxt, sendDateTxt;
 
-        public ChatViewHolder(final Context context, @NonNull @NotNull View itemView, final ChatAdapter adapter) {
+        public ChatViewHolder(final Context context, @NonNull @NotNull View itemView, final ChatAdapter adapter, int width) {
             super(itemView);
 
-            root = itemView.findViewById(R.id.message_root);
+            ConstraintLayout root = itemView.findViewById(R.id.message_root);
             sendContainer = root.findViewById(R.id.message_send_msg);
             comeContainer = root.findViewById(R.id.message_come_msg);
+
+            sendContainer.setMaxWidth(width);
+            comeContainer.setMaxWidth(width);
 
             comeTimeTxt = comeContainer.findViewById(R.id.message_come_time);
             comeMessageTxt = comeContainer.findViewById(R.id.message_come_text);
