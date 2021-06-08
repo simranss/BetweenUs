@@ -40,13 +40,13 @@ public class LoginFragment extends Fragment {
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    private final Activity activity;
+    private final MainActivity activity;
 
     private EditText phoneEditText, codeEditText;
     private ProgressBar progressBar;
     private Button submitButton;
 
-    public LoginFragment(Activity activity) {
+    public LoginFragment(MainActivity activity) {
         this.activity = activity;
         // Required empty public constructor
     }
@@ -160,8 +160,8 @@ public class LoginFragment extends Fragment {
     }
 
     private void updateState(String state) {
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).updateState(state);
+        if (activity != null) {
+            activity.updateState(state);
         }
     }
 
@@ -186,9 +186,11 @@ public class LoginFragment extends Fragment {
                     disableView(submitButton);
                     updateState(CommonValues.STATE_LOGGED_IN_NO_REG);
                     if (authResult.getUser() != null) {
-                        ((MainActivity) activity).removeListenerForUserAndKeyData();
-                        ((MainActivity) activity).addListenerForUserAndKeyData();
-                        Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID, authResult.getUser().getUid());
+                        activity.removeListenerForUserAndKeyData();
+                        activity.addListenerForUserAndKeyData();
+                        String uid = authResult.getUser().getUid();
+                        Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID, uid);
+                        activity.setUid(uid);
                     } else {
                         Log.w(TAG, "signInWithPhoneAuthCredential", new NullPointerException(FirebaseValues.USER_NULL));
                     }

@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private List<Key> keys;
 
     private boolean isInternetAvail = false;
-    private int fragmentIndex = 0;
     private String uid;
 
     private Fragment loginFragment, registrationFragment;
@@ -73,17 +72,14 @@ public class MainActivity extends AppCompatActivity {
                     updateState(CommonValues.STATE_NOT_LOGGED_IN);
                     break;
                 case CommonValues.STATE_NOT_LOGGED_IN:
-                    fragmentIndex = 0;
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, loginFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_NO_REG:
                     this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
-                    fragmentIndex = 1;
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, registrationFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_WITH_REG:
                     this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
-                    fragmentIndex = 2;
                     Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, mainFragment);
                     break;
             }
@@ -109,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void insertUser(User user) {
-        UserViewModel.getInstance(this, getApplication()).insert(user);
+        new Thread(() -> UserViewModel.getInstance(this, getApplication()).insert(user)).start();
     }
 
     public void insertKey(Key key) {
-        KeyViewModel.getInstance(this, getApplication()).insert(key);
+        new Thread(() -> KeyViewModel.getInstance(this, getApplication()).insert(key)).start();
     }
 
     private void initChildEventListeners() {
@@ -129,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             Log.d(TAG, "User: " + user);
                             if (!uid.equals(user.getId())) {
+                                Utils.writeToSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID, user.getId());
                                 insertUser(user);
                                 snapshot.getRef().removeValue();
                             }
@@ -201,6 +198,14 @@ public class MainActivity extends AppCompatActivity {
     public void restartListenerForConnectionChange() {
         StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().removeObserver(connectionObserver);
         StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().observe(this, connectionObserver);
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     @Override

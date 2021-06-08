@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -30,7 +29,7 @@ public class MainFragment extends Fragment {
 
     private final String TAG = "MainFrag";
 
-    protected final AppCompatActivity activity;
+    protected final MainActivity activity;
 
     // navigation UI
     private DrawerLayout drawerLayout;
@@ -40,16 +39,13 @@ public class MainFragment extends Fragment {
     private ViewPager2 viewPager;
     private MainFragmentAdapter adapter;
 
-    private final String uid;
-
     // fragments
     private Fragment chatFragment, memoriesFragment, calendarFragment, tasksFragment, dsFragment, docsForusFragment, docsPoemsFragment, docsDreamsFragment, settingsFragment;
 
     private boolean isDocsExpanded = false;
 
-    public MainFragment(AppCompatActivity activity, String uid) {
+    public MainFragment(MainActivity activity) {
         this.activity = activity;
-        this.uid = uid;
     }
 
     @Override
@@ -219,34 +215,34 @@ public class MainFragment extends Fragment {
         adapter.addFrag(settingsFragment);
     }
 
-    private boolean isInternetAvailable() {
-        if (activity instanceof MainActivity) {
-            return ((MainActivity) activity).isInternetAvail();
+    public boolean isInternetAvailable() {
+        if (activity != null) {
+            return activity.isInternetAvail();
         }
         return false;
     }
 
     private void restartConnectionChangeListener() {
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).restartListenerForConnectionChange();
+        if (activity != null) {
+            activity.restartListenerForConnectionChange();
         }
     }
 
     private void updateState(String state) {
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).updateState(state);
+        if (activity != null) {
+            activity.updateState(state);
         }
     }
 
-    private void insertUser(User user) {
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).insertUser(user);
+    public void insertUser(User user) {
+        if (activity != null) {
+            activity.insertUser(user);
         }
     }
 
-    private void insertKey(Key key) {
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).insertKey(key);
+    public void insertKey(Key key) {
+        if (activity != null) {
+            activity.insertKey(key);
         }
     }
 
@@ -305,6 +301,6 @@ public class MainFragment extends Fragment {
     }
 
     public String getUid() {
-        return uid;
+        return activity.getUid();
     }
 }

@@ -1,6 +1,5 @@
 package com.nishasimran.betweenus.Fragments;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.icu.util.Calendar;
 import android.os.Bundle;
@@ -41,7 +40,7 @@ public class RegistrationFragment extends Fragment {
 
     private final String TAG = "RegFrag";
 
-    private final Activity activity;
+    private final MainActivity activity;
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser;
@@ -59,7 +58,7 @@ public class RegistrationFragment extends Fragment {
     private String privateKey, publicKey, keyId;
     private long keyCurrMillis;
 
-    public RegistrationFragment(Activity activity) {
+    public RegistrationFragment(MainActivity activity) {
         this.activity = activity;
     }
 
@@ -207,27 +206,27 @@ public class RegistrationFragment extends Fragment {
     }
 
     private boolean isInternetAvailable() {
-        if (activity instanceof MainActivity) {
-            return ((MainActivity) activity).isInternetAvail();
+        if (activity != null) {
+            return activity.isInternetAvail();
         }
         return false;
     }
 
     private void updateState(String state) {
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).updateState(state);
+        if (activity != null) {
+            activity.updateState(state);
         }
     }
 
     private void insertUser(User user) {
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).insertUser(user);
+        if (activity != null) {
+            activity.insertUser(user);
         }
     }
 
     private void insertKey(Key key) {
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).insertKey(key);
+        if (activity != null) {
+            activity.insertKey(key);
         }
     }
 }
