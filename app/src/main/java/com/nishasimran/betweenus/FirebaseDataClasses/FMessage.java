@@ -162,40 +162,33 @@ public class FMessage {
 
     public Long getCurrMillis() {
         if (map != null) {
-            String currMillis = map.get(FirebaseValues.CURR_MILLIS);
-            if (currMillis != null)
-                return Long.parseLong(currMillis);
-            else return null;
+            String currMillis = String.valueOf(map.get(FirebaseValues.CURR_MILLIS));
+            return Long.parseLong(currMillis);
         }
         return null;
     }
 
     public Long getDeliveredCurrMillis() {
         if (map != null) {
-            String currMillis = map.get(FirebaseValues.DELIVERED_CURR_MILLIS);
-            if (currMillis != null)
-                return Long.parseLong(currMillis);
-            else return null;
+            String currMillis = String.valueOf(map.get(FirebaseValues.DELIVERED_CURR_MILLIS));
+            return Long.parseLong(currMillis);
         }
         return null;
     }
 
     public Long getSentCurrMillis() {
         if (map != null) {
-            String currMillis = map.get(FirebaseValues.SENT_CURR_MILLIS);
-            if (currMillis != null)
-                return Long.parseLong(currMillis);
-            else return null;
+            String currMillis = String.valueOf(map.get(FirebaseValues.SENT_CURR_MILLIS));
+            System.out.println(currMillis);
+            return Long.parseLong(currMillis);
         }
         return null;
     }
 
     public Long getReadCurrMillis() {
         if (map != null) {
-            String currMillis = map.get(FirebaseValues.READ_CURR_MILLIS);
-            if (currMillis != null)
-                return Long.parseLong(currMillis);
-            else return null;
+            String currMillis = String.valueOf(map.get(FirebaseValues.READ_CURR_MILLIS));
+            return Long.parseLong(currMillis);
         }
         return null;
     }

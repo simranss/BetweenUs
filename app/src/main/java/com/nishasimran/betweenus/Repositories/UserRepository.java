@@ -1,14 +1,13 @@
 package com.nishasimran.betweenus.Repositories;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.DAOs.UserDao;
 import com.nishasimran.betweenus.Database.CommonDatabase;
+import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
 
 import java.util.List;
@@ -16,8 +15,7 @@ import java.util.List;
 public class UserRepository {
 
     private final UserDao userDao;
-    private final LiveData<List<User>> allUsers;
-    private final String uid;
+    private final String uid, serverUid;
 
     // Note that in order to unit test the UserRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -26,16 +24,15 @@ public class UserRepository {
     public UserRepository(Application application) {
         CommonDatabase db = CommonDatabase.getDatabase(application);
         userDao = db.userDao();
-        allUsers = userDao.getAlphabetizedUsers();
 
-        SharedPreferences prefs = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        uid = prefs.getString(CommonValues.SHARED_PREFERENCE_UID, CommonValues.NULL);
+        uid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID);
+        serverUid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_SERVER_UID);
     }
 
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     public LiveData<List<User>> getAllUsers() {
-        return allUsers;
+        return userDao.getAllUsers();
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
@@ -60,6 +57,18 @@ public class UserRepository {
         if (users != null) {
             for (User user : users) {
                 if (uid.equals(user.getId())) {
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
+
+    public User getServerUser(List<User> users) {
+        System.out.println("inside getServerUser()");
+        if (users != null && !users.isEmpty()) {
+            for (User user : users) {
+                if (serverUid.equals(user.getId())) {
                     return user;
                 }
             }

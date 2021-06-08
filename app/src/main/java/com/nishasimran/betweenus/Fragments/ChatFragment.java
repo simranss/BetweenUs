@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.nishasimran.betweenus.Adapters.ChatAdapter;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.Message;
+import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Encryption.Encryption;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.FirebaseDataClasses.FMessage;
@@ -39,6 +41,7 @@ import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.FirebaseValues;
 import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.ViewModels.MessageViewModel;
+import com.nishasimran.betweenus.ViewModels.UserViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -105,27 +108,40 @@ public class ChatFragment extends Fragment {
                     if (map != null) {
                         FMessage fMessage = new FMessage(map);
                         Log.d(TAG, "fMessage: " + fMessage);
-                        if (mainFragment.getUid().trim().equals(fMessage.getTo().trim())) {
-                            Key key = KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic());
-                            if (key != null) {
-                                snapshot.getRef().removeValue();
-                                long deliveredCurrMillis = System.currentTimeMillis();
-                                Log.d(TAG, "map iv: " + fMessage.getIv());
-                                Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
-                                Log.d(TAG, "map message: " + fMessage.getMessage());
-                                String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
-                                Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, null, null);
-                                messages.add(message);
-                                insertMessage(message);
-                                adapter.notifyItemInserted(messages.indexOf(message));
-                                recyclerView.scrollToPosition(messages.indexOf(message));
-                                Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
-                                mainFragment.insertKey(key1);
+                        if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
+                            if (mainFragment.getUid().trim().equals(fMessage.getTo().trim())) {
+                                Key key = KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic());
+                                if (key != null) {
+                                    snapshot.getRef().removeValue();
+                                    long deliveredCurrMillis = System.currentTimeMillis();
+                                    Log.d(TAG, "map iv: " + fMessage.getIv());
+                                    Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
+                                    Log.d(TAG, "map message: " + fMessage.getMessage());
+                                    String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
+                                    Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
+                                    messages.add(message);
+                                    insertMessage(message);
+                                    adapter.notifyItemInserted(messages.indexOf(message));
+                                    recyclerView.scrollToPosition(messages.indexOf(message));
+                                    Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
+                                    mainFragment.insertKey(key1);
+                                } else {
+                                    Log.d(TAG, "key not found");
+                                }
                             } else {
-                                Log.d(TAG, "key not found");
+                                Log.d(TAG, "message not sent to you");
+                                if (fMessage.getSentCurrMillis() != null) {
+                                    String messageId = snapshot.getRef().getKey();
+                                    Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                                    message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                                    updateMessage(message);
+                                }
                             }
-                        } else {
-                            Log.d(TAG, "message not sent to you");
+                        } else if (fMessage.getSentCurrMillis() != null) {
+                            String messageId = snapshot.getRef().getKey();
+                            Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                            message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                            updateMessage(message);
                         }
                     }
                 }
@@ -225,7 +241,8 @@ public class ChatFragment extends Fragment {
 
                     if (mainFragment.isInternetAvailable()) {
                         Map<String, String> map = encryptMessage(message.getMessage());
-                        createAndSendMessage(map, message);
+                        if (map != null)
+                            createAndSendMessage(map, message);
                     }
 
                 }).start();
@@ -245,8 +262,12 @@ public class ChatFragment extends Fragment {
     }
 
     private Map<String, String> encryptMessage(String text) {
-        String serverPublic = KeyViewModel.getInstance(mainFragment, mainFragment.activity.getApplication()).getLastKeyWithServerPublic().getServerPublic();
-        return Encryption.encryptText(text, serverPublic);
+        Key key = KeyViewModel.getInstance(mainFragment, mainFragment.activity.getApplication()).getLastKeyWithServerPublic();
+        if (key != null) {
+            String serverPublic = key.getServerPublic();
+            return Encryption.encryptText(text, serverPublic);
+        }
+        return null;
     }
 
     private String decryptMessage(String serverPublic, String myPrivateKey, String iv, String encryptedMessage) {
@@ -268,6 +289,20 @@ public class ChatFragment extends Fragment {
         createPopupMenu();
 
         initRecyclerView();
+
+        showNameAndDp();
+    }
+
+    private void showNameAndDp() {
+        UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllUsers().observe(mainFragment.activity, users -> {
+            if (users != null && !users.isEmpty()) {
+                Log.d(TAG, "showNameAndDp users: " + users);
+                User serverUser = UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getServerUser(users);
+                if (serverUser != null) {
+                    nameTextView.setText(serverUser.getName());
+                }
+            }
+        });
     }
 
     private void initRecyclerView() {

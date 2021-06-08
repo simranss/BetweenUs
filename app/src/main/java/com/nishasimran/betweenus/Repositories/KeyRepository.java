@@ -32,7 +32,7 @@ public class KeyRepository {
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     public LiveData<List<Key>> getAllKeys() {
-        return allKeys;
+        return keyDao.getAllKeys();
     }
 
     public LiveData<List<Key>> getAllKeysDesc() {

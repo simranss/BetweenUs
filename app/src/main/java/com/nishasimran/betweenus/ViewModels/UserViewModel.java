@@ -20,12 +20,9 @@ public class UserViewModel extends AndroidViewModel {
 
     private final UserRepository mRepository;
 
-    private final LiveData<List<User>> mAllUsers;
-
     public UserViewModel (Application application) {
         super(application);
         mRepository = new UserRepository(application);
-        mAllUsers = mRepository.getAllUsers();
     }
 
     public static UserViewModel getInstance(@NonNull ViewModelStoreOwner owner, @NonNull Application application) {
@@ -36,7 +33,7 @@ public class UserViewModel extends AndroidViewModel {
         return INSTANCE;
     }
 
-    LiveData<List<User>> getAllUsers() { return mAllUsers; }
+    public LiveData<List<User>> getAllUsers() { return mRepository.getAllUsers(); }
 
     public void insert(User user) { mRepository.insert(user); }
 
@@ -48,5 +45,9 @@ public class UserViewModel extends AndroidViewModel {
 
     public User getCurrentUser(List<User> users) {
         return mRepository.getCurrentUser(users);
+    }
+
+    public User getServerUser(List<User> users) {
+        return mRepository.getServerUser(users);
     }
 }
