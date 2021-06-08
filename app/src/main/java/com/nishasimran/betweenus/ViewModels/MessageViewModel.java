@@ -36,7 +36,7 @@ public class MessageViewModel extends AndroidViewModel {
         return INSTANCE;
     }
 
-    LiveData<List<Message>> getAllMessages() { return mAllMessages; }
+    public LiveData<List<Message>> getAllMessages() { return mAllMessages; }
 
     public void insert(Message message) { mRepository.insert(message); }
 
@@ -46,7 +46,7 @@ public class MessageViewModel extends AndroidViewModel {
 
     public void deleteAll() { mRepository.deleteAll(); }
 
-    Message findMessage(String messageId, List<Message> messages) {
+    public Message findMessage(String messageId, List<Message> messages) {
         return mRepository.findMessage(messageId, messages);
     }
 }

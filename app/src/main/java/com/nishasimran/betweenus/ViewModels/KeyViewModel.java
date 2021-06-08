@@ -51,4 +51,12 @@ public class KeyViewModel extends AndroidViewModel {
         Log.d(TAG, "findKey: inside");
         return repository.findKey(keyId, keys);
     }
+
+    public Key getLastKeyWithServerPublic() {
+        return repository.getLastKeyWithServerPublic();
+    }
+
+    public Key findKeyByMyPublic(String myPublic) {
+        return repository.findKeyByMyPublic(myPublic);
+    }
 }

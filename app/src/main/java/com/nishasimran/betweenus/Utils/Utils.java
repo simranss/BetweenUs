@@ -1,5 +1,6 @@
 package com.nishasimran.betweenus.Utils;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Values.CommonValues;
+import com.nishasimran.betweenus.Values.FirebaseValues;
 
 import java.util.Date;
 import java.util.Locale;
@@ -179,5 +181,17 @@ public class Utils {
 
     public static void setBackgroundInt(@NonNull Application application, int value) {
         writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_BACKGROUND, value);
+    }
+
+
+    public static String getUniqueMessageId() {
+        return FirebaseValues.MESSAGE_REF.push().getKey();
+    }
+
+
+    @SuppressLint("ApplySharedPref")
+    public static void resetSharedPref(@NonNull Application application) {
+        SharedPreferences preferences = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        preferences.edit().clear().commit();
     }
 }

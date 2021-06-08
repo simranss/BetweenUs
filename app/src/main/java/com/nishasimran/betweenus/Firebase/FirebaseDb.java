@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.nishasimran.betweenus.FirebaseDataClasses.FMessage;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.FirebaseValues;
 import com.nishasimran.betweenus.Utils.Utils;
@@ -23,8 +24,10 @@ public class FirebaseDb {
 
     private final String TAG = "FirebaseDatabase";
 
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private final DatabaseReference root = database.getReference();
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public static final DatabaseReference root = database.getReference();
+
+    private final DatabaseReference messagesRef = FirebaseValues.MESSAGE_REF;
 
     final MutableLiveData<String> lastSeen = new MutableLiveData<>();
     MutableLiveData<Boolean> connected = new MutableLiveData<>();
@@ -128,6 +131,30 @@ public class FirebaseDb {
 
     public void goOffline() {
         DatabaseReference.goOffline();
+    }
+
+    public void sendMessage(FMessage message) {
+        messagesRef.child(message.getId()).setValue(message.getMap()).addOnSuccessListener(unused -> messagesRef.child(message.getId()).child(FirebaseValues.SENT_CURR_MILLIS).setValue(ServerValue.TIMESTAMP));
+    }
+
+    public void updateMessageStatus(String id, String status, long currMillis) {
+        FMessage message = new FMessage(id, null, null, null, null, status, null, null, null, null, null, null, null);
+        switch (status) {
+            case CommonValues.STATUS_SENDING:
+                message.setCurrMillis(String.valueOf(currMillis));
+                break;
+            case CommonValues.STATUS_SENT:
+                message.setSentCurrMillis(String.valueOf(currMillis));
+                break;
+            case CommonValues.STATUS_DELIVERED:
+                message.setDeliveredCurrMillis(String.valueOf(currMillis));
+                break;
+            case CommonValues.STATUS_SEEN:
+                message.setReadCurrMillis(String.valueOf(currMillis));
+                break;
+        }
+
+        messagesRef.child(id).setValue(message.getMap());
     }
 
 }

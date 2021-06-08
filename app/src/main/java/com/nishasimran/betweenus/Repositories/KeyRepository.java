@@ -17,6 +17,7 @@ public class KeyRepository {
 
     private final KeyDao keyDao;
     private final LiveData<List<Key>> allKeys;
+    private LiveData<List<Key>> allKeysDesc;
 
     // Note that in order to unit test the KeyRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -32,6 +33,11 @@ public class KeyRepository {
     // Observed LiveData will notify the observer when the data has changed.
     public LiveData<List<Key>> getAllKeys() {
         return allKeys;
+    }
+
+    public LiveData<List<Key>> getAllKeysDesc() {
+        allKeysDesc = keyDao.getAllKeysDesc();
+        return allKeysDesc;
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
@@ -59,6 +65,64 @@ public class KeyRepository {
             for (Key key : keys) {
                 if (id.equals(key.getId())) {
                     return key;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Key findKeyByMyPublic(String myPublic) {
+        List<Key> keys;
+        if (allKeysDesc == null) {
+            keys = allKeys.getValue();
+            if (keys != null && !keys.isEmpty()) {
+                Log.d(TAG, "findKey: keys not null");
+
+                int size = keys.size();
+                for (int i = size - 1; i >= 0; i--) {
+                    if (keys.get(i).getMyPublic() != null && keys.get(i).getMyPublic().trim().equals(myPublic.trim()) && (keys.get(i).getMyPrivate() != null)) {
+                        Log.d(TAG, "findKeyByMyPublic: " + keys.get(i));
+                        return keys.get(i);
+                    }
+                }
+            }
+        } else {
+            keys = allKeysDesc.getValue();
+            if (keys != null && !keys.isEmpty()) {
+                Log.d(TAG, "findKey: keys not null");
+
+                for (Key key : keys) {
+                    if (key.getMyPublic().trim().equals(myPublic.trim()) && (key.getMyPrivate() != null)) {
+                        Log.d(TAG, "findKeyByMyPublic: " + key);
+                        return key;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public Key getLastKeyWithServerPublic() {
+        List<Key> keys;
+        if (allKeysDesc == null) {
+            keys = allKeys.getValue();
+            if (keys != null && !keys.isEmpty()) {
+                Log.d(TAG, "findKey: keys not null");
+
+                int size = keys.size();
+                for (int i = size - 1; i >= 0; i--) {
+                    if (keys.get(i).getServerPublic() != null)
+                        return keys.get(i);
+                }
+            }
+        } else {
+            keys = allKeysDesc.getValue();
+            if (keys != null && !keys.isEmpty()) {
+                Log.d(TAG, "findKey: keys not null");
+
+                for (Key key : keys) {
+                    if (key.getServerPublic() != null)
+                        return key;
                 }
             }
         }

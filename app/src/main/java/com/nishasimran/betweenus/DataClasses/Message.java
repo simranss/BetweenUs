@@ -45,17 +45,21 @@ public class Message {
 
 
 
-    public Message(@NonNull String id, String message, String from, String to, String messageType, String status, long currMillis, long sentCurrMillis, long deliveredCurrMillis, long readCurrMillis) {
+    public Message(@NonNull String id, String message, String from, String to, String messageType, String status, Long currMillis, Long sentCurrMillis, Long deliveredCurrMillis, Long readCurrMillis) {
         this.id = id;
         this.message = message;
         this.from = from;
         this.to = to;
         this.messageType = messageType;
         this.status = status;
-        this.currMillis = currMillis;
-        this.sentCurrMillis = sentCurrMillis;
-        this.deliveredCurrMillis = deliveredCurrMillis;
-        this.readCurrMillis = readCurrMillis;
+        if (currMillis != null)
+            this.currMillis = currMillis;
+        if (sentCurrMillis != null)
+            this.sentCurrMillis = sentCurrMillis;
+        if (deliveredCurrMillis != null)
+            this.deliveredCurrMillis = deliveredCurrMillis;
+        if (readCurrMillis != null)
+            this.readCurrMillis = readCurrMillis;
     }
 
 

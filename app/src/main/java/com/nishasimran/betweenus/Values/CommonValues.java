@@ -19,6 +19,10 @@ public class CommonValues {
     public final static String STATUS_SEEN = "status_3";
     public final static String STATUS_ONLINE = "status_4";
 
+    public final static String MESSAGE_TYPE_TEXT = "m_t_t";
+    public final static String MESSAGE_TYPE_IMAGE = "m_t_i";
+    public final static String MESSAGE_TYPE_DOC = "m_t_d";
+
     public final static String STATE_LOGGED_IN_NO_REG = "state_0";
     public final static String STATE_LOGGED_IN_WITH_REG = "state_1";
     public final static String STATE_NOT_LOGGED_IN = "state_2";

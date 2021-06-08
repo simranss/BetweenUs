@@ -30,4 +30,7 @@ public interface KeyDao {
 
     @Query("SELECT * FROM " + DatabaseValues.TABLE_KEYS + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Key>> getAllKeys();
+
+    @Query("SELECT * FROM " + DatabaseValues.TABLE_KEYS + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " DESC")
+    LiveData<List<Key>> getAllKeysDesc();
 }
