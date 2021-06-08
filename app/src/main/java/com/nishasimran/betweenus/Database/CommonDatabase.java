@@ -8,30 +8,47 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.nishasimran.betweenus.DAOs.AlbumDao;
+import com.nishasimran.betweenus.DAOs.KeyDao;
+import com.nishasimran.betweenus.DAOs.MemoryDao;
 import com.nishasimran.betweenus.DAOs.MessageDao;
+import com.nishasimran.betweenus.DAOs.SpecialDayDao;
+import com.nishasimran.betweenus.DAOs.UserDao;
+import com.nishasimran.betweenus.DataClasses.Album;
+import com.nishasimran.betweenus.DataClasses.Key;
+import com.nishasimran.betweenus.DataClasses.Memory;
 import com.nishasimran.betweenus.DataClasses.Message;
+import com.nishasimran.betweenus.DataClasses.SpecialDay;
+import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Values.DatabaseValues;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities =  {Message.class}, version = 1, exportSchema = false)
-public abstract class MessageRoomDatabase extends RoomDatabase {
+@Database(entities = {User.class, Key.class, Message.class, Memory.class, Album.class, SpecialDay.class}, version = 1, exportSchema = false)
+public abstract class CommonDatabase extends RoomDatabase {
+
+    public abstract UserDao userDao();
+    public abstract KeyDao keyDao();
 
     public abstract MessageDao messageDao();
 
-    private static volatile MessageRoomDatabase INSTANCE;
+    public abstract MemoryDao memoryDao();
+    public abstract AlbumDao albumDao();
+    public abstract SpecialDayDao specialDayDao();
+    
+    private static volatile CommonDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    public static MessageRoomDatabase getDatabase(final Context context) {
+    public static CommonDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (MessageRoomDatabase.class) {
+            synchronized (CommonDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(
                             context.getApplicationContext(),
-                            MessageRoomDatabase.class,
-                            DatabaseValues.DATABASE_MESSAGES
+                            CommonDatabase.class,
+                            DatabaseValues.DATABASE_USERS
                     )
                             .addCallback(sRoomDatabaseCallback)
                             .build();
@@ -51,7 +68,12 @@ public abstract class MessageRoomDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 // Populate the database in the background.
                 // If you want to start with more words, just add them.
-                MessageDao dao = INSTANCE.messageDao();
+                UserDao userDao = INSTANCE.userDao();
+                KeyDao keyDao = INSTANCE.keyDao();
+                MessageDao messageDao = INSTANCE.messageDao();
+                MemoryDao memoryDao = INSTANCE.memoryDao();
+                AlbumDao albumDao = INSTANCE.albumDao();
+                SpecialDayDao specialDayDao = INSTANCE.specialDayDao();
             });
         }
     };

@@ -5,9 +5,8 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DAOs.MessageDao;
-import com.nishasimran.betweenus.DataClasses.Album;
 import com.nishasimran.betweenus.DataClasses.Message;
-import com.nishasimran.betweenus.Database.MessageRoomDatabase;
+import com.nishasimran.betweenus.Database.CommonDatabase;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class MessageRepository {
     // See the BasicSample in the android-architecture-components repository at
     // https://github.com/googlesamples
     public MessageRepository(Application application) {
-        MessageRoomDatabase db = MessageRoomDatabase.getDatabase(application);
+        CommonDatabase db = CommonDatabase.getDatabase(application);
         messageDao = db.messageDao();
         allMessages = messageDao.getAllMessages();
     }
@@ -35,19 +34,19 @@ public class MessageRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public void insert(Message message) {
-        MessageRoomDatabase.databaseWriteExecutor.execute(() -> messageDao.insert(message));
+        CommonDatabase.databaseWriteExecutor.execute(() -> messageDao.insert(message));
     }
 
     public void update(Message message) {
-        MessageRoomDatabase.databaseWriteExecutor.execute(() -> messageDao.update(message));
+        CommonDatabase.databaseWriteExecutor.execute(() -> messageDao.update(message));
     }
 
     public void delete(Message message) {
-        MessageRoomDatabase.databaseWriteExecutor.execute(() -> messageDao.delete(message));
+        CommonDatabase.databaseWriteExecutor.execute(() -> messageDao.delete(message));
     }
 
     public void deleteAll() {
-        MessageRoomDatabase.databaseWriteExecutor.execute(messageDao::deleteAll);
+        CommonDatabase.databaseWriteExecutor.execute(messageDao::deleteAll);
     }
 
     public Message findMessage(String id, List<Message> messages) {

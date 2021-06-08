@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.DAOs.UserDao;
-import com.nishasimran.betweenus.Database.UserRoomDatabase;
+import com.nishasimran.betweenus.Database.CommonDatabase;
 import com.nishasimran.betweenus.Values.CommonValues;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class UserRepository {
     // See the BasicSample in the android-architecture-components repository at
     // https://github.com/googlesamples
     public UserRepository(Application application) {
-        UserRoomDatabase db = UserRoomDatabase.getDatabase(application);
+        CommonDatabase db = CommonDatabase.getDatabase(application);
         userDao = db.userDao();
         allUsers = userDao.getAlphabetizedUsers();
 
@@ -41,19 +41,19 @@ public class UserRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public void insert(User user) {
-        UserRoomDatabase.databaseWriteExecutor.execute(() -> userDao.insert(user));
+        CommonDatabase.databaseWriteExecutor.execute(() -> userDao.insert(user));
     }
 
     public void update(User user) {
-        UserRoomDatabase.databaseWriteExecutor.execute(() -> userDao.update(user));
+        CommonDatabase.databaseWriteExecutor.execute(() -> userDao.update(user));
     }
 
     public void delete(User user) {
-        UserRoomDatabase.databaseWriteExecutor.execute(() -> userDao.delete(user));
+        CommonDatabase.databaseWriteExecutor.execute(() -> userDao.delete(user));
     }
 
     public void deleteAll() {
-        UserRoomDatabase.databaseWriteExecutor.execute(userDao::deleteAll);
+        CommonDatabase.databaseWriteExecutor.execute(userDao::deleteAll);
     }
 
     public User getCurrentUser(List<User> users) {

@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DAOs.AlbumDao;
 import com.nishasimran.betweenus.DataClasses.Album;
-import com.nishasimran.betweenus.Database.MemoryRoomDatabase;
+import com.nishasimran.betweenus.Database.CommonDatabase;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class AlbumRepository {
     // See the BasicSample in the android-architecture-components repository at
     // https://github.com/googlesamples
     public AlbumRepository(Application application) {
-        MemoryRoomDatabase db = MemoryRoomDatabase.getDatabase(application);
+        CommonDatabase db = CommonDatabase.getDatabase(application);
         dao = db.albumDao();
         allAlbums = dao.getAllAlbums();
     }
@@ -34,19 +34,19 @@ public class AlbumRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public void insert(Album album) {
-        MemoryRoomDatabase.databaseWriteExecutor.execute(() -> dao.insert(album));
+        CommonDatabase.databaseWriteExecutor.execute(() -> dao.insert(album));
     }
 
     public void update(Album album) {
-        MemoryRoomDatabase.databaseWriteExecutor.execute(() -> dao.update(album));
+        CommonDatabase.databaseWriteExecutor.execute(() -> dao.update(album));
     }
 
     public void delete(Album album) {
-        MemoryRoomDatabase.databaseWriteExecutor.execute(() -> dao.delete(album));
+        CommonDatabase.databaseWriteExecutor.execute(() -> dao.delete(album));
     }
 
     public void deleteAll() {
-        MemoryRoomDatabase.databaseWriteExecutor.execute(dao::deleteAll);
+        CommonDatabase.databaseWriteExecutor.execute(dao::deleteAll);
     }
 
     public Album findAlbum(String id, List<Album> albums) {

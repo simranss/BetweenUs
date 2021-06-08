@@ -6,11 +6,9 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DAOs.KeyDao;
-import com.nishasimran.betweenus.DataClasses.Album;
 import com.nishasimran.betweenus.DataClasses.Key;
-import com.nishasimran.betweenus.Database.UserRoomDatabase;
+import com.nishasimran.betweenus.Database.CommonDatabase;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class KeyRepository {
@@ -25,7 +23,7 @@ public class KeyRepository {
     // See the BasicSample in the android-architecture-components repository at
     // https://github.com/googlesamples
     public KeyRepository(Application application) {
-        UserRoomDatabase db = UserRoomDatabase.getDatabase(application);
+        CommonDatabase db = CommonDatabase.getDatabase(application);
         keyDao = db.keyDao();
         allKeys = keyDao.getAllKeys();
     }
@@ -39,26 +37,25 @@ public class KeyRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public void insert(Key key) {
-        UserRoomDatabase.databaseWriteExecutor.execute(() -> keyDao.insert(key));
+        CommonDatabase.databaseWriteExecutor.execute(() -> keyDao.insert(key));
     }
 
     public void update(Key key) {
-        UserRoomDatabase.databaseWriteExecutor.execute(() -> keyDao.update(key));
+        CommonDatabase.databaseWriteExecutor.execute(() -> keyDao.update(key));
     }
 
     public void delete(Key key) {
-        UserRoomDatabase.databaseWriteExecutor.execute(() -> keyDao.delete(key));
+        CommonDatabase.databaseWriteExecutor.execute(() -> keyDao.delete(key));
     }
 
     public void deleteAll() {
-        UserRoomDatabase.databaseWriteExecutor.execute(keyDao::deleteAll);
+        CommonDatabase.databaseWriteExecutor.execute(keyDao::deleteAll);
     }
 
     public Key findKey(String id, List<Key> keys) {
         Log.d(TAG, "findKey: inside");
         if (keys != null) {
             Log.d(TAG, "findKey: keys not null");
-            Log.d(TAG, "Keys: " + keys);
             for (Key key : keys) {
                 if (id.equals(key.getId())) {
                     return key;

@@ -6,9 +6,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.nishasimran.betweenus.DAOs.MemoryDao;
-import com.nishasimran.betweenus.DataClasses.Album;
 import com.nishasimran.betweenus.DataClasses.Memory;
-import com.nishasimran.betweenus.Database.MemoryRoomDatabase;
+import com.nishasimran.betweenus.Database.CommonDatabase;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class MemoryRepository {
     // See the BasicSample in the android-architecture-components repository at
     // https://github.com/googlesamples
     public MemoryRepository(Application application) {
-        MemoryRoomDatabase db = MemoryRoomDatabase.getDatabase(application);
+        CommonDatabase db = CommonDatabase.getDatabase(application);
         dao = db.memoryDao();
         allMemories = dao.getAllMemories();
     }
@@ -38,19 +37,19 @@ public class MemoryRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public void insert(Memory memory) {
-        MemoryRoomDatabase.databaseWriteExecutor.execute(() -> dao.insert(memory));
+        CommonDatabase.databaseWriteExecutor.execute(() -> dao.insert(memory));
     }
 
     public void update(Memory memory) {
-        MemoryRoomDatabase.databaseWriteExecutor.execute(() -> dao.update(memory));
+        CommonDatabase.databaseWriteExecutor.execute(() -> dao.update(memory));
     }
 
     public void delete(Memory memory) {
-        MemoryRoomDatabase.databaseWriteExecutor.execute(() -> dao.delete(memory));
+        CommonDatabase.databaseWriteExecutor.execute(() -> dao.delete(memory));
     }
 
     public void deleteAll() {
-        MemoryRoomDatabase.databaseWriteExecutor.execute(dao::deleteAll);
+        CommonDatabase.databaseWriteExecutor.execute(dao::deleteAll);
     }
 
     public Memory findMemory(String id, List<Memory> memories) {
