@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -140,6 +141,8 @@ public class LoginFragment extends Fragment {
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
                 Log.d(TAG, "verificationFailed: " + e.getMessage());
+                if (e instanceof FirebaseNetworkException)
+                    Toast.makeText(activity, "Check your internet connection", Toast.LENGTH_SHORT).show();
                 Toast.makeText(activity, "Failure: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 hideView(codeEditText);
                 hideView(progressBar);
