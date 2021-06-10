@@ -1,5 +1,6 @@
 package com.nishasimran.betweenus.Fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.nishasimran.betweenus.Activities.UserDetailsActivity;
 import com.nishasimran.betweenus.Adapters.ChatAdapter;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.Message;
@@ -215,7 +217,11 @@ public class ChatFragment extends Fragment {
         Log.d(TAG, "listenersForViews");
         navOpen.setOnClickListener(v -> mainFragment.openDrawer());
         nameTextView.setOnClickListener(v -> {
-            // TODO: add an activity that shows details of the partner and lets you edit them as well
+            if (serverUser != null) {
+                Intent intent = new Intent(mainFragment.activity, UserDetailsActivity.class);
+                intent.putExtra(CommonValues.EXTRA_USER_ID, serverUser.getId());
+                startActivity(intent);
+            }
         });
 
         callImageView.setOnClickListener(v -> {

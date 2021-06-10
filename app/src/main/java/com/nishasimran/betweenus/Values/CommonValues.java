@@ -42,6 +42,8 @@ public class CommonValues {
     public final static String ERROR_REQUIRED = "Required";
     public final static String ERROR_EMAIL = "Please enter a valid email";
 
+    public final static String EXTRA_USER_ID = "extra_user_id";
+
     public final static int PHONE_LENGTH = 10;
     public final static int OTP_LENGTH = 6;
     public final static int BACKGROUND_CUSTOM = 99;
