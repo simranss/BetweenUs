@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -139,6 +140,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
                 Log.d(TAG, "verificationFailed: " + e.getMessage());
+                Toast.makeText(activity, "Failure: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 hideView(codeEditText);
                 hideView(progressBar);
                 enableView(phoneEditText);

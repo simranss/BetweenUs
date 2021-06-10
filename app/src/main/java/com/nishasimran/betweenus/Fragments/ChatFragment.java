@@ -143,34 +143,120 @@ public class ChatFragment extends Fragment {
                                 if (fMessage.getSentCurrMillis() != null) {
                                     String messageId = snapshot.getRef().getKey();
                                     Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
-                                    message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                    updateMessage(message);
+                                    if (message != null) {
+                                        if (message.getSentCurrMillis() == null) {
+                                            message.setStatus(CommonValues.STATUS_SENT);
+                                            message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                                            updateMessage(message);
+                                        } else {
+                                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                        }
+                                    }
                                 }
                             }
                         } else if (fMessage.getSentCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
-                            if (message.getSentCurrMillis() == null) {
-                                message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                updateMessage(message);
-                            } else {
-                                Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                            if (message != null) {
+                                if (message.getSentCurrMillis() == null) {
+                                    message.setStatus(CommonValues.STATUS_SENT);
+                                    message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                                    updateMessage(message);
+                                } else {
+                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                }
                             }
                         } else if (fMessage.getDeliveredCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
-                            if (message.getDeliveredCurrMillis() == null) {
-                                message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
-                                updateMessage(message);
-                            } else {
-                                Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                            if (message != null) {
+                                if (message.getDeliveredCurrMillis() == null) {
+                                    message.setStatus(CommonValues.STATUS_DELIVERED);
+                                    message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                                    updateMessage(message);
+                                } else {
+                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                }
                             }
                         }
                     }
                 }
             }
             @Override
-            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) { }
+            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                if (snapshot.exists()) {
+                    Map<String, String> map = (Map<String, String>) snapshot.getValue();
+                    if (map != null) {
+                        FMessage fMessage = new FMessage(map);
+                        Log.d(TAG, "fMessage: " + fMessage);
+                        if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
+                            if (mainFragment.getUid().trim().equals(fMessage.getTo().trim())) {
+                                Key key = KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic(), keys);
+                                if (key != null) {
+                                    snapshot.getRef().removeValue();
+                                    long deliveredCurrMillis = System.currentTimeMillis();
+                                    Log.d(TAG, "map iv: " + fMessage.getIv());
+                                    Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
+                                    Log.d(TAG, "map message: " + fMessage.getMessage());
+                                    String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
+                                    Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
+                                    if (fMessage.getSentCurrMillis() != null) {
+                                        message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                                    }
+                                    FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
+                                    messages.add(message);
+                                    insertMessage(message);
+                                    adapter.notifyItemInserted(messages.indexOf(message));
+                                    recyclerView.scrollToPosition(messages.indexOf(message));
+                                    Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
+                                    mainFragment.insertKey(key1);
+                                } else {
+                                    Log.d(TAG, "key not found");
+                                }
+                            } else {
+                                Log.d(TAG, "message not sent to you");
+                                if (fMessage.getSentCurrMillis() != null) {
+                                    String messageId = snapshot.getRef().getKey();
+                                    Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                                    if (message != null) {
+                                        if (message.getSentCurrMillis() == null) {
+                                            message.setStatus(CommonValues.STATUS_SENT);
+                                            message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                                            updateMessage(message);
+                                        } else {
+                                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (fMessage.getSentCurrMillis() != null) {
+                            String messageId = snapshot.getRef().getKey();
+                            Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                            if (message != null) {
+                                if (message.getSentCurrMillis() == null) {
+                                    message.setStatus(CommonValues.STATUS_SENT);
+                                    message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                                    updateMessage(message);
+                                } else {
+                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                }
+                            }
+                        } else if (fMessage.getDeliveredCurrMillis() != null) {
+                            String messageId = snapshot.getRef().getKey();
+                            Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                            if (message != null) {
+                                if (message.getDeliveredCurrMillis() == null) {
+                                    message.setStatus(CommonValues.STATUS_DELIVERED);
+                                    message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                                    updateMessage(message);
+                                } else {
+                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             @Override
             public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) { }
             @Override
