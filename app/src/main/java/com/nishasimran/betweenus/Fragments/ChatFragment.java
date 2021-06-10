@@ -46,6 +46,7 @@ import com.nishasimran.betweenus.ViewModels.UserViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -65,7 +66,10 @@ public class ChatFragment extends Fragment {
 
     private ChatAdapter adapter;
 
-    private ArrayList<Message> messages;
+    private List<Message> messages;
+    private List<Key> keys;
+
+    private User serverUser = null;
 
     private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
 
@@ -110,7 +114,7 @@ public class ChatFragment extends Fragment {
                         Log.d(TAG, "fMessage: " + fMessage);
                         if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
                             if (mainFragment.getUid().trim().equals(fMessage.getTo().trim())) {
-                                Key key = KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic());
+                                Key key = KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic(), keys);
                                 if (key != null) {
                                     snapshot.getRef().removeValue();
                                     long deliveredCurrMillis = System.currentTimeMillis();
@@ -119,6 +123,10 @@ public class ChatFragment extends Fragment {
                                     Log.d(TAG, "map message: " + fMessage.getMessage());
                                     String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
                                     Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
+                                    if (fMessage.getSentCurrMillis() != null) {
+                                        message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                                    }
+                                    FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
                                     messages.add(message);
                                     insertMessage(message);
                                     adapter.notifyItemInserted(messages.indexOf(message));
@@ -140,8 +148,21 @@ public class ChatFragment extends Fragment {
                         } else if (fMessage.getSentCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
-                            message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                            updateMessage(message);
+                            if (message.getSentCurrMillis() == null) {
+                                message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                                updateMessage(message);
+                            } else {
+                                Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                            }
+                        } else if (fMessage.getDeliveredCurrMillis() != null) {
+                            String messageId = snapshot.getRef().getKey();
+                            Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                            if (message.getDeliveredCurrMillis() == null) {
+                                message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                                updateMessage(message);
+                            } else {
+                                Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                            }
                         }
                     }
                 }
@@ -149,9 +170,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) { }
             @Override
-            public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
-                // TODO: add code that message is delivered
-            }
+            public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) { }
             @Override
             public void onChildMoved(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) { }
             @Override
@@ -163,6 +182,7 @@ public class ChatFragment extends Fragment {
         Log.d(TAG, "populateTheChats");
         messages.clear();
         initMessagesListener();
+        initKeyListener();
     }
 
     private void initMessagesListener() {
@@ -200,6 +220,11 @@ public class ChatFragment extends Fragment {
 
         callImageView.setOnClickListener(v -> {
             // TODO: add a call option in future
+        });
+
+        callImageView.setOnLongClickListener(v -> {
+            // TODO: add a popup menu for having options for different calling options
+            return false;
         });
 
         popupMenu.setOnMenuItemClickListener(item -> {
@@ -270,7 +295,7 @@ public class ChatFragment extends Fragment {
     }
 
     private Map<String, String> encryptMessage(String text) {
-        Key key = KeyViewModel.getInstance(mainFragment, mainFragment.activity.getApplication()).getLastKeyWithServerPublic();
+        Key key = KeyViewModel.getInstance(mainFragment, mainFragment.activity.getApplication()).getLastKeyWithServerPublic(keys);
         if (key != null) {
             String serverPublic = key.getServerPublic();
             return Encryption.encryptText(text, serverPublic);
@@ -305,7 +330,7 @@ public class ChatFragment extends Fragment {
         UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllUsers().observe(mainFragment.activity, users -> {
             if (users != null && !users.isEmpty()) {
                 Log.d(TAG, "showNameAndDp users: " + users);
-                User serverUser = UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getServerUser(users);
+                serverUser = UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getServerUser(users);
                 if (serverUser != null) {
                     nameTextView.setText(serverUser.getName());
                 }
@@ -375,5 +400,9 @@ public class ChatFragment extends Fragment {
 
     public void noMessages(boolean value) {
         noMessagesCard.setVisibility(value?View.VISIBLE:View.GONE);
+    }
+
+    private void initKeyListener() {
+        KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllKeys().observe(mainFragment.activity, keys1 -> keys = keys1);
     }
 }

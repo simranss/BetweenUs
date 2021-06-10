@@ -26,13 +26,13 @@ public class Message {
     @ColumnInfo(name = DatabaseValues.COLUMN_STATUS)
     private String status;
     @ColumnInfo(name = DatabaseValues.COLUMN_CURR_MILLIS)
-    private long currMillis;
+    private Long currMillis;
     @ColumnInfo(name = DatabaseValues.COLUMN_SENT_CURR_MILLIS)
-    private long sentCurrMillis;
+    private Long sentCurrMillis;
     @ColumnInfo(name = DatabaseValues.COLUMN_DELIVERED_CURR_MILLIS)
-    private long deliveredCurrMillis;
+    private Long deliveredCurrMillis;
     @ColumnInfo(name = DatabaseValues.COLUMN_READ_CURR_MILLIS)
-    private long readCurrMillis;
+    private Long readCurrMillis;
 
 
 
@@ -84,16 +84,16 @@ public class Message {
     public String getStatus() {
         return status;
     }
-    public long getCurrMillis() {
+    public Long getCurrMillis() {
         return currMillis;
     }
-    public long getSentCurrMillis() {
+    public Long getSentCurrMillis() {
         return sentCurrMillis;
     }
-    public long getDeliveredCurrMillis() {
+    public Long getDeliveredCurrMillis() {
         return deliveredCurrMillis;
     }
-    public long getReadCurrMillis() {
+    public Long getReadCurrMillis() {
         return readCurrMillis;
     }
 
@@ -116,16 +116,16 @@ public class Message {
     public void setStatus(String status) {
         this.status = status;
     }
-    public void setCurrMillis(long currMillis) {
+    public void setCurrMillis(Long currMillis) {
         this.currMillis = currMillis;
     }
-    public void setSentCurrMillis(long sentCurrMillis) {
+    public void setSentCurrMillis(Long sentCurrMillis) {
         this.sentCurrMillis = sentCurrMillis;
     }
-    public void setDeliveredCurrMillis(long deliveredCurrMillis) {
+    public void setDeliveredCurrMillis(Long deliveredCurrMillis) {
         this.deliveredCurrMillis = deliveredCurrMillis;
     }
-    public void setReadCurrMillis(long readCurrMillis) {
+    public void setReadCurrMillis(Long readCurrMillis) {
         this.readCurrMillis = readCurrMillis;
     }
 }

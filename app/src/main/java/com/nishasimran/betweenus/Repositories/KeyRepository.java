@@ -71,59 +71,29 @@ public class KeyRepository {
         return null;
     }
 
-    public Key findKeyByMyPublic(String myPublic) {
-        List<Key> keys;
-        if (allKeysDesc == null) {
-            keys = allKeys.getValue();
-            if (keys != null && !keys.isEmpty()) {
-                Log.d(TAG, "findKey: keys not null");
+    public Key findKeyByMyPublic(String myPublic, List<Key> keys) {
+        if (keys != null && !keys.isEmpty()) {
+            Log.d(TAG, "findKey: keys not null");
 
-                int size = keys.size();
-                for (int i = size - 1; i >= 0; i--) {
-                    if (keys.get(i).getMyPublic() != null && keys.get(i).getMyPublic().trim().equals(myPublic.trim()) && (keys.get(i).getMyPrivate() != null)) {
-                        Log.d(TAG, "findKeyByMyPublic: " + keys.get(i));
-                        return keys.get(i);
-                    }
-                }
-            }
-        } else {
-            keys = allKeysDesc.getValue();
-            if (keys != null && !keys.isEmpty()) {
-                Log.d(TAG, "findKey: keys not null");
-
-                for (Key key : keys) {
-                    if (key.getMyPublic().trim().equals(myPublic.trim()) && (key.getMyPrivate() != null)) {
-                        Log.d(TAG, "findKeyByMyPublic: " + key);
-                        return key;
-                    }
+            int size = keys.size();
+            for (int i = size - 1; i >= 0; i--) {
+                if (keys.get(i).getMyPublic() != null && keys.get(i).getMyPublic().trim().equals(myPublic.trim()) && (keys.get(i).getMyPrivate() != null)) {
+                    Log.d(TAG, "findKeyByMyPublic: " + keys.get(i));
+                    return keys.get(i);
                 }
             }
         }
         return null;
     }
 
-    public Key getLastKeyWithServerPublic() {
-        List<Key> keys;
-        if (allKeysDesc == null) {
-            keys = allKeys.getValue();
-            if (keys != null && !keys.isEmpty()) {
-                Log.d(TAG, "findKey: keys not null");
+    public Key getLastKeyWithServerPublic(List<Key> keys) {
+        if (keys != null && !keys.isEmpty()) {
+            Log.d(TAG, "findKey: keys not null");
 
-                int size = keys.size();
-                for (int i = size - 1; i >= 0; i--) {
-                    if (keys.get(i).getServerPublic() != null)
-                        return keys.get(i);
-                }
-            }
-        } else {
-            keys = allKeysDesc.getValue();
-            if (keys != null && !keys.isEmpty()) {
-                Log.d(TAG, "findKey: keys not null");
-
-                for (Key key : keys) {
-                    if (key.getServerPublic() != null)
-                        return key;
-                }
+            int size = keys.size();
+            for (int i = size - 1; i >= 0; i--) {
+                if (keys.get(i).getServerPublic() != null)
+                    return keys.get(i);
             }
         }
         return null;

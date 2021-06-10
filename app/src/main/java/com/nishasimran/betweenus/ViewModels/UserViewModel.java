@@ -50,4 +50,8 @@ public class UserViewModel extends AndroidViewModel {
     public User getServerUser(List<User> users) {
         return mRepository.getServerUser(users);
     }
+
+    public User findUserById(String id, List<User> users) {
+        return mRepository.findUserById(id, users);
+    }
 }

@@ -54,7 +54,7 @@ public class UserRepository {
     }
 
     public User getCurrentUser(List<User> users) {
-        if (users != null) {
+        if (users != null && !users.isEmpty()) {
             for (User user : users) {
                 if (uid.equals(user.getId())) {
                     return user;
@@ -69,6 +69,17 @@ public class UserRepository {
         if (users != null && !users.isEmpty()) {
             for (User user : users) {
                 if (serverUid.equals(user.getId())) {
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
+
+    public User findUserById(String id, List<User> users) {
+        if (users != null && !users.isEmpty()) {
+            for (User user : users) {
+                if (id.equals(user.getId())) {
                     return user;
                 }
             }

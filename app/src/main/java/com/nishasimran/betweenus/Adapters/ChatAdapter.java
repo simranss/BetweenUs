@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nishasimran.betweenus.DataClasses.Message;
@@ -18,16 +17,16 @@ import com.nishasimran.betweenus.Utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
-    private final ArrayList<Message> messages;
+    private final List<Message> messages;
     private final String uid;
     private final Context context;
     private final ChatFragment fragment;
 
-    public ChatAdapter(ChatFragment fragment, ArrayList<Message> messages, String uid) {
+    public ChatAdapter(ChatFragment fragment, List<Message> messages, String uid) {
         this.fragment = fragment;
         this.context = fragment.getContext();
         this.messages = messages;

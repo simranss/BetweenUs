@@ -52,11 +52,11 @@ public class KeyViewModel extends AndroidViewModel {
         return repository.findKey(keyId, keys);
     }
 
-    public Key getLastKeyWithServerPublic() {
-        return repository.getLastKeyWithServerPublic();
+    public Key getLastKeyWithServerPublic(List<Key> keys) {
+        return repository.getLastKeyWithServerPublic(keys);
     }
 
-    public Key findKeyByMyPublic(String myPublic) {
-        return repository.findKeyByMyPublic(myPublic);
+    public Key findKeyByMyPublic(String myPublic, List<Key> keys) {
+        return repository.findKeyByMyPublic(myPublic, keys);
     }
 }
