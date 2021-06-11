@@ -6,10 +6,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -193,5 +198,35 @@ public class Utils {
     public static void resetSharedPref(@NonNull Application application) {
         SharedPreferences preferences = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
         preferences.edit().clear().commit();
+    }
+
+    public static void hideKeyboard(View view) {
+        WindowInsetsControllerCompat controllerCompat = ViewCompat.getWindowInsetsController(view);
+        if (controllerCompat != null) {
+            controllerCompat.hide(WindowInsetsCompat.Type.ime());
+        }
+    }
+
+    public static void hideKeyboard(Fragment fragment) {
+        WindowInsetsControllerCompat controllerCompat = ViewCompat.getWindowInsetsController(fragment.requireView());
+        if (controllerCompat != null) {
+            controllerCompat.hide(WindowInsetsCompat.Type.ime());
+        }
+    }
+
+    public static boolean isKeyboardVisible(View view) {
+        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(view);
+        if (insets != null) {
+            return insets.isVisible(WindowInsetsCompat.Type.ime());
+        }
+        return false;
+    }
+
+    public static boolean isKeyboardVisible(Fragment fragment) {
+        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(fragment.requireView());
+        if (insets != null) {
+            return insets.isVisible(WindowInsetsCompat.Type.ime());
+        }
+        return false;
     }
 }

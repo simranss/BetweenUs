@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.R;
+import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.ViewModels.UserViewModel;
 
@@ -57,7 +58,9 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         root.setOnClickListener(v -> {
             editText.clearFocus();
-
+            if (Utils.isKeyboardVisible(root)) {
+                Utils.hideKeyboard(root);
+            }
         });
     }
 

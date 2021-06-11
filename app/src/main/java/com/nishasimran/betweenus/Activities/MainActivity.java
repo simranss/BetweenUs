@@ -217,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
 
         if (mainFragment.isDrawerOpen()) {
             mainFragment.closeDrawer();
@@ -226,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             mainFragment.loadFragment(0);
 
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 }
