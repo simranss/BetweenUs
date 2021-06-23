@@ -119,7 +119,7 @@ public class Utils {
 
     public static int getIntFromSharedPreference(@NonNull Application application, String key) {
         SharedPreferences preferences = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        return preferences.getInt(key, 0);
+        return preferences.getInt(key, -1);
     }
 
     public static long getLongFromSharedPreference(@NonNull Application application, String key) {
@@ -228,5 +228,22 @@ public class Utils {
             return insets.isVisible(WindowInsetsCompat.Type.ime());
         }
         return false;
+    }
+
+
+    public static String getMessageStatus(String status) {
+        if (status != null) {
+            switch (status) {
+                case CommonValues.STATUS_SENDING:
+                    return "Sending";
+                case CommonValues.STATUS_SENT:
+                    return "Sent";
+                case CommonValues.STATUS_DELIVERED:
+                    return "Delivered";
+                case CommonValues.STATUS_SEEN:
+                    return "Seen";
+            }
+        }
+        return null;
     }
 }

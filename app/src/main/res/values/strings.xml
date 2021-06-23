@@ -10,6 +10,8 @@
     <string name="dp_desc">Profile picture</string>
     <string name="call_desc">Call</string>
     <string name="menu_desc">Menu</string>
+    <string name="no_messages_icon_desc">Just a random cute image</string>
+    <string name="back_img_desc">Image to select as new background</string>
 
     <!-- Hint strings -->
     <string name="phone_hint">phone no.</string>

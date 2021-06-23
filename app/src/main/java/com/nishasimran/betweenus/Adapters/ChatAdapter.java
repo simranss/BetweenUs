@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nishasimran.betweenus.DataClasses.Message;
@@ -21,15 +22,14 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
-    private final List<Message> messages;
+    private List<Message> messages;
     private final String uid;
     private final Context context;
     private final ChatFragment fragment;
 
-    public ChatAdapter(ChatFragment fragment, List<Message> messages, String uid) {
+    public ChatAdapter(ChatFragment fragment, String uid) {
         this.fragment = fragment;
         this.context = fragment.getContext();
-        this.messages = messages;
         this.uid = uid;
     }
 
@@ -44,40 +44,91 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ChatViewHolder holder, int position) {
-        Message message = messages.get(position);
-        String date = Utils.getFormattedDate(message.getCurrMillis());
-        String time = Utils.getFormattedTime(message.getCurrMillis());
-        String messageText = message.getMessage();
-        if (message.getFrom().trim().equals(uid.trim())) {
-            holder.comeContainer.setVisibility(View.GONE);
-            holder.sendContainer.setVisibility(View.VISIBLE);
+        if (messages != null) {
+            Message message = messages.get(position);
+            String date = Utils.getFormattedDate(message.getCurrMillis());
+            String time = Utils.getFormattedTime(message.getCurrMillis());
+            String messageText = message.getMessage();
+            if (position == 0) {
+                holder.dateTxt.setVisibility(View.VISIBLE);
+                holder.dateTxt.setText(date);
+            } else {
+                String prevDate = Utils.getFormattedDate(messages.get(position - 1).getCurrMillis());
+                if (!date.equals(prevDate)) {
+                    holder.dateTxt.setVisibility(View.VISIBLE);
+                    holder.dateTxt.setText(date);
+                } else {
+                    holder.dateTxt.setVisibility(View.GONE);
+                }
+            }
+            if (message.getFrom().trim().equals(uid.trim())) {
+                holder.comeContainer.setVisibility(View.GONE);
+                holder.sendContainer.setVisibility(View.VISIBLE);
 
-            holder.sendMessageTxt.setText(messageText);
-            holder.sendTimeTxt.setText(time);
-            holder.sendDateTxt.setText(date);
+                holder.sendMessageTxt.setText(messageText);
+                holder.sendTimeTxt.setText(time);
+                holder.sendStatusTxt.setText(Utils.getMessageStatus(message.getStatus()));
 
-        } else if (message.getTo().trim().equals(uid.trim())){
-            holder.comeContainer.setVisibility(View.VISIBLE);
-            holder.sendContainer.setVisibility(View.GONE);
+            } else if (message.getTo().trim().equals(uid.trim())) {
+                holder.comeContainer.setVisibility(View.VISIBLE);
+                holder.sendContainer.setVisibility(View.GONE);
 
-            holder.comeMessageTxt.setText(messageText);
-            holder.comeTimeTxt.setText(time);
-            holder.comeDateTxt.setText(date);
+                holder.comeMessageTxt.setText(messageText);
+                holder.comeTimeTxt.setText(time);
+                holder.comeStatusTxt.setText(Utils.getMessageStatus(message.getStatus()));
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        int size = messages.size();
+        int size = messages == null ? 0 : messages.size();
         fragment.noMessages(size < 1);
         return size;
+    }
+
+    public void setMessages(final List<Message> messages1) {
+        if (messages == null || messages.isEmpty()) {
+            messages = messages1;
+            notifyItemRangeInserted(0, messages1.size());
+        } else {
+            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                @Override
+                public int getOldListSize() {
+                    return messages.size();
+                }
+                @Override
+                public int getNewListSize() {
+                    return messages1.size();
+                }
+                @Override
+                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                    return messages.get(oldItemPosition).getId().equals(messages1.get(newItemPosition).getId());
+                }
+                @Override
+                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                    Message newMessage = messages1.get(newItemPosition);
+                    Message oldMessage = messages.get(oldItemPosition);
+                    return newMessage.equals(oldMessage);
+                }
+            });
+            messages = messages1;
+            result.dispatchUpdatesTo(this);
+        }
+    }
+
+    public int getIndexOf(Message message) {
+        if (messages != null && !messages.isEmpty()) {
+            return messages.indexOf(message);
+        }
+        return 0;
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
 
         private final ConstraintLayout sendContainer;
         private final ConstraintLayout comeContainer;
-        private final TextView comeTimeTxt, sendTimeTxt, comeMessageTxt, sendMessageTxt, comeDateTxt, sendDateTxt;
+        private final TextView dateTxt, comeTimeTxt, sendTimeTxt, comeMessageTxt, sendMessageTxt, comeStatusTxt, sendStatusTxt;
 
         public ChatViewHolder(final Context context, @NonNull @NotNull View itemView, final ChatAdapter adapter, int width) {
             super(itemView);
@@ -86,19 +137,22 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             sendContainer = root.findViewById(R.id.message_send_msg);
             comeContainer = root.findViewById(R.id.message_come_msg);
 
+            dateTxt = root.findViewById(R.id.message_date);
+
             sendContainer.setMaxWidth(width);
             comeContainer.setMaxWidth(width);
 
             comeTimeTxt = comeContainer.findViewById(R.id.message_come_time);
             comeMessageTxt = comeContainer.findViewById(R.id.message_come_text);
-            comeDateTxt = comeContainer.findViewById(R.id.message_come_date);
+            comeStatusTxt = comeContainer.findViewById(R.id.message_come_status);
 
             sendTimeTxt = sendContainer.findViewById(R.id.message_send_time);
             sendMessageTxt = sendContainer.findViewById(R.id.message_send_text);
-            sendDateTxt = sendContainer.findViewById(R.id.message_send_date);
+            sendStatusTxt = sendContainer.findViewById(R.id.message_send_status);
 
             sendContainer.setVisibility(View.GONE);
             comeContainer.setVisibility(View.GONE);
+            dateTxt.setVisibility(View.GONE);
         }
     }
 }

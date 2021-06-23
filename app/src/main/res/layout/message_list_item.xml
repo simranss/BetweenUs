@@ -8,10 +8,29 @@
     android:layout_marginVertical="1dp"
     android:paddingVertical="1dp">
 
+    <TextView
+        android:id="@+id/message_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/white"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:textAlignment="center"
+        android:textColor="@color/dark_grey"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="22nd Apr 2021" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/message_come_msg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@drawable/message_come_back"
         android:backgroundTint="@color/white_40"
         android:paddingVertical="8dp"
@@ -19,7 +38,8 @@
         android:paddingEnd="12dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/message_date"
+        app:layout_goneMarginTop="0dp">
 
         <TextView
             android:id="@+id/message_come_time"
@@ -42,14 +62,14 @@
             tools:text="Hi I am Simran and I am simply testing this textView out\nLet's see how it works" />
 
         <TextView
-            android:id="@+id/message_come_date"
+            android:id="@+id/message_come_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/dark_grey"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/message_come_text"
-            tools:text="05th Jun 2021" />
+            tools:text="Delivered" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -57,14 +77,16 @@
         android:id="@+id/message_send_msg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@drawable/message_send_back"
         android:backgroundTint="@color/white_40"
         android:paddingVertical="8dp"
         android:paddingStart="12dp"
         android:paddingEnd="16dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/message_date"
+        app:layout_goneMarginTop="0dp">
 
         <TextView
             android:id="@+id/message_send_time"
@@ -87,14 +109,14 @@
             tools:text="Hi I am Simran and I am simply testing this textView out\nLet's see how it works" />
 
         <TextView
-            android:id="@+id/message_send_date"
+            android:id="@+id/message_send_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/dark_grey"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/message_send_text"
-            tools:text="05th Jun 2021" />
+            tools:text="Delivered" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

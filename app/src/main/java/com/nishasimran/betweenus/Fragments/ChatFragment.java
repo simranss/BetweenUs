@@ -47,7 +47,6 @@ import com.nishasimran.betweenus.ViewModels.UserViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -129,10 +128,8 @@ public class ChatFragment extends Fragment {
                                         message.setSentCurrMillis(fMessage.getSentCurrMillis());
                                     }
                                     FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
-                                    messages.add(message);
                                     insertMessage(message);
-                                    adapter.notifyItemInserted(messages.indexOf(message));
-                                    recyclerView.scrollToPosition(messages.indexOf(message));
+                                    recyclerView.scrollToPosition(adapter.getIndexOf(message));
                                     Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
                                     mainFragment.insertKey(key1);
                                 } else {
@@ -204,10 +201,8 @@ public class ChatFragment extends Fragment {
                                         message.setSentCurrMillis(fMessage.getSentCurrMillis());
                                     }
                                     FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
-                                    messages.add(message);
                                     insertMessage(message);
-                                    adapter.notifyItemInserted(messages.indexOf(message));
-                                    recyclerView.scrollToPosition(messages.indexOf(message));
+                                    recyclerView.scrollToPosition(adapter.getIndexOf(message));
                                     Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
                                     mainFragment.insertKey(key1);
                                 } else {
@@ -268,22 +263,20 @@ public class ChatFragment extends Fragment {
 
     private void populateTheChats() {
         Log.d(TAG, "populateTheChats");
-        messages.clear();
         initMessagesListener();
         initKeyListener();
     }
 
     private void initMessagesListener() {
         MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllMessages().observe(mainFragment.activity, messages1 -> {
-            if (messages.size() < messages1.size()) {
-                messages.clear();
-                messages.addAll(messages1);
-                adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(messages.size() - 1);
+            if (messages1 != null) {
+                if (messages1.isEmpty()) {
+                    noMessages(true);
+                }
+                messages = messages1;
+                adapter.setMessages(messages1);
+                recyclerView.scrollToPosition(messages1.size() - 1);
                 noMessages(false);
-            }
-            if (messages1.isEmpty()) {
-                noMessages(true);
             }
         });
     }
@@ -357,12 +350,8 @@ public class ChatFragment extends Fragment {
                             null,
                             null,
                             null);
-                    messages.add(message);
                     insertMessage(message);
-                    mainFragment.activity.runOnUiThread(() -> {
-                        adapter.notifyItemInserted(messages.indexOf(message));
-                        recyclerView.scrollToPosition(messages.indexOf(message));
-                    });
+                    mainFragment.activity.runOnUiThread(() -> recyclerView.scrollToPosition(adapter.getIndexOf(message)));
 
                     if (mainFragment.isInternetAvailable()) {
                         Map<String, String> map = encryptMessage(message.getMessage());
@@ -422,7 +411,7 @@ public class ChatFragment extends Fragment {
         UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllUsers().observe(mainFragment.activity, users -> {
             if (users != null && !users.isEmpty()) {
                 Log.d(TAG, "showNameAndDp users: " + users);
-                serverUser = UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getServerUser(users);
+                serverUser = UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getServerUser(users, Utils.getStringFromSharedPreference(mainFragment.activity.getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID));
                 if (serverUser != null) {
                     nameTextView.setText(serverUser.getName());
                 }
@@ -434,8 +423,7 @@ public class ChatFragment extends Fragment {
         Log.d(TAG, "initRecyclerView");
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        messages = new ArrayList<>();
-        adapter = new ChatAdapter(this, messages, mainFragment.getUid());
+        adapter = new ChatAdapter(this, mainFragment.getUid());
 
         recyclerView.setAdapter(adapter);
     }

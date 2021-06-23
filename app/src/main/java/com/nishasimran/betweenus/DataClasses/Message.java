@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 
 import com.nishasimran.betweenus.Values.DatabaseValues;
 
+import java.util.Objects;
+
 @Entity(tableName = DatabaseValues.TABLE_MESSAGES)
 public class Message {
 
@@ -127,5 +129,27 @@ public class Message {
     }
     public void setReadCurrMillis(Long readCurrMillis) {
         this.readCurrMillis = readCurrMillis;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Message)) return false;
+        Message message1 = (Message) o;
+        return getId().equals(message1.getId()) &&
+                Objects.equals(getMessage(), message1.getMessage()) &&
+                Objects.equals(getFrom(), message1.getFrom()) &&
+                Objects.equals(getTo(), message1.getTo()) &&
+                Objects.equals(getMessageType(), message1.getMessageType()) &&
+                Objects.equals(getStatus(), message1.getStatus()) &&
+                Objects.equals(getCurrMillis(), message1.getCurrMillis()) &&
+                Objects.equals(getSentCurrMillis(), message1.getSentCurrMillis()) &&
+                Objects.equals(getDeliveredCurrMillis(), message1.getDeliveredCurrMillis()) &&
+                Objects.equals(getReadCurrMillis(), message1.getReadCurrMillis());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getMessage(), getFrom(), getTo(), getMessageType(), getStatus(), getCurrMillis(), getSentCurrMillis(), getDeliveredCurrMillis(), getReadCurrMillis());
     }
 }

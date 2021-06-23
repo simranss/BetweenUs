@@ -64,7 +64,7 @@ public class UserRepository {
         return null;
     }
 
-    public User getServerUser(List<User> users) {
+    public User getServerUser(List<User> users, String serverUid) {
         System.out.println("inside getServerUser()");
         if (users != null && !users.isEmpty()) {
             for (User user : users) {

@@ -104,7 +104,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </FrameLayout>
 
     <FrameLayout
@@ -139,16 +138,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp">
+                    android:paddingVertical="16dp">
+
+                    <ImageView
+                        android:id="@+id/chat_no_messages_icon"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/no_messages_icon_desc"
+                        android:src="@drawable/couple"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
                         android:gravity="center_horizontal"
                         android:text="@string/convo_start"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/chat_no_messages_icon" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

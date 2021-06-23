@@ -22,10 +22,10 @@
         android:id="@+id/frag_log_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/white_30"
-        android:layout_marginHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frag_log_icon">
