@@ -36,6 +36,7 @@ public class CommonValues {
     public final static String SHARED_PREFERENCE_STATE = "state";
     public final static String SHARED_PREFERENCE_CONNECTION = "connection";
     public final static String SHARED_PREFERENCE_BACKGROUND = "chat_back";
+    public final static String SHARED_PREFERENCE_BACK_BLUR = "chat_back_blur";
 
     public final static String ERROR_PHONE = "Please enter a valid phone number";
     public final static String ERROR_OTP = "Invalid OTP";

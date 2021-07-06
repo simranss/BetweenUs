@@ -57,7 +57,7 @@ public class ChatFragment extends Fragment {
 
     private final MainFragment mainFragment;
 
-    private ConstraintLayout root;
+    private ConstraintLayout root, extraLayer;
     private ImageView navOpen, callImageView, menuImageView, sendImageView;
     private TextView nameTextView;
     private CardView noMessagesCard;
@@ -94,9 +94,14 @@ public class ChatFragment extends Fragment {
 
         listenersForViews();
 
-        initOnGlobalLayoutListener();
+        if (Utils.getIsBackgroundBlur(mainFragment.activity.getApplication())) {
+            initOnGlobalLayoutListener();
 
-        blurBackground();
+            blurBackground();
+        } else {
+            extraLayer.setBackgroundResource(R.color.transparent);
+            root.setBackgroundResource(Utils.getBackgroundId(mainFragment.activity.getApplication()));
+        }
 
         initMessageReceiver();
 
@@ -400,6 +405,7 @@ public class ChatFragment extends Fragment {
     private void initViews(View parent) {
         Log.d(TAG, "initViews");
         root = parent.findViewById(R.id.chat_root);
+        extraLayer = parent.findViewById(R.id.chat_main_extra_layer);
         navOpen = parent.findViewById(R.id.chat_nav_open);
         nameTextView = parent.findViewById(R.id.chat_name);
         callImageView = parent.findViewById(R.id.chat_call);

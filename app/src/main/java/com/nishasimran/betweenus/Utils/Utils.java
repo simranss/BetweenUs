@@ -11,7 +11,6 @@ import android.view.View;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -186,6 +185,14 @@ public class Utils {
 
     public static void setBackgroundInt(@NonNull Application application, int value) {
         writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_BACKGROUND, value);
+    }
+
+    public static boolean getIsBackgroundBlur(@NonNull Application application) {
+        return !getBooleanFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_BACK_BLUR);
+    }
+
+    public static void setIsBackgroundBlur(@NonNull Application application, boolean value) {
+        writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_BACK_BLUR, !value);
     }
 
 
