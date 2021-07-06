@@ -117,11 +117,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
     }
 
-    public int getIndexOf(Message message) {
+    public Integer getIndexOf(Message message) {
         if (messages != null && !messages.isEmpty()) {
             return messages.indexOf(message);
         }
-        return 0;
+        return null;
+    }
+
+    public void updateMessage(int index, Message message) {
+        messages.set(index, message);
+        notifyItemChanged(index);
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {

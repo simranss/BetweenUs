@@ -141,10 +141,11 @@ public class ChatFragment extends Fragment {
                                     String messageId = snapshot.getRef().getKey();
                                     Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                                     if (message != null) {
+                                        int index = adapter.getIndexOf(message);
                                         if (message.getSentCurrMillis() == null) {
                                             message.setStatus(CommonValues.STATUS_SENT);
                                             message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                            updateMessage(message);
+                                            updateMessage(message, index);
                                         } else {
                                             Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                         }
@@ -155,10 +156,11 @@ public class ChatFragment extends Fragment {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
+                                int index = adapter.getIndexOf(message);
                                 if (message.getSentCurrMillis() == null) {
                                     message.setStatus(CommonValues.STATUS_SENT);
                                     message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                    updateMessage(message);
+                                    updateMessage(message, index);
                                 } else {
                                     Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                 }
@@ -167,10 +169,11 @@ public class ChatFragment extends Fragment {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
+                                int index = adapter.getIndexOf(message);
                                 if (message.getDeliveredCurrMillis() == null) {
                                     message.setStatus(CommonValues.STATUS_DELIVERED);
                                     message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
-                                    updateMessage(message);
+                                    updateMessage(message, index);
                                 } else {
                                     Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                 }
@@ -214,10 +217,11 @@ public class ChatFragment extends Fragment {
                                     String messageId = snapshot.getRef().getKey();
                                     Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                                     if (message != null) {
+                                        int index = adapter.getIndexOf(message);
                                         if (message.getSentCurrMillis() == null) {
                                             message.setStatus(CommonValues.STATUS_SENT);
                                             message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                            updateMessage(message);
+                                            updateMessage(message, index);
                                         } else {
                                             Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                         }
@@ -228,10 +232,11 @@ public class ChatFragment extends Fragment {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
+                                int index = adapter.getIndexOf(message);
                                 if (message.getSentCurrMillis() == null) {
                                     message.setStatus(CommonValues.STATUS_SENT);
                                     message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                    updateMessage(message);
+                                    updateMessage(message, index);
                                 } else {
                                     Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                 }
@@ -240,10 +245,11 @@ public class ChatFragment extends Fragment {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
+                                int index = adapter.getIndexOf(message);
                                 if (message.getDeliveredCurrMillis() == null) {
                                     message.setStatus(CommonValues.STATUS_DELIVERED);
                                     message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
-                                    updateMessage(message);
+                                    updateMessage(message, index);
                                 } else {
                                     Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                 }
@@ -270,13 +276,16 @@ public class ChatFragment extends Fragment {
     private void initMessagesListener() {
         MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllMessages().observe(mainFragment.activity, messages1 -> {
             if (messages1 != null) {
-                if (messages1.isEmpty()) {
-                    noMessages(true);
-                }
                 messages = messages1;
                 adapter.setMessages(messages1);
-                recyclerView.scrollToPosition(messages1.size() - 1);
-                noMessages(false);
+                if (messages1.isEmpty()) {
+                    noMessages(true);
+                } else {
+                    recyclerView.scrollToPosition(messages1.size() - 1);
+                    noMessages(false);
+                }
+            } else {
+                noMessages(true);
             }
         });
     }
@@ -474,8 +483,9 @@ public class ChatFragment extends Fragment {
         MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).insert(message);
     }
 
-    private void updateMessage(Message message) {
+    private void updateMessage(Message message, int index) {
         MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).update(message);
+        adapter.updateMessage(index, message);
     }
 
     public void noMessages(boolean value) {
