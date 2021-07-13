@@ -152,4 +152,20 @@ public class Message {
     public int hashCode() {
         return Objects.hash(getId(), getMessage(), getFrom(), getTo(), getMessageType(), getStatus(), getCurrMillis(), getSentCurrMillis(), getDeliveredCurrMillis(), getReadCurrMillis());
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id='" + id + '\'' +
+                ", message='" + message + '\'' +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", messageType='" + messageType + '\'' +
+                ", status='" + status + '\'' +
+                ", currMillis=" + currMillis +
+                ", sentCurrMillis=" + sentCurrMillis +
+                ", deliveredCurrMillis=" + deliveredCurrMillis +
+                ", readCurrMillis=" + readCurrMillis +
+                '}';
+    }
 }

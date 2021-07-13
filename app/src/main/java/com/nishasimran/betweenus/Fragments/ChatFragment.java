@@ -134,7 +134,9 @@ public class ChatFragment extends Fragment {
                                     }
                                     FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
                                     insertMessage(message);
-                                    recyclerView.scrollToPosition(adapter.getIndexOf(message));
+                                    Integer index = adapter.getIndexOf(message);
+                                    if (index != null)
+                                        recyclerView.scrollToPosition(index);
                                     Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
                                     mainFragment.insertKey(key1);
                                 } else {
@@ -146,7 +148,7 @@ public class ChatFragment extends Fragment {
                                     String messageId = snapshot.getRef().getKey();
                                     Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                                     if (message != null) {
-                                        int index = adapter.getIndexOf(message);
+                                        Integer index = adapter.getIndexOf(message);
                                         if (message.getSentCurrMillis() == null) {
                                             message.setStatus(CommonValues.STATUS_SENT);
                                             message.setSentCurrMillis(fMessage.getSentCurrMillis());
@@ -161,7 +163,7 @@ public class ChatFragment extends Fragment {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
-                                int index = adapter.getIndexOf(message);
+                                Integer index = adapter.getIndexOf(message);
                                 if (message.getSentCurrMillis() == null) {
                                     message.setStatus(CommonValues.STATUS_SENT);
                                     message.setSentCurrMillis(fMessage.getSentCurrMillis());
@@ -169,12 +171,22 @@ public class ChatFragment extends Fragment {
                                 } else {
                                     Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                 }
+
+                                if (fMessage.getDeliveredCurrMillis() != null) {
+                                    if (message.getDeliveredCurrMillis() == null) {
+                                        message.setStatus(CommonValues.STATUS_DELIVERED);
+                                        message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                                        updateMessage(message, index);
+                                    } else {
+                                        Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                    }
+                                }
                             }
                         } else if (fMessage.getDeliveredCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
-                                int index = adapter.getIndexOf(message);
+                                Integer index = adapter.getIndexOf(message);
                                 if (message.getDeliveredCurrMillis() == null) {
                                     message.setStatus(CommonValues.STATUS_DELIVERED);
                                     message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
@@ -210,7 +222,9 @@ public class ChatFragment extends Fragment {
                                     }
                                     FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
                                     insertMessage(message);
-                                    recyclerView.scrollToPosition(adapter.getIndexOf(message));
+                                    Integer index = adapter.getIndexOf(message);
+                                    if (index != null)
+                                        recyclerView.scrollToPosition(index);
                                     Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
                                     mainFragment.insertKey(key1);
                                 } else {
@@ -222,7 +236,7 @@ public class ChatFragment extends Fragment {
                                     String messageId = snapshot.getRef().getKey();
                                     Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                                     if (message != null) {
-                                        int index = adapter.getIndexOf(message);
+                                        Integer index = adapter.getIndexOf(message);
                                         if (message.getSentCurrMillis() == null) {
                                             message.setStatus(CommonValues.STATUS_SENT);
                                             message.setSentCurrMillis(fMessage.getSentCurrMillis());
@@ -237,7 +251,7 @@ public class ChatFragment extends Fragment {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
-                                int index = adapter.getIndexOf(message);
+                                Integer index = adapter.getIndexOf(message);
                                 if (message.getSentCurrMillis() == null) {
                                     message.setStatus(CommonValues.STATUS_SENT);
                                     message.setSentCurrMillis(fMessage.getSentCurrMillis());
@@ -245,12 +259,22 @@ public class ChatFragment extends Fragment {
                                 } else {
                                     Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                 }
+
+                                if (fMessage.getDeliveredCurrMillis() != null) {
+                                    if (message.getDeliveredCurrMillis() == null) {
+                                        message.setStatus(CommonValues.STATUS_DELIVERED);
+                                        message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                                        updateMessage(message, index);
+                                    } else {
+                                        Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                    }
+                                }
                             }
                         } else if (fMessage.getDeliveredCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
-                                int index = adapter.getIndexOf(message);
+                                Integer index = adapter.getIndexOf(message);
                                 if (message.getDeliveredCurrMillis() == null) {
                                     message.setStatus(CommonValues.STATUS_DELIVERED);
                                     message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
@@ -281,6 +305,7 @@ public class ChatFragment extends Fragment {
     private void initMessagesListener() {
         MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllMessages().observe(mainFragment.activity, messages1 -> {
             if (messages1 != null) {
+                Log.d(TAG, "messages: " + messages1);
                 messages = messages1;
                 adapter.setMessages(messages1);
                 if (messages1.isEmpty()) {
@@ -365,7 +390,11 @@ public class ChatFragment extends Fragment {
                             null,
                             null);
                     insertMessage(message);
-                    mainFragment.activity.runOnUiThread(() -> recyclerView.scrollToPosition(adapter.getIndexOf(message)));
+                    mainFragment.activity.runOnUiThread(() -> {
+                        Integer index = adapter.getIndexOf(message);
+                        if (index != null)
+                            recyclerView.scrollToPosition(index);
+                    });
 
                     if (mainFragment.isInternetAvailable()) {
                         Map<String, String> map = encryptMessage(message.getMessage());
@@ -489,9 +518,10 @@ public class ChatFragment extends Fragment {
         MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).insert(message);
     }
 
-    private void updateMessage(Message message, int index) {
+    private void updateMessage(Message message, Integer index) {
         MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).update(message);
-        adapter.updateMessage(index, message);
+        if (index != null)
+            adapter.updateMessage(index, message);
     }
 
     public void noMessages(boolean value) {
