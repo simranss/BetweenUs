@@ -12,13 +12,13 @@
         android:id="@+id/message_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/white"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
         android:textAlignment="center"
         android:textColor="@color/dark_grey"
-        android:layout_marginTop="10dp"
         android:textSize="14sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,16 +61,6 @@
             app:layout_constraintTop_toBottomOf="@id/message_come_time"
             tools:text="Hi I am Simran and I am simply testing this textView out\nLet's see how it works" />
 
-        <TextView
-            android:id="@+id/message_come_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_grey"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/message_come_text"
-            tools:text="Delivered" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,7 +73,7 @@
         android:paddingVertical="8dp"
         android:paddingStart="12dp"
         android:paddingEnd="16dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/message_date"
         app:layout_goneMarginTop="0dp">

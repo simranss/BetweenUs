@@ -75,7 +75,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
                 holder.comeMessageTxt.setText(messageText);
                 holder.comeTimeTxt.setText(time);
-                holder.comeStatusTxt.setText(Utils.getMessageStatus(message.getStatus()));
             }
         }
     }
@@ -133,7 +132,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
         private final ConstraintLayout sendContainer;
         private final ConstraintLayout comeContainer;
-        private final TextView dateTxt, comeTimeTxt, sendTimeTxt, comeMessageTxt, sendMessageTxt, comeStatusTxt, sendStatusTxt;
+        private final TextView dateTxt, comeTimeTxt, sendTimeTxt, comeMessageTxt, sendMessageTxt, sendStatusTxt;
 
         public ChatViewHolder(final Context context, @NonNull @NotNull View itemView, final ChatAdapter adapter, int width) {
             super(itemView);
@@ -149,7 +148,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
             comeTimeTxt = comeContainer.findViewById(R.id.message_come_time);
             comeMessageTxt = comeContainer.findViewById(R.id.message_come_text);
-            comeStatusTxt = comeContainer.findViewById(R.id.message_come_status);
 
             sendTimeTxt = sendContainer.findViewById(R.id.message_send_time);
             sendMessageTxt = sendContainer.findViewById(R.id.message_send_text);
