@@ -1,6 +1,5 @@
 package com.nishasimran.betweenus.Fragments;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.nishasimran.betweenus.Activities.UserDetailsActivity;
 import com.nishasimran.betweenus.Adapters.ChatAdapter;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.Message;
@@ -336,9 +334,8 @@ public class ChatFragment extends Fragment {
         navOpen.setOnClickListener(v -> mainFragment.openDrawer());
         nameTextView.setOnClickListener(v -> {
             if (serverUser != null) {
-                Intent intent = new Intent(mainFragment.activity, UserDetailsActivity.class);
-                intent.putExtra(CommonValues.EXTRA_USER_ID, serverUser.getId());
-                startActivity(intent);
+                UserDetailsFragment fragment = new UserDetailsFragment(mainFragment.activity, serverUser);
+                Utils.showFragment(mainFragment.activity.getSupportFragmentManager(), R.id.root_fragment_container, fragment);
             }
         });
 

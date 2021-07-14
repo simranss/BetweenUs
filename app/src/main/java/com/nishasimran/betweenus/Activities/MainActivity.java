@@ -75,15 +75,15 @@ public class MainActivity extends AppCompatActivity {
                     updateState(CommonValues.STATE_NOT_LOGGED_IN);
                     break;
                 case CommonValues.STATE_NOT_LOGGED_IN:
-                    Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, loginFragment);
+                    Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, loginFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_NO_REG:
                     this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
-                    Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, registrationFragment);
+                    Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, registrationFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_WITH_REG:
                     this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
-                    Utils.showFragment(getSupportFragmentManager(), R.id.fragment_container, mainFragment);
+                    Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
                     break;
             }
         });
