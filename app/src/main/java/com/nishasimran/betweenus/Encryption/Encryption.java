@@ -6,7 +6,6 @@ import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.EncryptionString;
 import com.nishasimran.betweenus.Utils.Utils;
 
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -46,7 +45,12 @@ public class Encryption {
 
 
     public static HashMap<String, String> encryptText(@NotNull String text, String serverPublicKey) {
-        byte[] bM = text.getBytes(StandardCharsets.ISO_8859_1);
+        byte[] bM = text.getBytes();
+
+        Log.d(TAG, "text: " + text);
+        Log.d(TAG, "textToBytes: " + Arrays.toString(bM));
+        Log.d(TAG, "bytesToText: " + new String(bM));
+
         SecureRandom random = new SecureRandom();
 
         byte[] privateKey = generatePrivateKey(random);
@@ -98,7 +102,7 @@ public class Encryption {
             Cipher decryptCipher = Cipher.getInstance(EncryptionString.TRANSFORMATION_AES);
             decryptCipher.init(Cipher.DECRYPT_MODE, decryptionKey, new IvParameterSpec(iv));
             byte[] decryptedBytes = decryptCipher.doFinal(cipherText);
-            decryptedMessage = new String(decryptedBytes, StandardCharsets.ISO_8859_1);
+            decryptedMessage = new String(decryptedBytes);
             Log.d(TAG, "decryptedBytes: " + Arrays.toString(decryptedBytes));
             Log.d(TAG, "decryptedMessage: " + decryptedMessage);
 

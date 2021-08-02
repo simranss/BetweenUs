@@ -157,6 +157,8 @@ public class LoginFragment extends Fragment {
                 codeSent = true;
                 disableView(phoneEditText);
                 showView(codeEditText);
+                codeEditText.requestFocus();
+                Log.d(TAG, "otp editText hasFocus(): " + codeEditText.hasFocus());
                 hideView(progressBar);
                 enableView(submitButton);
                 LoginFragment.this.verificationId = verificationId;

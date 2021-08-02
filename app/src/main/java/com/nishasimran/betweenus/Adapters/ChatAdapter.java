@@ -39,7 +39,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public ChatViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.message_list_item, parent, false);
         int width = (int) (parent.getWidth() * 0.75);
-        return new ChatViewHolder(context, view, this, width);
+        return new ChatViewHolder(view, width);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         private final ConstraintLayout comeContainer;
         private final TextView dateTxt, comeTimeTxt, sendTimeTxt, comeMessageTxt, sendMessageTxt, sendStatusTxt;
 
-        public ChatViewHolder(final Context context, @NonNull @NotNull View itemView, final ChatAdapter adapter, int width) {
+        public ChatViewHolder(@NonNull @NotNull View itemView, int width) {
             super(itemView);
 
             ConstraintLayout root = itemView.findViewById(R.id.message_root);
