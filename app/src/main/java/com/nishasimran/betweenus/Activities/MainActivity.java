@@ -128,9 +128,11 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             Log.d(TAG, "User: " + user);
                             if (!uid.equals(user.getId())) {
-                                Utils.writeToSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID, user.getId());
-                                insertUser(user);
-                                snapshot.getRef().removeValue();
+                                String serverUid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
+                                if (serverUid == null || serverUid.equals(CommonValues.NULL)) {
+                                    Utils.writeToSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID, user.getId());
+                                    insertUser(user);
+                                }
                             }
                         }
                     }
@@ -159,13 +161,11 @@ public class MainActivity extends AppCompatActivity {
                             if (!tmpKey.getMyPublic().equals(fKey.getMyPublic())) {
                                 Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
                                 insertKey(key);
-                                snapshot.getRef().removeValue();
                             }
                         } else {
                             Log.d(TAG, "database key: null");
                             Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
                             insertKey(key);
-                            snapshot.getRef().removeValue();
                         }
                     }
                 }
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
             mainFragment.loadFragment(0);
 
         } else {
-            finish();
+            finishAndRemoveTask();
         }
     }
 }

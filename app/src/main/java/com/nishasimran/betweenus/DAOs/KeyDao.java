@@ -16,7 +16,7 @@ import java.util.List;
 @Dao
 public interface KeyDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Key key);
 
     @Update
