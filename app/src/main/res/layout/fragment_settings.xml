@@ -1,14 +1,321 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/settings_blur_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:checked="true"
+        android:text="Do you want the wallpaper blurred?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/settings_demo_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:text="There are total 17 wallpapers. You can change it by entering a number between 1-17 below."
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_blur_switch" />
+
+    <EditText
+        android:id="@+id/settings_wallpaper_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:inputType="number"
+        android:hint="number between 1-17"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_demo_tv" />
+
+    <Button
+        android:id="@+id/settings_save_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--
+
+    <ScrollView
+        android:id="@+id/settings_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/settings_bottom_space"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
+            android:columnCount="3"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/settings_img_1"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_1" />
+
+            <ImageView
+                android:id="@+id/settings_img_2"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_2" />
+
+            <ImageView
+                android:id="@+id/settings_img_3"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="0"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_3" />
+
+            <ImageView
+                android:id="@+id/settings_img_4"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_4" />
+
+            <ImageView
+                android:id="@+id/settings_img_5"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_5" />
+
+            <ImageView
+                android:id="@+id/settings_img_6"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="1"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_6" />
+
+            <ImageView
+                android:id="@+id/settings_img_7"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_7" />
+
+            <ImageView
+                android:id="@+id/settings_img_8"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="2"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_8" />
+
+            <ImageView
+                android:id="@+id/settings_img_9"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="2"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_9" />
+
+            <ImageView
+                android:id="@+id/settings_img_10"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="3"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_10" />
+
+            <ImageView
+                android:id="@+id/settings_img_11"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="3"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_11" />
+
+            <ImageView
+                android:id="@+id/settings_img_12"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="3"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_12" />
+
+            <ImageView
+                android:id="@+id/settings_img_13"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="4"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_13" />
+
+            <ImageView
+                android:id="@+id/settings_img_14"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="4"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_14" />
+
+            <ImageView
+                android:id="@+id/settings_img_15"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="4"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_15" />
+
+            <ImageView
+                android:id="@+id/settings_img_16"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="5"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_16" />
+
+            <ImageView
+                android:id="@+id/settings_img_17"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="5"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_17" />
+
+            <ImageView
+                android:id="@+id/settings_img_18"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_row="5"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:clickable="true"
+                android:contentDescription="@string/back_img_desc"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:tag="settings_img_18" />
+
+        </GridLayout>
+
+    </ScrollView>
+
+    <View
+        android:id="@+id/settings_bottom_space"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+        -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

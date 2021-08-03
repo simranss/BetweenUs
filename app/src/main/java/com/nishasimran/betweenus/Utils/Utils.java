@@ -245,6 +245,10 @@ public class Utils {
         writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_BACKGROUND, value);
     }
 
+    public static int getBackgroundInt(@NonNull Application application) {
+        return getIntFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_BACKGROUND);
+    }
+
     public static boolean getIsBackgroundBlur(@NonNull Application application) {
         return !getBooleanFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_BACK_BLUR);
     }
