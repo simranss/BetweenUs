@@ -223,8 +223,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (mainFragment.chatFragment.fragment.isVisible()) {
-            Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
+        if (mainFragment.chatFragment.fragment != null) {
+            if (mainFragment.chatFragment.fragment.isVisible()) {
+                Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
+            }
 
         } else if (mainFragment.isDrawerOpen()) {
             mainFragment.closeDrawer();
