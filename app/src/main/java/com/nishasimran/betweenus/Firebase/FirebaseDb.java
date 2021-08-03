@@ -134,7 +134,8 @@ public class FirebaseDb {
     }
 
     public void sendMessage(FMessage message) {
-        messagesRef.child(message.getId()).setValue(message.getMap()).addOnSuccessListener(unused -> messagesRef.child(message.getId()).child(FirebaseValues.SENT_CURR_MILLIS).setValue(ServerValue.TIMESTAMP));
+        message.setSentCurrMillis(ServerValue.TIMESTAMP);
+        messagesRef.child(message.getId()).setValue(message.getMap());
     }
 
     public void updateMessageStatus(String id, String status, long currMillis) {

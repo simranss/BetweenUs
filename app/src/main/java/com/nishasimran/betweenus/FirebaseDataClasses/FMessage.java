@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class FMessage {
 
-    Map<String, String> map;
+    Map<String, Object> map;
 
     public FMessage() {
         // required no-argument constructor
@@ -38,7 +38,7 @@ public class FMessage {
         map.put(FirebaseValues.IV, iv);
     }
 
-    public FMessage(@NotNull @NonNull Map<String, String> map) {
+    public FMessage(@NotNull @NonNull Map<String, Object> map) {
         this.map = map;
     }
 
@@ -97,6 +97,12 @@ public class FMessage {
         }
     }
 
+    public void setSentCurrMillis(Map<String, String> sentCurrMillis) {
+        if (map != null) {
+            map.put(FirebaseValues.SENT_CURR_MILLIS, sentCurrMillis);
+        }
+    }
+
     public void setReadCurrMillis(String readCurrMillis) {
         if (map != null) {
             map.put(FirebaseValues.READ_CURR_MILLIS, readCurrMillis);
@@ -124,42 +130,42 @@ public class FMessage {
 
     public String getId() {
         if (map != null) {
-            return map.get(FirebaseValues.ID);
+            return (String) map.get(FirebaseValues.ID);
         }
         return null;
     }
 
     public String getMessage() {
         if (map != null) {
-            return map.get(FirebaseValues.ENCRYPTED_MESSAGE);
+            return (String) map.get(FirebaseValues.ENCRYPTED_MESSAGE);
         }
         return null;
     }
 
     public String getFrom() {
         if (map != null) {
-            return map.get(FirebaseValues.MESSAGE_FROM);
+            return (String) map.get(FirebaseValues.MESSAGE_FROM);
         }
         return null;
     }
 
     public String getTo() {
         if (map != null) {
-            return map.get(FirebaseValues.MESSAGE_TO);
+            return (String) map.get(FirebaseValues.MESSAGE_TO);
         }
         return null;
     }
 
     public String getMessageType() {
         if (map != null) {
-            return map.get(FirebaseValues.MESSAGE_TYPE);
+            return (String) map.get(FirebaseValues.MESSAGE_TYPE);
         }
         return null;
     }
 
     public String getStatus() {
         if (map != null) {
-            return map.get(FirebaseValues.MESSAGE_STATUS);
+            return (String) map.get(FirebaseValues.MESSAGE_STATUS);
         }
         return null;
     }
@@ -219,26 +225,26 @@ public class FMessage {
 
     public String getServerPublic() {
         if (map != null) {
-            return map.get(FirebaseValues.SERVER_PUBLIC);
+            return (String) map.get(FirebaseValues.SERVER_PUBLIC);
         }
         return null;
     }
 
     public String getMyPublic() {
         if (map != null) {
-            return map.get(FirebaseValues.MY_PUBLIC);
+            return (String) map.get(FirebaseValues.MY_PUBLIC);
         }
         return null;
     }
 
     public String getIv() {
         if (map != null) {
-            return map.get(FirebaseValues.IV);
+            return (String) map.get(FirebaseValues.IV);
         }
         return null;
     }
 
-    public Map<String, String> getMap() {
+    public Map<String, Object> getMap() {
         return map;
     }
 

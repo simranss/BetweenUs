@@ -116,7 +116,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
                 if (snapshot.exists()) {
-                    Map<String, String> map = (Map<String, String>) snapshot.getValue();
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
                     if (map != null) {
                         FMessage fMessage = new FMessage(map);
                         Log.d(TAG, "fMessage: " + fMessage);
@@ -132,6 +132,7 @@ public class ChatFragment extends Fragment {
                                     String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
                                     Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
                                     if (fMessage.getSentCurrMillis() != null) {
+                                        message.setCurrMillis(fMessage.getSentCurrMillis());
                                         message.setSentCurrMillis(fMessage.getSentCurrMillis());
                                     }
                                     FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
@@ -204,7 +205,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
                 if (snapshot.exists()) {
-                    Map<String, String> map = (Map<String, String>) snapshot.getValue();
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
                     if (map != null) {
                         FMessage fMessage = new FMessage(map);
                         Log.d(TAG, "fMessage: " + fMessage);
@@ -220,6 +221,7 @@ public class ChatFragment extends Fragment {
                                     String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
                                     Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
                                     if (fMessage.getSentCurrMillis() != null) {
+                                        message.setCurrMillis(fMessage.getSentCurrMillis());
                                         message.setSentCurrMillis(fMessage.getSentCurrMillis());
                                     }
                                     FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
