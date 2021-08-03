@@ -161,11 +161,13 @@ public class MainActivity extends AppCompatActivity {
                             if (!tmpKey.getMyPublic().equals(fKey.getMyPublic())) {
                                 Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
                                 insertKey(key);
+                                snapshot.getRef().removeValue();
                             }
                         } else {
                             Log.d(TAG, "database key: null");
                             Key key = new Key(fKey.getId(), null, null, fKey.getMyPublic(), fKey.getCurrMillis());
                             insertKey(key);
+                            snapshot.getRef().removeValue();
                         }
                     }
                 }
