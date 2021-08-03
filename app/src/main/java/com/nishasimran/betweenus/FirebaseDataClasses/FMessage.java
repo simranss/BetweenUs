@@ -197,7 +197,7 @@ public class FMessage {
     public Long getSentCurrMillis() {
         if (map != null) {
             Object object = map.get(FirebaseValues.SENT_CURR_MILLIS);
-            System.out.println(String.valueOf(map.get(FirebaseValues.SENT_CURR_MILLIS)));
+            System.out.println(map.get(FirebaseValues.SENT_CURR_MILLIS));
             System.out.println(object);
             if (object != null) {
                 try {

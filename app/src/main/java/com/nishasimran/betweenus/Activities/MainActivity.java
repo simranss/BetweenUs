@@ -1,5 +1,8 @@
 package com.nishasimran.betweenus.Activities;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,26 +10,23 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
-import android.os.Bundle;
-import android.util.Log;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.nishasimran.betweenus.FirebaseDataClasses.FirebaseKey;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
+import com.nishasimran.betweenus.FirebaseDataClasses.FirebaseKey;
 import com.nishasimran.betweenus.Fragments.LoginFragment;
 import com.nishasimran.betweenus.Fragments.MainFragment;
 import com.nishasimran.betweenus.Fragments.RegistrationFragment;
 import com.nishasimran.betweenus.R;
-import com.nishasimran.betweenus.Values.CommonValues;
+import com.nishasimran.betweenus.State.StateViewModel;
 import com.nishasimran.betweenus.Utils.Utils;
+import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.FirebaseValues;
 import com.nishasimran.betweenus.ViewModels.KeyViewModel;
-import com.nishasimran.betweenus.State.StateViewModel;
 import com.nishasimran.betweenus.ViewModels.UserViewModel;
 
 import java.util.List;
@@ -223,12 +223,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (mainFragment.isDrawerOpen()) {
+        if (mainFragment.chatFragment.fragment.isVisible()) {
+            Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
+
+        } else if (mainFragment.isDrawerOpen()) {
             mainFragment.closeDrawer();
 
         } else if (!mainFragment.isHomeFragment()) {
             mainFragment.loadFragment(0);
 
+        } else if (!mainFragment.chatFragment.isVisible()) {
+            mainFragment.loadFragment(0);
         } else {
             finishAndRemoveTask();
         }

@@ -4,6 +4,12 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -11,13 +17,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,7 +47,8 @@ public class MainFragment extends Fragment {
     private MainFragmentAdapter adapter;
 
     // fragments
-    private Fragment chatFragment, memoriesFragment, calendarFragment, tasksFragment, dsFragment, docsForusFragment, docsPoemsFragment, docsDreamsFragment, settingsFragment;
+    public ChatFragment chatFragment;
+    public Fragment memoriesFragment, calendarFragment, tasksFragment, dsFragment, docsForusFragment, docsPoemsFragment, docsDreamsFragment, settingsFragment;
 
     // blur components
     private FrameLayout root;

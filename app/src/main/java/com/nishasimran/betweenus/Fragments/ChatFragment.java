@@ -1,15 +1,6 @@
 package com.nishasimran.betweenus.Fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +9,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -67,6 +66,8 @@ public class ChatFragment extends Fragment {
 
     private DatabaseReference lastSeenRef;
     private ValueEventListener lastSeenListener;
+
+    public UserDetailsFragment fragment;
 
     public ChatFragment(MainFragment fragment) {
         this.mainFragment = fragment;
@@ -323,7 +324,7 @@ public class ChatFragment extends Fragment {
         navOpen.setOnClickListener(v -> mainFragment.openDrawer());
         nameTextView.setOnClickListener(v -> {
             if (serverUser != null) {
-                UserDetailsFragment fragment = new UserDetailsFragment(mainFragment.activity, serverUser);
+                fragment = new UserDetailsFragment(mainFragment.activity, serverUser);
                 Utils.showFragment(mainFragment.activity.getSupportFragmentManager(), R.id.root_fragment_container, fragment);
             }
         });
