@@ -291,7 +291,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void initMessagesListener() {
-        MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllMessages().observe(mainFragment.activity, messages1 -> {
+        MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getHundredMessages(0).observe(mainFragment.activity, messages1 -> {
             if (messages1 != null) {
                 Log.d(TAG, "messages: " + messages1);
                 messages = messages1;
@@ -352,6 +352,25 @@ public class ChatFragment extends Fragment {
         sendImageView.setOnLongClickListener(v -> {
             sendPopupMenu.show();
             return false;
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                /*
+                 -1 = up
+                 1 = down
+                 0 = returns false
+                 */
+                if (!recyclerView.canScrollVertically(-1)) {
+                    MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getHundredMessages(100).observe(mainFragment.activity, messages1 -> {
+                        messages.addAll(0, messages1);
+                        adapter.setMessages(messages);
+                    });
+                }
+            }
         });
     }
 

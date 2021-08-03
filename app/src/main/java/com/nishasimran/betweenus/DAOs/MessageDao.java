@@ -30,4 +30,7 @@ public interface MessageDao {
 
     @Query("SELECT * FROM " + DatabaseValues.TABLE_MESSAGES + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
     LiveData<List<Message>> getAllMessages();
+
+    @Query("SELECT * FROM (SELECT * FROM " + DatabaseValues.TABLE_MESSAGES + " ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " DESC LIMIT :offset, 100) ORDER BY " + DatabaseValues.COLUMN_CURR_MILLIS + " ASC")
+    LiveData<List<Message>> getHundredMessages(int offset);
 }

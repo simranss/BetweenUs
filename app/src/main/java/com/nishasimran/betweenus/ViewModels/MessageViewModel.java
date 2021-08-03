@@ -20,12 +20,9 @@ public class MessageViewModel extends AndroidViewModel {
 
     private final MessageRepository mRepository;
 
-    private final LiveData<List<Message>> mAllMessages;
-
     public MessageViewModel (Application application) {
         super(application);
         mRepository = new MessageRepository(application);
-        mAllMessages = mRepository.getAllMessages();
     }
 
     public static MessageViewModel getInstance(@NonNull ViewModelStoreOwner owner, @NonNull Application application) {
@@ -36,7 +33,9 @@ public class MessageViewModel extends AndroidViewModel {
         return INSTANCE;
     }
 
-    public LiveData<List<Message>> getAllMessages() { return mAllMessages; }
+    public LiveData<List<Message>> getAllMessages() { return mRepository.getAllMessages(); }
+
+    public LiveData<List<Message>> getHundredMessages(int offset) { return mRepository.getHundredMessages(offset); }
 
     public void insert(Message message) { mRepository.insert(message); }
 
