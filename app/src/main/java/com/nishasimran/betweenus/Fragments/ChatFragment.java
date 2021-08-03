@@ -27,6 +27,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.nishasimran.betweenus.Adapters.ChatAdapter;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.Message;
@@ -57,7 +58,7 @@ public class ChatFragment extends Fragment {
 
     private ConstraintLayout root, extraLayer;
     private ImageView navOpen, callImageView, menuImageView, sendImageView;
-    private TextView nameTextView;
+    private TextView nameTextView, lastSeenTextView;
     private CardView noMessagesCard;
     private RecyclerView recyclerView;
     private EditText messageEditText;
@@ -71,6 +72,9 @@ public class ChatFragment extends Fragment {
     private User serverUser = null;
 
     private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
+
+    private DatabaseReference lastSeenRef;
+    private ValueEventListener lastSeenListener;
 
     public ChatFragment(MainFragment fragment) {
         this.mainFragment = fragment;
@@ -434,6 +438,7 @@ public class ChatFragment extends Fragment {
         extraLayer = parent.findViewById(R.id.chat_main_extra_layer);
         navOpen = parent.findViewById(R.id.chat_nav_open);
         nameTextView = parent.findViewById(R.id.chat_name);
+        lastSeenTextView = parent.findViewById(R.id.chat_last_seen);
         callImageView = parent.findViewById(R.id.chat_call);
         menuImageView = parent.findViewById(R.id.chat_menu);
         noMessagesCard = parent.findViewById(R.id.chat_no_messages);
@@ -445,7 +450,46 @@ public class ChatFragment extends Fragment {
 
         initRecyclerView();
 
+        initLastSeenListener();
         showNameAndDp();
+    }
+
+    private void initLastSeenListener() {
+        lastSeenListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Object o = snapshot.getValue();
+                    if (o != null) {
+                        if (o instanceof String) {
+                            String lastSeen = (String) o;
+                            Log.d(TAG, "lastSeen str: " + lastSeen);
+                            if (lastSeen.trim().isEmpty()) {
+                                Log.d(TAG, "lastSeen empty");
+                            } else {
+                                if (lastSeen.trim().equals(CommonValues.STATUS_ONLINE)) {
+                                    lastSeenTextView.setText(R.string.online);
+                                } else {
+                                    Log.d(TAG, "last seen error");
+                                }
+                            }
+                        } else if (o instanceof Long) {
+                            Long lastSeen = (Long) o;
+                            Log.d(TAG, "lastSeen long: " + lastSeen);
+                            String lastSeenStr = Utils.getFormattedLastSeenTime(lastSeen).trim();
+                            Log.d(TAG, "lastSeen calculated: " + lastSeenStr);
+                            lastSeenTextView.setText(lastSeenStr);
+                        } else {
+                            Log.d(TAG, "lastSeen class: " + o.getClass().getName() + o.toString());
+                        }
+                    } else {
+                        Log.d(TAG, "lastSeen null");
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        };
     }
 
     private void showNameAndDp() {
@@ -455,9 +499,23 @@ public class ChatFragment extends Fragment {
                 serverUser = UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getServerUser(users, Utils.getStringFromSharedPreference(mainFragment.activity.getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID));
                 if (serverUser != null) {
                     nameTextView.setText(serverUser.getName());
+                    updateLastSeenListeners(serverUser.getId());
                 }
             }
         });
+    }
+
+    private void updateLastSeenListeners(String serverUid) {
+        if (lastSeenListener != null) {
+            if (lastSeenRef != null) {
+                lastSeenRef.removeEventListener(lastSeenListener);
+            }
+            lastSeenRef = FirebaseDb.root.child(FirebaseValues.LAST_SEEN).child(serverUid);
+
+            lastSeenRef.addValueEventListener(lastSeenListener);
+        } else {
+            initLastSeenListener();
+        }
     }
 
     private void initRecyclerView() {

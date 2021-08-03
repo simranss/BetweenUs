@@ -60,6 +60,64 @@ public class Utils {
         return formattedDate;
     }
 
+    public static String getFormattedLastSeenTime(long milliSec) {
+        String time = getFormattedTime(milliSec).trim();
+        Date date = new Date(milliSec);
+        Date currDate = new Date(System.currentTimeMillis());
+        String day = new SimpleDateFormat("dd", Locale.getDefault()).format(date).trim();
+        String month = new SimpleDateFormat("MMM", Locale.getDefault()).format(date).trim();
+        String year = new SimpleDateFormat("yyyy", Locale.getDefault()).format(date).trim();
+        String currDay = new SimpleDateFormat("dd", Locale.getDefault()).format(currDate).trim();
+        String currMonth = new SimpleDateFormat("MMM", Locale.getDefault()).format(currDate).trim();
+        String currYear = new SimpleDateFormat("yyyy", Locale.getDefault()).format(currDate).trim();
+        String romanTerm;
+        switch (day) {
+            case "01":
+            case "21":
+                romanTerm = "st";
+            break;
+            case "02":
+            case "22":
+                romanTerm = "nd";
+            break;
+            case "03":
+            case "23":
+                romanTerm = "rd";
+            break;
+            default:
+                romanTerm = "th";
+            break;
+        }
+        String formattedDate = day + romanTerm + " " + month + " " + year;
+
+        if (day.equals(currDay) && month.equals(currMonth) && year.equals(currYear)) {
+            return time;
+        } else {
+            if (!year.equals(currYear)) {
+                return formattedDate;
+            } else if (!month.equals(currMonth)) {
+                return day + romanTerm + " " + month;
+            } else {
+                try {
+                    int dayInt = Integer.parseInt(day);
+                    int currDayInt = Integer.parseInt(currDay);
+                    if (currDayInt - dayInt > 1) {
+                        return time + " on " + day + romanTerm;
+                    } else if (currDayInt - dayInt == 1) {
+                        return time + " yesterday";
+                    } else if (currDayInt - dayInt == 0) {
+                        return time;
+                    } else {
+                        return time + " " + formattedDate;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return time + " " + formattedDate;
+                }
+            }
+        }
+    }
+
     public static String getFormattedTime(long milliSec) {
         Date date = new Date(milliSec);
 
