@@ -127,17 +127,14 @@
         android:id="@+id/chat_main_screen"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white_10"
         app:layout_constraintBottom_toTopOf="@id/chat_message_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/chat_app_bar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/chat_main_extra_layer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white_40">
+            android:layout_height="match_parent">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/chat_no_messages"

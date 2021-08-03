@@ -1,14 +1,11 @@
 package com.nishasimran.betweenus.Fragments;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,7 +32,6 @@ import com.nishasimran.betweenus.Encryption.Encryption;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.FirebaseDataClasses.FMessage;
 import com.nishasimran.betweenus.R;
-import com.nishasimran.betweenus.Utils.BlurBuilder;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.FirebaseValues;
@@ -56,7 +51,6 @@ public class ChatFragment extends Fragment {
 
     private final MainFragment mainFragment;
 
-    private ConstraintLayout root, extraLayer;
     private ImageView navOpen, callImageView, menuImageView, sendImageView;
     private TextView nameTextView, lastSeenTextView;
     private CardView noMessagesCard;
@@ -70,8 +64,6 @@ public class ChatFragment extends Fragment {
     private List<Key> keys;
 
     private User serverUser = null;
-
-    private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
 
     private DatabaseReference lastSeenRef;
     private ValueEventListener lastSeenListener;
@@ -95,15 +87,6 @@ public class ChatFragment extends Fragment {
         populateTheChats();
 
         listenersForViews();
-
-        if (Utils.getIsBackgroundBlur(mainFragment.activity.getApplication())) {
-            initOnGlobalLayoutListener();
-
-            blurBackground();
-        } else {
-            extraLayer.setBackgroundResource(R.color.transparent);
-            root.setBackgroundResource(Utils.getBackgroundId(mainFragment.activity.getApplication()));
-        }
 
         initMessageReceiver();
 
@@ -436,8 +419,6 @@ public class ChatFragment extends Fragment {
 
     private void initViews(View parent) {
         Log.d(TAG, "initViews");
-        root = parent.findViewById(R.id.chat_root);
-        extraLayer = parent.findViewById(R.id.chat_main_extra_layer);
         navOpen = parent.findViewById(R.id.chat_nav_open);
         nameTextView = parent.findViewById(R.id.chat_name);
         lastSeenTextView = parent.findViewById(R.id.chat_last_seen);
@@ -540,34 +521,8 @@ public class ChatFragment extends Fragment {
         }
     }
 
-    private void blurBackground() {
-        Log.d(TAG, "blurBackground");
-        if (getContext() != null) {
-            if (root.getWidth() > 0) {
-                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), Utils.getBackgroundId(mainFragment.activity.getApplication()), null, null);
-                root.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
-            } else {
-                root.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
-            }
-        }
-    }
-
-    private void initOnGlobalLayoutListener() {
-        Log.d(TAG, "initOnGlobalLayoutListener");
-        if (getContext() != null)
-            onGlobalLayoutListener = () -> {
-                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), Utils.getBackgroundId(mainFragment.activity.getApplication()), null, null);
-                if (blurredBitmap != null) {
-                    root.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
-                } else {
-                    root.setBackgroundResource(Utils.getBackgroundId(mainFragment.activity.getApplication()));
-                }
-            };
-    }
-
     @Override
     public void onPause() {
-        root.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
         super.onPause();
     }
 

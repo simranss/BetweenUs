@@ -1,6 +1,8 @@
 package com.nishasimran.betweenus.Fragments;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.IdRes;
@@ -14,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +27,7 @@ import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.R;
+import com.nishasimran.betweenus.Utils.BlurBuilder;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
 
@@ -44,6 +49,10 @@ public class MainFragment extends Fragment {
 
     // fragments
     private Fragment chatFragment, memoriesFragment, calendarFragment, tasksFragment, dsFragment, docsForusFragment, docsPoemsFragment, docsDreamsFragment, settingsFragment;
+
+    // blur components
+    private FrameLayout root;
+    private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
 
     private boolean isDocsExpanded = false;
 
@@ -72,6 +81,17 @@ public class MainFragment extends Fragment {
 
         setDocsExpanded(false);
 
+        root = parent.findViewById(R.id.main_root);
+        FrameLayout extraLayer = parent.findViewById(R.id.main_extra_layer);
+        if (Utils.getIsBackgroundBlur(activity.getApplication())) {
+            initOnGlobalLayoutListener();
+
+            blurBackground();
+        } else {
+            extraLayer.setBackgroundResource(R.color.transparent);
+            root.setBackgroundResource(Utils.getBackgroundId(activity.getApplication()));
+        }
+
         // by default load the home fragment
         if (savedInstanceState == null) {
             loadFragment(0);
@@ -87,6 +107,37 @@ public class MainFragment extends Fragment {
         setNavigationListener();
 
         return parent;
+    }
+
+    @Override
+    public void onPause() {
+        root.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
+        super.onPause();
+    }
+
+    private void blurBackground() {
+        Log.d(TAG, "blurBackground");
+        if (getContext() != null) {
+            if (root.getWidth() > 0) {
+                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), Utils.getBackgroundId(activity.getApplication()), null, null);
+                root.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
+            } else {
+                root.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+            }
+        }
+    }
+
+    private void initOnGlobalLayoutListener() {
+        Log.d(TAG, "initOnGlobalLayoutListener");
+        if (getContext() != null)
+            onGlobalLayoutListener = () -> {
+                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), Utils.getBackgroundId(activity.getApplication()), null, null);
+                if (blurredBitmap != null) {
+                    root.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
+                } else {
+                    root.setBackgroundResource(Utils.getBackgroundId(activity.getApplication()));
+                }
+            };
     }
 
     private void setDrawerListener() {
