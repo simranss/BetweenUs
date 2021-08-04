@@ -3,7 +3,6 @@ package com.nishasimran.betweenus.Firebase;
 import android.app.Application;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -14,9 +13,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.nishasimran.betweenus.FirebaseDataClasses.FMessage;
+import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.FirebaseValues;
-import com.nishasimran.betweenus.Utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,33 +42,6 @@ public class FirebaseDb {
         return INSTANCE;
     }
 
-    public LiveData<String> addListenerForServerLastSeen(String serverUid) {
-        lastSeen.setValue(null);
-        root.child(FirebaseValues.LAST_SEEN).child(serverUid).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    Object object = snapshot.getValue();
-                    if (object != null) {
-                        if (object instanceof String) {
-                            lastSeen.setValue((String) object);
-                        } else if (object instanceof Long) {
-                            lastSeen.setValue(String.valueOf((long) object));
-                        }
-                    } else {
-                        lastSeen.setValue(null);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                lastSeen.setValue(null);
-            }
-        });
-        return lastSeen;
-    }
-
     private void initListenerForConnectionChange(String uid, Application application) {
         connectionChangeListener = new ValueEventListener() {
             @Override
@@ -83,9 +55,11 @@ public class FirebaseDb {
                             // When I disconnect, update the last time I was seen online
                             if (uid != null && !uid.equals(CommonValues.NULL)) {
                                 final DatabaseReference lastOnlineRef = root.child(FirebaseValues.LAST_SEEN).child(uid);
-                                lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
+                                final DatabaseReference disconnectRef = root.child(FirebaseValues.DISCONNECT).child(uid);
+                                disconnectRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
 
                                 lastOnlineRef.setValue(CommonValues.STATUS_ONLINE);
+                                disconnectRef.setValue(CommonValues.NULL);
                             }
 
                             Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_CONNECTION, CommonValues.CONNECTION_CONNECTED);
@@ -128,7 +102,9 @@ public class FirebaseDb {
 
     public void userOnline(String uid) {
         final DatabaseReference lastOnlineRef = root.child(FirebaseValues.LAST_SEEN).child(uid);
+        final DatabaseReference disconnectRef = root.child(FirebaseValues.DISCONNECT).child(uid);
         lastOnlineRef.setValue(CommonValues.STATUS_ONLINE);
+        disconnectRef.setValue(CommonValues.NULL);
     }
 
     public void removeConnectionChangeListener() {

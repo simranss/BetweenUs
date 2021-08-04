@@ -455,11 +455,10 @@ public class ChatFragment extends Fragment {
 
         initRecyclerView();
 
-        initLastSeenListener();
         showNameAndDp();
     }
 
-    private void initLastSeenListener() {
+    private void initLastSeenListener(String serverUid) {
         lastSeenListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -473,7 +472,29 @@ public class ChatFragment extends Fragment {
                                 Log.d(TAG, "lastSeen empty");
                             } else {
                                 if (lastSeen.trim().equals(CommonValues.STATUS_ONLINE)) {
-                                    lastSeenTextView.setText(R.string.online);
+                                    FirebaseDb.root.child(FirebaseValues.DISCONNECT).child(serverUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists()) {
+                                                Object disconnectLastSeen = snapshot.getValue();
+                                                if (disconnectLastSeen != null) {
+                                                    if (disconnectLastSeen instanceof String && !((String) disconnectLastSeen).trim().isEmpty() && CommonValues.NULL.equals(disconnectLastSeen)) {
+                                                        lastSeenTextView.setText(R.string.online);
+                                                    } else if (disconnectLastSeen instanceof Long) {
+                                                        Long lastSeen = (Long) disconnectLastSeen;
+                                                        Log.d(TAG, "lastSeen long: " + lastSeen);
+                                                        String lastSeenStr = Utils.getFormattedLastSeenTime(lastSeen).trim();
+                                                        Log.d(TAG, "lastSeen calculated: " + lastSeenStr);
+                                                        lastSeenTextView.setText(lastSeenStr);
+                                                    }
+                                                } else {
+                                                    lastSeenTextView.setText(R.string.online);
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) { }
+                                    });
                                 } else {
                                     Log.d(TAG, "last seen error");
                                 }
@@ -504,6 +525,7 @@ public class ChatFragment extends Fragment {
                 serverUser = UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getServerUser(users, Utils.getStringFromSharedPreference(mainFragment.activity.getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID));
                 if (serverUser != null) {
                     nameTextView.setText(serverUser.getName());
+                    initLastSeenListener(serverUser.getId());
                     updateLastSeenListeners(serverUser.getId());
                 }
             }
@@ -519,7 +541,7 @@ public class ChatFragment extends Fragment {
 
             lastSeenRef.addValueEventListener(lastSeenListener);
         } else {
-            initLastSeenListener();
+            initLastSeenListener(serverUid);
         }
     }
 

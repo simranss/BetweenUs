@@ -14,14 +14,10 @@ import org.jetbrains.annotations.NotNull;
 public class StateRepository {
 
     private final Application application;
-    private String uid;
-    private final String serverUid;
     private MutableLiveData<String> state;
 
     public StateRepository(@NotNull Application application) {
         this.application = application;
-        uid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID);
-        serverUid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_SERVER_UID);
         if (state == null) {
             state = new MutableLiveData<>();
         }
@@ -33,12 +29,6 @@ public class StateRepository {
         state.setValue(stateValue);
     }
 
-    public String getUid() {
-        return uid;
-    }
-    public String getServerUid() {
-        return serverUid;
-    }
     public LiveData<String> getState() {
         return state;
     }
@@ -48,12 +38,8 @@ public class StateRepository {
         this.state.setValue(state);
     }
 
-    public LiveData<String> addListenerForServerLastSeen() {
-        return FirebaseDb.getInstance().addListenerForServerLastSeen(serverUid);
-    }
-
     public LiveData<Boolean> addListenerForConnectionChanges() {
-        uid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID);
+        String uid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID);
         return FirebaseDb.getInstance().listenersForConnectionChanges(uid, application);
     }
 

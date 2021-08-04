@@ -33,12 +33,6 @@ public class StateViewModel extends AndroidViewModel {
         return repository.addListenerForConnectionChanges();
     }
 
-    public LiveData<String> addServerLastSeenChangeListener() {
-        LiveData<String> lastSeen =  repository.addListenerForServerLastSeen();
-        Log.d(TAG, "addServerLastSeenChangeListener: " + lastSeen.getValue());
-        return lastSeen;
-    }
-
     public LiveData<String> getState() {
         Log.d(TAG, "getState: " + repository.getState().getValue());
         return repository.getState();
@@ -47,16 +41,6 @@ public class StateViewModel extends AndroidViewModel {
     public void updateState(String state) {
         Log.d(TAG, "updateState: " + state);
         repository.updateState(state);
-    }
-
-    public String getServerUid() {
-        Log.d(TAG, "getServerUid: " + repository.getServerUid());
-        return repository.getServerUid();
-    }
-
-    public String getUid() {
-        Log.d(TAG, "getUid: " + repository.getUid());
-        return repository.getUid();
     }
 
 }
