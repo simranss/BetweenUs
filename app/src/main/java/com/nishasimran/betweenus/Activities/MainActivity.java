@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                             if (!uid.equals(user.getId())) {
                                 String serverUid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
                                 if (serverUid == null || serverUid.equals(CommonValues.NULL)) {
+                                    Utils.writeToSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_NAME, user.getName());
                                     Utils.writeToSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID, user.getId());
                                     insertUser(user);
                                 }
@@ -220,7 +221,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().removeObserver(connectionObserver);
         FirebaseDb.getInstance().removeConnectionChangeListener();
-        mainFragment.chatFragment.removeMessageListener();
+        if (mainFragment.chatFragment != null)
+            mainFragment.chatFragment.removeMessageListener();
         FirebaseDb.getInstance().userOffline(uid);
         startService(new Intent(getApplicationContext(), MessageService.class));
 

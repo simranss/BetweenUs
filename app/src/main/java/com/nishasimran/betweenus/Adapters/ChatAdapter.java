@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nishasimran.betweenus.DataClasses.Message;
+import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.Fragments.ChatFragment;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Utils.Utils;
+import com.nishasimran.betweenus.Values.CommonValues;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -74,6 +76,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
                 holder.comeMessageTxt.setText(messageText);
                 holder.comeTimeTxt.setText(time);
+
+                if (message.getUnread() != null) {
+                    if (message.getUnread())
+                        message.setUnread(false);
+                        FirebaseDb.getInstance().updateMessageStatus(message.getId(), CommonValues.STATUS_SEEN, System.currentTimeMillis());
+                }
             }
         }
     }

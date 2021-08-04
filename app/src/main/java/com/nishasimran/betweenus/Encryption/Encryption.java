@@ -2,9 +2,11 @@ package com.nishasimran.betweenus.Encryption;
 
 import android.util.Log;
 
+import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.EncryptionString;
-import com.nishasimran.betweenus.Utils.Utils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -12,8 +14,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -90,8 +90,6 @@ public class Encryption {
         byte[] privateKey = Utils.stringByteArrayToByteArray(private_key);
         byte[] cipherText = Utils.stringByteArrayToByteArray(encryptedText);
         byte[] iv = Utils.stringByteArrayToByteArray(ivStr);
-
-        SecureRandom random = new SecureRandom();
 
         byte[] sharedKey = generateSharedKey(privateKey, serverKey);
 

@@ -35,6 +35,8 @@ public class Message {
     private Long deliveredCurrMillis;
     @ColumnInfo(name = DatabaseValues.COLUMN_READ_CURR_MILLIS)
     private Long readCurrMillis;
+    @ColumnInfo(name = DatabaseValues.COLUMN_UNREAD)
+    private Boolean unread;
 
 
 
@@ -98,6 +100,9 @@ public class Message {
     public Long getReadCurrMillis() {
         return readCurrMillis;
     }
+    public Boolean getUnread() {
+        return unread;
+    }
 
     // setters
     public void setId(@NonNull String id) {
@@ -129,6 +134,9 @@ public class Message {
     }
     public void setReadCurrMillis(Long readCurrMillis) {
         this.readCurrMillis = readCurrMillis;
+    }
+    public void setUnread(Boolean unread) {
+        this.unread = unread;
     }
 
     @Override

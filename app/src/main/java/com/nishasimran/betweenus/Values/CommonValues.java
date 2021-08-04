@@ -33,6 +33,7 @@ public class CommonValues {
     public final static String SHARED_PREFERENCE = "MyPreferences";
     public final static String SHARED_PREFERENCE_UID = "uid";
     public final static String SHARED_PREFERENCE_SERVER_UID = "server_uid";
+    public final static String SHARED_PREFERENCE_SERVER_NAME = "server_name";
     public final static String SHARED_PREFERENCE_STATE = "state";
     public final static String SHARED_PREFERENCE_CONNECTION = "connection";
     public final static String SHARED_PREFERENCE_BACKGROUND = "chat_back";

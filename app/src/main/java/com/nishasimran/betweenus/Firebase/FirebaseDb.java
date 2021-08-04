@@ -28,7 +28,6 @@ public class FirebaseDb {
 
     private final DatabaseReference messagesRef = FirebaseValues.MESSAGE_REF;
 
-    final MutableLiveData<String> lastSeen = new MutableLiveData<>();
     MutableLiveData<Boolean> connected = new MutableLiveData<>();
     final DatabaseReference connectedRef = FirebaseValues.CONNECTED_REF;
     ValueEventListener connectionChangeListener = null;

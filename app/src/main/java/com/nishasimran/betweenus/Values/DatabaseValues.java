@@ -17,6 +17,7 @@ public class DatabaseValues {
     public final static String COLUMN_SENT_CURR_MILLIS = "sent_curr_millis";
     public final static String COLUMN_DELIVERED_CURR_MILLIS = "delivered_curr_millis";
     public final static String COLUMN_READ_CURR_MILLIS = "read_curr_millis";
+    public final static String COLUMN_UNREAD = "unread";
     public final static String COLUMN_ALBUM_NAME = "album_name";
     public final static String COLUMN_IMAGE = "image";
     public final static String COLUMN_DAY = "day";

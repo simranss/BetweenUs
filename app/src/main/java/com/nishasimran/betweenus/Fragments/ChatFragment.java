@@ -65,7 +65,7 @@ public class ChatFragment extends Fragment {
     private User serverUser = null;
 
     private DatabaseReference lastSeenRef;
-    private DatabaseReference messagesRef = FirebaseValues.MESSAGE_REF;
+    private final DatabaseReference messagesRef = FirebaseValues.MESSAGE_REF;
     private ChildEventListener messageChildEventListener;
     private ValueEventListener lastSeenListener;
 
@@ -110,17 +110,18 @@ public class ChatFragment extends Fragment {
                                 Key key = KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic(), keys);
                                 if (key != null) {
                                     snapshot.getRef().removeValue();
-                                    long deliveredCurrMillis = System.currentTimeMillis();
+                                    long readCurrMillis = System.currentTimeMillis();
                                     Log.d(TAG, "map iv: " + fMessage.getIv());
                                     Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
                                     Log.d(TAG, "map message: " + fMessage.getMessage());
                                     String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
-                                    Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
+                                    Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, readCurrMillis, null, readCurrMillis, readCurrMillis);
+                                    message.setUnread(false);
                                     if (fMessage.getSentCurrMillis() != null) {
                                         message.setCurrMillis(fMessage.getSentCurrMillis());
                                         message.setSentCurrMillis(fMessage.getSentCurrMillis());
                                     }
-                                    FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
+                                    FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_SEEN, readCurrMillis);
                                     insertMessage(message);
                                     Integer index = adapter.getIndexOf(message);
                                     if (index != null)
@@ -169,6 +170,16 @@ public class ChatFragment extends Fragment {
                                         Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                     }
                                 }
+
+                                if (fMessage.getReadCurrMillis() != null) {
+                                    if (message.getReadCurrMillis() == null) {
+                                        message.setStatus(CommonValues.STATUS_SEEN);
+                                        message.setReadCurrMillis(fMessage.getReadCurrMillis());
+                                        updateMessage(message, index);
+                                    } else {
+                                        Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                    }
+                                }
                             }
                         } else if (fMessage.getDeliveredCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
@@ -178,6 +189,19 @@ public class ChatFragment extends Fragment {
                                 if (message.getDeliveredCurrMillis() == null) {
                                     message.setStatus(CommonValues.STATUS_DELIVERED);
                                     message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                                    updateMessage(message, index);
+                                } else {
+                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                }
+                            }
+                        } else if (fMessage.getReadCurrMillis() != null) {
+                            String messageId = snapshot.getRef().getKey();
+                            Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                            if (message != null) {
+                                Integer index = adapter.getIndexOf(message);
+                                if (message.getReadCurrMillis() == null) {
+                                    message.setStatus(CommonValues.STATUS_SEEN);
+                                    message.setReadCurrMillis(fMessage.getReadCurrMillis());
                                     updateMessage(message, index);
                                 } else {
                                     Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
@@ -199,17 +223,18 @@ public class ChatFragment extends Fragment {
                                 Key key = KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic(), keys);
                                 if (key != null) {
                                     snapshot.getRef().removeValue();
-                                    long deliveredCurrMillis = System.currentTimeMillis();
+                                    long readCurrMillis = System.currentTimeMillis();
                                     Log.d(TAG, "map iv: " + fMessage.getIv());
                                     Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
                                     Log.d(TAG, "map message: " + fMessage.getMessage());
                                     String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
-                                    Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
+                                    Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_SEEN, readCurrMillis, null, readCurrMillis, readCurrMillis);
+                                    message.setUnread(false);
                                     if (fMessage.getSentCurrMillis() != null) {
                                         message.setCurrMillis(fMessage.getSentCurrMillis());
                                         message.setSentCurrMillis(fMessage.getSentCurrMillis());
                                     }
-                                    FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
+                                    FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, readCurrMillis);
                                     insertMessage(message);
                                     Integer index = adapter.getIndexOf(message);
                                     if (index != null)
@@ -258,6 +283,16 @@ public class ChatFragment extends Fragment {
                                         Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                     }
                                 }
+
+                                if (fMessage.getReadCurrMillis() != null) {
+                                    if (message.getReadCurrMillis() == null) {
+                                        message.setStatus(CommonValues.STATUS_SEEN);
+                                        message.setReadCurrMillis(fMessage.getReadCurrMillis());
+                                        updateMessage(message, index);
+                                    } else {
+                                        Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                    }
+                                }
                             }
                         } else if (fMessage.getDeliveredCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
@@ -270,6 +305,24 @@ public class ChatFragment extends Fragment {
                                     updateMessage(message, index);
                                 } else {
                                     Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                }
+                            }
+                        } else if (fMessage.getReadCurrMillis() != null) {
+                            String messageId = snapshot.getRef().getKey();
+                            Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                            if (message != null) {
+                                Integer index = adapter.getIndexOf(message);
+                                if (message.getReadCurrMillis() == null) {
+                                    message.setStatus(CommonValues.STATUS_SEEN);
+                                    message.setReadCurrMillis(fMessage.getReadCurrMillis());
+                                    updateMessage(message, index);
+                                } else {
+                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                }
+
+                                if (message.getDeliveredCurrMillis() == null) {
+                                    message.setDeliveredCurrMillis(fMessage.getReadCurrMillis());
+                                    updateMessage(message, index);
                                 }
                             }
                         }
