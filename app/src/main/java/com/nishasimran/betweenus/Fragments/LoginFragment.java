@@ -3,10 +3,6 @@ package com.nishasimran.betweenus.Fragments;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +12,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +22,7 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.nishasimran.betweenus.Activities.MainActivity;
+import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
@@ -191,13 +191,15 @@ public class LoginFragment extends Fragment {
                     disableView(codeEditText);
                     disableView(phoneEditText);
                     disableView(submitButton);
-                    updateState(CommonValues.STATE_LOGGED_IN_NO_REG);
                     if (authResult.getUser() != null) {
                         activity.removeListenerForUserAndKeyData();
                         activity.addListenerForUserAndKeyData();
+                        FirebaseDb.getInstance().removeConnectionChangeListener();
                         String uid = authResult.getUser().getUid();
                         Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID, uid);
                         activity.setUid(uid);
+                        FirebaseDb.getInstance().listenersForConnectionChanges(uid, application);
+                        updateState(CommonValues.STATE_LOGGED_IN_NO_REG);
                     } else {
                         Log.w(TAG, "signInWithPhoneAuthCredential", new NullPointerException(FirebaseValues.USER_NULL));
                     }

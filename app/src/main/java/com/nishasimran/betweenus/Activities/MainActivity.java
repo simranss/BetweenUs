@@ -215,9 +215,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().removeObserver(connectionObserver);
+        FirebaseDb.getInstance().removeConnectionChangeListener();
+        mainFragment.chatFragment.removeMessageListener();
+        FirebaseDb.getInstance().userOffline(uid);
         super.onStop();
+    }
 
-        FirebaseDb.getInstance().goOffline();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (isInternetAvail) {
+            FirebaseDb.getInstance().userOnline(uid);
+        }
     }
 
     @Override
@@ -237,7 +247,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (!mainFragment.chatFragment.isVisible()) {
             mainFragment.loadFragment(0);
         } else {
-            finishAndRemoveTask();
+            StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().removeObserver(connectionObserver);
+            FirebaseDb.getInstance().removeConnectionChangeListener();
+            mainFragment.chatFragment.removeMessageListener();
+            FirebaseDb.getInstance().userOffline(uid);
+            finish();
         }
     }
 }

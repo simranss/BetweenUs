@@ -65,6 +65,8 @@ public class ChatFragment extends Fragment {
     private User serverUser = null;
 
     private DatabaseReference lastSeenRef;
+    private DatabaseReference messagesRef = FirebaseValues.MESSAGE_REF;
+    private ChildEventListener messageChildEventListener;
     private ValueEventListener lastSeenListener;
 
     public UserDetailsFragment fragment;
@@ -95,8 +97,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void initMessageReceiver() {
-        DatabaseReference messagesRef = FirebaseValues.MESSAGE_REF;
-        messagesRef.addChildEventListener(new ChildEventListener() {
+        messageChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
                 if (snapshot.exists()) {
@@ -281,7 +282,8 @@ public class ChatFragment extends Fragment {
             public void onChildMoved(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) { }
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) { }
-        });
+        };
+        messagesRef.addChildEventListener(messageChildEventListener);
     }
 
     private void populateTheChats() {
@@ -562,5 +564,9 @@ public class ChatFragment extends Fragment {
 
     private void initKeyListener() {
         KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllKeys().observe(mainFragment.activity, keys1 -> keys = keys1);
+    }
+
+    public void removeMessageListener() {
+        messagesRef.removeEventListener(messageChildEventListener);
     }
 }

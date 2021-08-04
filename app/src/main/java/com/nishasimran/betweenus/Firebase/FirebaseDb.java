@@ -121,6 +121,16 @@ public class FirebaseDb {
         return connected;
     }
 
+    public void userOffline(String uid) {
+        final DatabaseReference lastOnlineRef = root.child(FirebaseValues.LAST_SEEN).child(uid);
+        lastOnlineRef.setValue(ServerValue.TIMESTAMP);
+    }
+
+    public void userOnline(String uid) {
+        final DatabaseReference lastOnlineRef = root.child(FirebaseValues.LAST_SEEN).child(uid);
+        lastOnlineRef.setValue(CommonValues.STATUS_ONLINE);
+    }
+
     public void removeConnectionChangeListener() {
         connectedRef.removeEventListener(connectionChangeListener);
     }
