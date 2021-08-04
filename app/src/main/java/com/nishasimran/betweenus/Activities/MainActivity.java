@@ -1,5 +1,6 @@
 package com.nishasimran.betweenus.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -28,6 +29,7 @@ import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.FirebaseValues;
 import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.ViewModels.UserViewModel;
+import com.nishasimran.betweenus.services.MessageService;
 
 import java.util.List;
 
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        stopService(new Intent(MainActivity.this, MessageService.class));
         this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
 
         loginFragment = new LoginFragment(this);
@@ -219,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDb.getInstance().removeConnectionChangeListener();
         mainFragment.chatFragment.removeMessageListener();
         FirebaseDb.getInstance().userOffline(uid);
+        startService(new Intent(getApplicationContext(), MessageService.class));
+
         super.onStop();
     }
 
