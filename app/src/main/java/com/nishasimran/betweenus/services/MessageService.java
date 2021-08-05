@@ -69,6 +69,7 @@ public class MessageService extends LifecycleService {
 
         NotificationChannel channel = new NotificationChannel("sticky", name, importance);
         channel.setDescription(description);
+        channel.setShowBadge(false);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
