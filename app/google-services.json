@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "791405861961-7mle8gu6kc0doju6klkng94jcfbjf8s0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nishasimran.betweenus",
+            "certificate_hash": "e2b8edb5fe2a54c11898c99f595085c57f1a770e"
+          }
+        },
+        {
           "client_id": "791405861961-ulj9tsr12c7q8rj0qasbpj56e27dma7l.apps.googleusercontent.com",
           "client_type": 3
         }
