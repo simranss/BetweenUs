@@ -3,11 +3,15 @@ package com.nishasimran.betweenus.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
@@ -32,6 +36,7 @@ import com.nishasimran.betweenus.ViewModels.UserViewModel;
 import com.nishasimran.betweenus.services.MessageService;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
 
     private Fragment loginFragment, registrationFragment;
     private MainFragment mainFragment;
+
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
                     Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, registrationFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_WITH_REG:
+                    initBiometric();
+                    checkForBiometric();
                     this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
                     Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
                     break;
@@ -105,6 +116,63 @@ public class MainActivity extends AppCompatActivity {
             this.keys = keys;
             Log.d(TAG, "Keys updated: " + keys);
         });
+    }
+
+    private void initBiometric() {
+
+        executor = ContextCompat.getMainExecutor(this);
+        biometricPrompt = new BiometricPrompt(MainActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(getApplicationContext(), "Error: " + errString, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                Toast.makeText(getApplicationContext(), "Authentication succeeded!", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Biometric login")
+                .setSubtitle("Log in using your biometric credential")
+                .setNegativeButtonText("Use account password")
+                .build();
+    }
+
+    private void checkForBiometric() {
+        BiometricManager biometricManager = BiometricManager.from(this);
+        switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG | BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
+            case BiometricManager.BIOMETRIC_SUCCESS:
+                Log.d(TAG, "App can authenticate using biometrics.");
+                biometricPrompt.authenticate(promptInfo);
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                Log.d(TAG, "No biometric features available on this device.");
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                Log.d(TAG, "Biometric features are currently unavailable.");
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                Log.d(TAG, "BIOMETRIC_ERROR_NONE_ENROLLED");
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED:
+                Log.d(TAG, "BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED");
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED:
+                Log.d(TAG, "BIOMETRIC_ERROR_UNSUPPORTED");
+                break;
+            case BiometricManager.BIOMETRIC_STATUS_UNKNOWN:
+                Log.d(TAG, "BIOMETRIC_STATUS_UNKNOWN");
+                break;
+        }
     }
 
     public boolean isInternetAvail() {

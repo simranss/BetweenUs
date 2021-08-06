@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.nishasimran.betweenus"
-        minSdkVersion 30
+        minSdkVersion 25
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
@@ -69,5 +69,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-crashlytics'
+
+    // biometric lock
+    implementation "androidx.biometric:biometric:1.1.0"
 
 }
