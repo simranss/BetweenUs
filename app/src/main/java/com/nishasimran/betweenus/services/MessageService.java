@@ -39,6 +39,7 @@ import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.ViewModels.MessageViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -272,6 +273,10 @@ public class MessageService extends LifecycleService {
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 102, notificationIntent, PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
 
+        String serverName = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_NAME);
+        String serverUid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
+        String from = (serverUid.equals(message.getFrom().trim())) ? serverName : "Name";
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -285,10 +290,6 @@ public class MessageService extends LifecycleService {
             channel.setDescription(description);
 
             notificationManager.createNotificationChannel(channel);
-
-            String serverName = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_NAME);
-            String serverUid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
-            String from = (serverUid.equals(message.getFrom().trim())) ? serverName : "Name";
 
             NotificationCompat.BubbleMetadata bubbleMetadata = new NotificationCompat.BubbleMetadata.Builder("short_id").build();
             Person person = new Person.Builder()
@@ -339,10 +340,35 @@ public class MessageService extends LifecycleService {
                 notificationManager.createNotificationChannel(channel);
             }
 
+            String contentInfo = "";
+
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+
+            List<Message> list1 = new ArrayList<>(unreadMessages);
+            List<Message> list2 = new ArrayList<>();
+
+            Collections.reverse(list1);
+            int i = 0;
+            for (Message message1 : list1) {
+                i++;
+                if (i == 6)
+                    break;
+                list2.add(message1);
+            }
+
+            Collections.reverse(list2);
+            for (Message message1 : list2) {
+                inboxStyle.addLine(message.getMessage());
+            }
+
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "message")
                     .setSmallIcon(R.drawable.notif_icon)
                     .setContentIntent(contentIntent)
                     .setNumber(unreadMessages.size())
+                    .setContentTitle(from)
+                    .setContentText(message.getMessage())
+                    .setStyle(inboxStyle)
+                    .setContentText(contentInfo)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
             // notificationId is a unique int for each notification that you must define
