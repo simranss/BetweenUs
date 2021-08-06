@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -69,15 +70,18 @@ public class MessageService extends LifecycleService {
         String description = "Foreground notifications";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
-        NotificationChannel channel = new NotificationChannel("sticky", name, importance);
-        channel.setDescription(description);
-        channel.setShowBadge(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            NotificationChannel channel = new NotificationChannel("sticky", name, importance);
+            channel.setDescription(description);
+            channel.setShowBadge(false);
 
-        notificationManager.createNotificationChannel(channel);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+            notificationManager.createNotificationChannel(channel);
+        }
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, "sticky")
                 .setContentTitle("Sticky notification")
@@ -268,56 +272,83 @@ public class MessageService extends LifecycleService {
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 102, notificationIntent, PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
 
-        CharSequence name = "General";
-        String description = "General notifications";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-        NotificationChannel channel = new NotificationChannel("general", name, importance);
-        channel.setDescription(description);
-
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-        notificationManager.createNotificationChannel(channel);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
-        String serverName = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_NAME);
-        String serverUid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
-        String from = (serverUid.equals(message.getFrom().trim()))?serverName:"Name";
+            CharSequence name = "Messages";
+            String description = "Message notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
-        NotificationCompat.BubbleMetadata bubbleMetadata = new NotificationCompat.BubbleMetadata.Builder("short_id").build();
-        Person person = new Person.Builder()
-                .setName(from)
-                .setImportant(true)
-                .build();
-        Person you = new Person.Builder()
-                .setName("You")
-                .setImportant(true)
-                .build();
-        ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(this, "short_id")
-                .setLongLived(true)
-                .setIntent(new Intent(this, MainActivity.class).setAction(Intent.ACTION_VIEW))
-                .setShortLabel(from)
-                .setPerson(person)
-                .build();
-        ((ShortcutManager) getSystemService(Context.SHORTCUT_SERVICE)).pushDynamicShortcut(shortcut.toShortcutInfo());
-        NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle((person));
-        for (Message message1 : unreadMessages) {
-            if (message1.getFrom().equals(serverUid))
-                messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), person));
-            else
-                messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), you));
+            NotificationChannel channel = new NotificationChannel("message", name, importance);
+            channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+            channel.setDescription(description);
+
+            notificationManager.createNotificationChannel(channel);
+
+            String serverName = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_NAME);
+            String serverUid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
+            String from = (serverUid.equals(message.getFrom().trim())) ? serverName : "Name";
+
+            NotificationCompat.BubbleMetadata bubbleMetadata = new NotificationCompat.BubbleMetadata.Builder("short_id").build();
+            Person person = new Person.Builder()
+                    .setName(from)
+                    .setImportant(true)
+                    .build();
+            Person you = new Person.Builder()
+                    .setName("You")
+                    .setImportant(true)
+                    .build();
+            ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(this, "short_id")
+                    .setLongLived(true)
+                    .setIntent(new Intent(this, MainActivity.class).setAction(Intent.ACTION_VIEW))
+                    .setShortLabel(from)
+                    .setPerson(person)
+                    .build();
+            ((ShortcutManager) getSystemService(Context.SHORTCUT_SERVICE)).pushDynamicShortcut(shortcut.toShortcutInfo());
+            NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle((person));
+            for (Message message1 : unreadMessages) {
+                if (message1.getFrom().equals(serverUid))
+                    messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), person));
+                else
+                    messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), you));
+            }
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "message")
+                    .setSmallIcon(R.drawable.notif_icon)
+                    .setStyle(messagingStyle)
+                    .setShortcutId("short_id")
+                    .setBubbleMetadata(bubbleMetadata)
+                    .setContentIntent(contentIntent)
+                    .setNumber(unreadMessages.size())
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            // notificationId is a unique int for each notification that you must define
+            notificationManager.cancelAll();
+            notificationManager.notify(101, builder.build());
+        } else {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                CharSequence name = "Messages";
+                String description = "Message notifications";
+                int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+                NotificationChannel channel = new NotificationChannel("message", name, importance);
+                channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+                channel.setDescription(description);
+
+                notificationManager.createNotificationChannel(channel);
+            }
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "message")
+                    .setSmallIcon(R.drawable.notif_icon)
+                    .setContentIntent(contentIntent)
+                    .setNumber(unreadMessages.size())
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            // notificationId is a unique int for each notification that you must define
+            notificationManager.cancelAll();
+            notificationManager.notify(101, builder.build());
         }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "general")
-                .setSmallIcon(R.drawable.notif_icon)
-                .setStyle(messagingStyle)
-                .setShortcutId("short_id")
-                .setBubbleMetadata(bubbleMetadata)
-                .setContentIntent(contentIntent)
-                .setNumber(unreadMessages.size())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        // notificationId is a unique int for each notification that you must define
-        notificationManager.cancelAll();
-        notificationManager.notify(101, builder.build());
     }
 
     @Override
