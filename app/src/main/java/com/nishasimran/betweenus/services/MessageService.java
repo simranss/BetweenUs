@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ShortcutManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -318,13 +319,13 @@ public class MessageService extends LifecycleService {
                     .setSmallIcon(R.drawable.notif_icon)
                     .setStyle(messagingStyle)
                     .setShortcutId("short_id")
+                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                     .setBubbleMetadata(bubbleMetadata)
                     .setContentIntent(contentIntent)
                     .setNumber(unreadMessages.size())
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
             // notificationId is a unique int for each notification that you must define
-            notificationManager.cancelAll();
             notificationManager.notify(101, builder.build());
         } else {
 
@@ -367,12 +368,12 @@ public class MessageService extends LifecycleService {
                     .setNumber(unreadMessages.size())
                     .setContentTitle(from)
                     .setContentText(message.getMessage())
+                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                     .setStyle(inboxStyle)
                     .setContentText(contentInfo)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
             // notificationId is a unique int for each notification that you must define
-            notificationManager.cancelAll();
             notificationManager.notify(101, builder.build());
         }
     }
