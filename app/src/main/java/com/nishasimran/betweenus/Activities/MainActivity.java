@@ -216,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
                                     Utils.writeToSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID, user.getId());
                                     insertUser(user);
                                 }
+                                insertUser(user);
                             }
                         }
                     }
