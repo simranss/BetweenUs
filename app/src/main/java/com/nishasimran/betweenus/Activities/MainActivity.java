@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
                 if (errorCode != 12) {
-                    Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
                     Toast.makeText(getApplicationContext(), "Error: " + errorCode, Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -136,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 Toast.makeText(getApplicationContext(), "Authentication succeeded!", Toast.LENGTH_SHORT).show();
+                Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
             }
             @Override
             public void onAuthenticationFailed() {
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         promptInfo = new BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Biometric login")
                 .setSubtitle("Log in using your biometric credential")
-                .setNegativeButtonText("Use account password")
+                .setNegativeButtonText("Exit")
                 .build();
     }
 
