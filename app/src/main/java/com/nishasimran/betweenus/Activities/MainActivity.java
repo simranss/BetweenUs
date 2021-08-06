@@ -23,6 +23,7 @@ import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.FirebaseDataClasses.FirebaseKey;
+import com.nishasimran.betweenus.Fragments.BlankFragment;
 import com.nishasimran.betweenus.Fragments.LoginFragment;
 import com.nishasimran.betweenus.Fragments.MainFragment;
 import com.nishasimran.betweenus.Fragments.RegistrationFragment;
@@ -53,10 +54,9 @@ public class MainActivity extends AppCompatActivity {
     private String uid;
     private String state;
 
-    private Fragment loginFragment, registrationFragment;
+    private Fragment loginFragment, registrationFragment, blankFragment;
     private MainFragment mainFragment;
 
-    private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         loginFragment = new LoginFragment(this);
         registrationFragment = new RegistrationFragment(this);
         mainFragment = new MainFragment(this);
+        blankFragment = new BlankFragment();
 
         StateViewModel.getInstance(this, getApplication()).getState().observe(this, s -> {
             Log.d(TAG, "state: " + s);
@@ -90,10 +91,10 @@ public class MainActivity extends AppCompatActivity {
                     Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, registrationFragment);
                     break;
                 case CommonValues.STATE_LOGGED_IN_WITH_REG:
+                    Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, blankFragment);
                     initBiometric();
                     checkForBiometric();
                     this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
-                    Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
                     break;
             }
 
@@ -120,13 +121,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void initBiometric() {
 
-        executor = ContextCompat.getMainExecutor(this);
+        Executor executor = ContextCompat.getMainExecutor(this);
         biometricPrompt = new BiometricPrompt(MainActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
-                Toast.makeText(getApplicationContext(), "Error: " + errString, Toast.LENGTH_SHORT).show();
-                finish();
+                if (errorCode != 12) {
+                    Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
+                    Toast.makeText(getApplicationContext(), "Error: " + errorCode, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
