@@ -358,7 +358,7 @@ public class MessageService extends LifecycleService {
 
             Collections.reverse(list2);
             for (Message message1 : list2) {
-                inboxStyle.addLine(message.getMessage());
+                inboxStyle.addLine(message1.getMessage());
             }
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "message")
