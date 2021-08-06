@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isInternetAvail = false;
     private String uid;
+    private String state;
 
     private Fragment loginFragment, registrationFragment;
     private MainFragment mainFragment;
@@ -57,22 +58,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        stopService(new Intent(MainActivity.this, MessageService.class));
+        stopService(new Intent(getApplicationContext(), MessageService.class));
+
         this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
 
         loginFragment = new LoginFragment(this);
         registrationFragment = new RegistrationFragment(this);
         mainFragment = new MainFragment(this);
 
-        // adding a listener for new key and new user data
-        initChildEventListeners();
-        addListenerForUserAndKeyData();
-
-        // initialising the view model
-        initConnectionObserver();
-        restartListenerForConnectionChange();
         StateViewModel.getInstance(this, getApplication()).getState().observe(this, s -> {
             Log.d(TAG, "state: " + s);
+            state = s;
             switch(s) {
                 case CommonValues.NULL:
                     updateState(CommonValues.STATE_NOT_LOGGED_IN);
@@ -89,6 +85,20 @@ public class MainActivity extends AppCompatActivity {
                     Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
                     break;
             }
+
+            if (state != null && !state.equals(CommonValues.NULL) && !state.equals(CommonValues.STATE_NOT_LOGGED_IN)) {
+
+                // adding a listener for new key and new user data
+                initChildEventListeners();
+                addListenerForUserAndKeyData();
+
+                FirebaseDb.getInstance().goOnline();
+
+                // initialising the view model
+                initConnectionObserver();
+                restartListenerForConnectionChange();
+            }
+
         });
 
         KeyViewModel.getInstance(this, getApplication()).getAllKeys().observe(this, keys -> {
@@ -100,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean isInternetAvail() {
         Log.d(TAG, "isInternetAvail: " + isInternetAvail);
         if (!isInternetAvail) {
+            FirebaseDb.getInstance().goOnline();
             removeListenerForUserAndKeyData();
             addListenerForUserAndKeyData();
         }
@@ -118,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> KeyViewModel.getInstance(this, getApplication()).insert(key)).start();
     }
 
-    private void initChildEventListeners() {
+    public void initChildEventListeners() {
         userChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -187,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private void initConnectionObserver() {
+    public void initConnectionObserver() {
         connectionObserver = aBoolean -> {
             isInternetAvail = aBoolean;
             Log.d(TAG, "connected: " + isInternetAvail);
@@ -195,13 +206,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void removeListenerForUserAndKeyData() {
-        userRef.removeEventListener(userChildEventListener);
-        keyRef.removeEventListener(keyChildEventListener);
+        if (userChildEventListener != null && keyChildEventListener != null) {
+            userRef.removeEventListener(userChildEventListener);
+            keyRef.removeEventListener(keyChildEventListener);
+        }
     }
 
     public void addListenerForUserAndKeyData() {
-        userRef.addChildEventListener(userChildEventListener);
-        keyRef.addChildEventListener(keyChildEventListener);
+        if (userChildEventListener != null && keyChildEventListener != null) {
+            userRef.addChildEventListener(userChildEventListener);
+            keyRef.addChildEventListener(keyChildEventListener);
+        }
     }
 
     public void restartListenerForConnectionChange() {
@@ -240,23 +255,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (mainFragment.chatFragment.fragment != null) {
-            if (mainFragment.chatFragment.fragment.isVisible()) {
-                Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
+        if (state.equals(CommonValues.STATE_LOGGED_IN_WITH_REG)) {
+
+            if (mainFragment.chatFragment.fragment != null) {
+                if (mainFragment.chatFragment.fragment.isVisible()) {
+                    Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
+                }
+
+            } else if (mainFragment.isDrawerOpen()) {
+                mainFragment.closeDrawer();
+
+            } else if (!mainFragment.isHomeFragment()) {
+                mainFragment.loadFragment(0);
+
+            } else if (!mainFragment.chatFragment.isVisible()) {
+                mainFragment.loadFragment(0);
+            } else {
+                StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().removeObserver(connectionObserver);
+                FirebaseDb.getInstance().removeConnectionChangeListener();
+                mainFragment.chatFragment.removeMessageListener();
+                FirebaseDb.getInstance().userOffline(uid);
+                finish();
             }
-
-        } else if (mainFragment.isDrawerOpen()) {
-            mainFragment.closeDrawer();
-
-        } else if (!mainFragment.isHomeFragment()) {
-            mainFragment.loadFragment(0);
-
-        } else if (!mainFragment.chatFragment.isVisible()) {
-            mainFragment.loadFragment(0);
         } else {
             StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().removeObserver(connectionObserver);
             FirebaseDb.getInstance().removeConnectionChangeListener();
-            mainFragment.chatFragment.removeMessageListener();
             FirebaseDb.getInstance().userOffline(uid);
             finish();
         }

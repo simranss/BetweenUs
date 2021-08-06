@@ -144,6 +144,7 @@ public class LoginFragment extends Fragment {
                 if (e instanceof FirebaseNetworkException)
                     Toast.makeText(activity, "Check your internet connection", Toast.LENGTH_SHORT).show();
                 Toast.makeText(activity, "Failure: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
                 hideView(codeEditText);
                 hideView(progressBar);
                 enableView(phoneEditText);
@@ -194,11 +195,10 @@ public class LoginFragment extends Fragment {
                     if (authResult.getUser() != null) {
                         activity.removeListenerForUserAndKeyData();
                         activity.addListenerForUserAndKeyData();
-                        FirebaseDb.getInstance().removeConnectionChangeListener();
                         String uid = authResult.getUser().getUid();
                         Utils.writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID, uid);
                         activity.setUid(uid);
-                        FirebaseDb.getInstance().listenersForConnectionChanges(uid, application);
+                        FirebaseDb.getInstance().goOnline();
                         updateState(CommonValues.STATE_LOGGED_IN_NO_REG);
                     } else {
                         Log.w(TAG, "signInWithPhoneAuthCredential", new NullPointerException(FirebaseValues.USER_NULL));
@@ -207,6 +207,7 @@ public class LoginFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "VerificationFailed: " + e.getMessage());
+                    e.printStackTrace();
                     enableView(submitButton);
                     disableView(phoneEditText);
                     enableView(codeEditText);

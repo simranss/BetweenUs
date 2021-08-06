@@ -19,7 +19,6 @@ import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.lifecycle.LifecycleService;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,6 +37,7 @@ import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.ViewModels.MessageViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -52,6 +52,8 @@ public class MessageService extends LifecycleService {
     private KeyViewModel keyViewModel;
     private List<Key> keys;
     private List<Message> messages;
+
+    private List<Message> unreadMessages;
 
     @Override
     public IBinder onBind(@NonNull Intent arg0) {
@@ -84,6 +86,8 @@ public class MessageService extends LifecycleService {
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setSilent(true)
+                .setAutoCancel(false)
+                .setOngoing(true)
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
                 .build();
         startForeground(1, notification);
@@ -97,11 +101,11 @@ public class MessageService extends LifecycleService {
 
         Log.d(TAG, "init firebaseApp");
         FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth auth = FirebaseAuth.getInstance();
         Log.d(TAG, "init view models");
         messageViewModel = new MessageViewModel(getApplication());
         keyViewModel = new KeyViewModel(getApplication());
         Log.d(TAG, "init messages and key listener");
+        unreadMessages = new ArrayList<>();
         initMessagesListener();
         initKeyListener();
         String uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
@@ -130,6 +134,7 @@ public class MessageService extends LifecycleService {
                                     String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
                                     Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
                                     message.setUnread(true);
+                                    unreadMessages.add(message);
                                     if (fMessage.getSentCurrMillis() != null) {
                                         message.setCurrMillis(fMessage.getSentCurrMillis());
                                         message.setSentCurrMillis(fMessage.getSentCurrMillis());
@@ -197,97 +202,15 @@ public class MessageService extends LifecycleService {
                 }
             }
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.d(TAG, "messageService onChildChanged");
-                if (snapshot.exists()) {
-                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
-                    if (map != null) {
-                        FMessage fMessage = new FMessage(map);
-                        Log.d(TAG, "fMessage: " + fMessage);
-                        if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
-                            if (uid.trim().equals(fMessage.getTo().trim())) {
-                                Key key = keyViewModel.findKeyByMyPublic(fMessage.getServerPublic(), keys);
-                                if (key != null) {
-                                    snapshot.getRef().removeValue();
-                                    long deliveredCurrMillis = System.currentTimeMillis();
-                                    Log.d(TAG, "map iv: " + fMessage.getIv());
-                                    Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
-                                    Log.d(TAG, "map message: " + fMessage.getMessage());
-                                    String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
-                                    Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
-                                    message.setUnread(true);
-                                    if (fMessage.getSentCurrMillis() != null) {
-                                        message.setCurrMillis(fMessage.getSentCurrMillis());
-                                        message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                    }
-                                    FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
-                                    insertMessage(message);
-                                    postNotification(message);
-                                    Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
-                                    keyViewModel.insert(key1);
-                                } else {
-                                    Log.d(TAG, "key not found");
-                                }
-                            } else {
-                                Log.d(TAG, "message not sent to you");
-                                if (fMessage.getSentCurrMillis() != null) {
-                                    String messageId = snapshot.getRef().getKey();
-                                    Message message = messageViewModel.findMessage(messageId, messages);
-                                    if (message != null) {
-                                        if (message.getSentCurrMillis() == null) {
-                                            message.setStatus(CommonValues.STATUS_SENT);
-                                            message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                            updateMessage(message);
-                                        } else {
-                                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                        }
-                                    }
-                                }
-                            }
-                        } else if (fMessage.getSentCurrMillis() != null) {
-                            String messageId = snapshot.getRef().getKey();
-                            Message message = messageViewModel.findMessage(messageId, messages);
-                            if (message != null) {
-                                if (message.getSentCurrMillis() == null) {
-                                    message.setStatus(CommonValues.STATUS_SENT);
-                                    message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                    updateMessage(message);
-                                } else {
-                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                }
-
-                                if (fMessage.getDeliveredCurrMillis() != null) {
-                                    if (message.getDeliveredCurrMillis() == null) {
-                                        message.setStatus(CommonValues.STATUS_DELIVERED);
-                                        message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
-                                        updateMessage(message);
-                                    } else {
-                                        Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                    }
-                                }
-                            }
-                        } else if (fMessage.getDeliveredCurrMillis() != null) {
-                            String messageId = snapshot.getRef().getKey();
-                            Message message = messageViewModel.findMessage(messageId, messages);
-                            if (message != null) {
-                                if (message.getDeliveredCurrMillis() == null) {
-                                    message.setStatus(CommonValues.STATUS_DELIVERED);
-                                    message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
-                                    updateMessage(message);
-                                } else {
-                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d(TAG, "error" + error.getMessage());
+            }
         };
 
         Log.d(TAG, "adding the listeners to databaseReference");
@@ -343,7 +266,7 @@ public class MessageService extends LifecycleService {
         Context context = getApplicationContext();
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 102, notificationIntent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 102, notificationIntent, PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
 
         CharSequence name = "General";
         String description = "General notifications";
@@ -365,6 +288,10 @@ public class MessageService extends LifecycleService {
                 .setName(from)
                 .setImportant(true)
                 .build();
+        Person you = new Person.Builder()
+                .setName("You")
+                .setImportant(true)
+                .build();
         ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(this, "short_id")
                 .setLongLived(true)
                 .setIntent(new Intent(this, MainActivity.class).setAction(Intent.ACTION_VIEW))
@@ -372,19 +299,24 @@ public class MessageService extends LifecycleService {
                 .setPerson(person)
                 .build();
         ((ShortcutManager) getSystemService(Context.SHORTCUT_SERVICE)).pushDynamicShortcut(shortcut.toShortcutInfo());
+        NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle((person));
+        for (Message message1 : unreadMessages) {
+            if (message1.getFrom().equals(serverUid))
+                messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), person));
+            else
+                messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), you));
+        }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "general")
                 .setSmallIcon(R.drawable.notif_icon)
-                .setContentTitle(from)
-                .setContentText(message.getMessage())
-                .setAutoCancel(true)
-                .setStyle(new NotificationCompat.MessagingStyle((person))
-                        .addMessage(new NotificationCompat.MessagingStyle.Message(message.getMessage(), message.getCurrMillis(), person)))
+                .setStyle(messagingStyle)
                 .setShortcutId("short_id")
                 .setBubbleMetadata(bubbleMetadata)
                 .setContentIntent(contentIntent)
+                .setNumber(unreadMessages.size())
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         // notificationId is a unique int for each notification that you must define
+        notificationManager.cancelAll();
         notificationManager.notify(101, builder.build());
     }
 

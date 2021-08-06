@@ -3,9 +3,6 @@ package com.nishasimran.betweenus.Fragments;
 import android.app.DatePickerDialog;
 import android.icu.util.Calendar;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -16,15 +13,17 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.nishasimran.betweenus.Activities.MainActivity;
-import com.nishasimran.betweenus.FirebaseDataClasses.FirebaseKey;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.User;
 import com.nishasimran.betweenus.Encryption.Encryption;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
+import com.nishasimran.betweenus.FirebaseDataClasses.FirebaseKey;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
@@ -74,6 +73,16 @@ public class RegistrationFragment extends Fragment {
 
         FirebaseDb.getInstance().goOnline();
         isInternetAvailable();
+
+        // adding a listener for new key and new user data
+        activity.initChildEventListeners();
+        activity.addListenerForUserAndKeyData();
+
+        FirebaseDb.getInstance().goOnline();
+
+        // initialising the view model
+        activity.initConnectionObserver();
+        activity.restartListenerForConnectionChange();
 
         initViews(view);
         setDefaults();
