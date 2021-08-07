@@ -4,8 +4,11 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
@@ -60,7 +63,8 @@ public class ParentService extends LifecycleService {
     public void onCreate() {
         super.onCreate();
 
-        startService(new Intent(getApplicationContext(), MessageService.class));
+        if (isNetworkAvailable(getApplicationContext()))
+            startService(new Intent(getApplicationContext(), MessageService.class));
 
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         this.registerReceiver(new ConnectionReceiver(), intentFilter);
@@ -73,5 +77,21 @@ public class ParentService extends LifecycleService {
         stopService(new Intent(getApplicationContext(), MessageService.class));
         this.unregisterReceiver(new ConnectionReceiver());
         super.onDestroy();
+    }
+
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // For 29 api or above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+            if (capabilities == null)
+                return false;
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+        }
+        // For below 29 api
+        else {
+            return connectivityManager.getActiveNetworkInfo() != null && (connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI || connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_MOBILE ||connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_ETHERNET);
+        }
     }
 }

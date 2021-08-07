@@ -16,6 +16,8 @@ public class ConnectionReceiver extends BroadcastReceiver {
         if (isNetworkAvailable(context)) {
             context.stopService(new Intent(context, MessageService.class));
             context.startService(new Intent(context, MessageService.class));
+        } else {
+            context.stopService(new Intent(context, MessageService.class));
         }
     }
 
