@@ -1,6 +1,7 @@
 package com.nishasimran.betweenus.Activities;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.FirebaseValues;
 import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.ViewModels.UserViewModel;
+import com.nishasimran.betweenus.receivers.ConnectionReceiver;
 import com.nishasimran.betweenus.services.MessageService;
 
 import java.util.List;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         stopService(new Intent(getApplicationContext(), MessageService.class));
+        this.unregisterReceiver(new ConnectionReceiver());
 
         this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
 
@@ -184,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
 
         stopService(new Intent(getApplicationContext(), MessageService.class));
+        this.unregisterReceiver(new ConnectionReceiver());
 
         StateViewModel.getInstance(this, getApplication()).getState().observe(this, s -> {
             Log.d(TAG, "state: " + s);
@@ -351,6 +355,9 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDb.getInstance().userOffline(uid);
         startService(new Intent(getApplicationContext(), MessageService.class));
 
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        this.registerReceiver(new ConnectionReceiver(), intentFilter);
+
         super.onStop();
     }
 
@@ -391,6 +398,9 @@ public class MainActivity extends AppCompatActivity {
             StateViewModel.getInstance(this, getApplication()).addConnectionChangeListener().removeObserver(connectionObserver);
             FirebaseDb.getInstance().removeConnectionChangeListener();
             FirebaseDb.getInstance().userOffline(uid);
+
+            IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+            this.registerReceiver(new ConnectionReceiver(), intentFilter);
             finish();
         }
     }
