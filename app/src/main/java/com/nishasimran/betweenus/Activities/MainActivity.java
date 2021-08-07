@@ -179,6 +179,43 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        stopService(new Intent(getApplicationContext(), MessageService.class));
+
+        StateViewModel.getInstance(this, getApplication()).getState().observe(this, s -> {
+            Log.d(TAG, "state: " + s);
+            state = s;
+            switch(s) {
+                case CommonValues.NULL:
+                    updateState(CommonValues.STATE_NOT_LOGGED_IN);
+                    break;
+                case CommonValues.STATE_LOGGED_IN_WITH_REG:
+                    Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, blankFragment);
+                    initBiometric();
+                    checkForBiometric();
+                    this.uid = Utils.getStringFromSharedPreference(getApplication(), CommonValues.SHARED_PREFERENCE_UID);
+                    break;
+            }
+
+            if (state != null && !state.equals(CommonValues.NULL) && !state.equals(CommonValues.STATE_NOT_LOGGED_IN)) {
+
+                // adding a listener for new key and new user data
+                initChildEventListeners();
+                addListenerForUserAndKeyData();
+
+                FirebaseDb.getInstance().goOnline();
+
+                // initialising the view model
+                initConnectionObserver();
+                restartListenerForConnectionChange();
+            }
+
+        });
+    }
+
     public boolean isInternetAvail() {
         Log.d(TAG, "isInternetAvail: " + isInternetAvail);
         if (!isInternetAvail) {
