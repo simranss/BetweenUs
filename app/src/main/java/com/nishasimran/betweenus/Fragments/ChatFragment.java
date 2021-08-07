@@ -1,5 +1,6 @@
 package com.nishasimran.betweenus.Fragments;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,8 +72,11 @@ public class ChatFragment extends Fragment {
 
     public UserDetailsFragment fragment;
 
+    final private MediaPlayer mediaPlayer;
+
     public ChatFragment(MainFragment fragment) {
         this.mainFragment = fragment;
+        this.mediaPlayer = MediaPlayer.create(getContext(), R.raw.conv_tone);
     }
 
     @Override
@@ -123,6 +127,7 @@ public class ChatFragment extends Fragment {
                                     }
                                     FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_SEEN, readCurrMillis);
                                     insertMessage(message);
+                                    mediaPlayer.start();
                                     Integer index = adapter.getIndexOf(message);
                                     if (index != null)
                                         recyclerView.scrollToPosition(index);
@@ -311,6 +316,8 @@ public class ChatFragment extends Fragment {
                 }
             }
         });
+
+        mediaPlayer.setOnCompletionListener(MediaPlayer::release);
     }
 
     private void sendMessage() {
