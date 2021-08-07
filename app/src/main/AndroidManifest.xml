@@ -27,10 +27,19 @@
 
         <service
             android:name=".services.MessageService"
-            android:exported="true"
+            android:exported="false"
             android:process=":remote" >
             <intent-filter>
                 <action android:name="com.nishasimran.betweenus.services.MessageService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.ParentService"
+            android:exported="false"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="com.nishasimran.betweenus.services.ParentService" />
             </intent-filter>
         </service>
 
