@@ -24,6 +24,7 @@
         <item name="colorMessageText">@color/black</item>
         <item name="colorSendMessageBox">@color/white_10</item>
         <item name="colorSendMessageExtra">@color/white_40</item>
+        <item name="colorOnSendMessageBox">@color/black</item>
     </style>
 
     <style name="Theme.BetweenUs.BlackRed" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
