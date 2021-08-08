@@ -11,6 +11,7 @@ import android.view.View;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -255,6 +256,26 @@ public class Utils {
 
     public static void setIsBackgroundBlur(@NonNull Application application, boolean value) {
         writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_BACK_BLUR, !value);
+    }
+
+    public static void setThemeInt(@NonNull Application application, int value) {
+        writeToSharedPreference(application, CommonValues.SHARED_PREFERENCE_THEME, value);
+    }
+
+    public static int getThemeInt(@NonNull Application application) {
+        return getIntFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_THEME);
+    }
+
+    public static @StyleRes int getTheme(@NonNull Application application) {
+        int value = getThemeInt(application);
+        switch (value) {
+            case 1:
+                return R.style.Theme_BetweenUs_BlackBlue;
+            case 2:
+                return R.style.Theme_BetweenUs_BlackRed;
+            default:
+                return R.style.Theme_BetweenUs;
+        }
     }
 
 

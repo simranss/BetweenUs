@@ -7,11 +7,12 @@
     <color name="secondaryLightColor">#ffc1e3</color>
     <color name="secondaryDarkColor">#bf5f82</color>
     <color name="primaryTextColor">@color/black</color>
-    <color name="secondaryTextColor">@color/black</color>
+    <color name="secondaryTextColor">@color/white</color>
     <color name="surfaceColor">#ece0e0</color>
     <color name="surfaceTextColor">@color/black</color>
 
     <color name="white">#ffffff</color>
+    <color name="light_grey">#cccccc</color>
     <color name="grey">#777777</color>
     <color name="dark_grey">#444444</color>
     <color name="black">#000000</color>
@@ -23,5 +24,31 @@
     <color name="white_40">#66FFFFFF</color>
     <color name="white_50">#7fFFFFFF</color>
     <color name="white_60">#99ffffff</color>
+    <color name="white_70">#b3ffffff</color>
+
+    <color name="black_10">#19000000</color>
+    <color name="black_20">#33000000</color>
+    <color name="black_30">#4c000000</color>
+    <color name="black_40">#66000000</color>
+    <color name="black_50">#7f000000</color>
+    <color name="black_60">#99000000</color>
+
+    <color name="blue_10">#191b3242</color>
+    <color name="blue_20">#331b3242</color>
+    <color name="blue_30">#4c1b3242</color>
+    <color name="blue_40">#661b3242</color>
+    <color name="blue_50">#7f1b3242</color>
+    <color name="blue_60">#991b3242</color>
+
+    <color name="primaryColorBB">#1b3242</color>
+    <color name="primaryLightColorBB">#455b6d</color>
+    <color name="primaryDarkColorBB">#000a1c</color>
+    <color name="secondaryColorBB">#b0bec5</color>
+    <color name="secondaryLightColorBB">#e2f1f8</color>
+    <color name="secondaryDarkColorBB">#808e95</color>
+    <color name="primaryTextColorBB">#ffffff</color>
+    <color name="secondaryTextColorBB">#000000</color>
+    <color name="surfaceColorBB">#546e7a</color>
+    <color name="surfaceTextColorBB">@color/white</color>
 
 </resources>

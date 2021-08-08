@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="colorLightText" format="color" />
+
+    <!-- action bar -->
+    <attr name="colorActionBar" format="color" />
+    <attr name="colorActionBarExtra" format="color" />
+    <attr name="colorOnActionBar" format="color" />
+
+    <!-- messages -->
+    <attr name="colorMessageBox" format="color" />
+    <attr name="colorMessageText" format="color" />
+
+    <!-- send message box -->
+    <attr name="colorSendMessageBox" format="color" />
+    <attr name="colorSendMessageExtra" format="color" />
+    <attr name="colorOnSendMessageBox" format="color" />
+
+</resources>

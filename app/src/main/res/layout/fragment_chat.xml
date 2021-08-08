@@ -12,7 +12,7 @@
         android:id="@+id/chat_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white_40"
+        android:background="?colorActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,7 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white_60">
+            android:background="?attr/colorActionBarExtra">
 
             <ImageView
                 android:id="@+id/chat_nav_open"
@@ -36,7 +36,8 @@
                 android:src="@drawable/menu_open"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?attr/colorOnActionBar" />
 
             <ImageView
                 android:id="@+id/chat_dp"
@@ -49,7 +50,8 @@
                 android:src="@drawable/person"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/chat_nav_open"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?attr/colorOnActionBar" />
 
             <LinearLayout
                 android:id="@+id/chat_name_container"
@@ -73,7 +75,7 @@
                     android:layout_marginHorizontal="8dp"
                     android:gravity="center"
                     android:text="@string/data_name"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorOnActionBar"
                     android:textSize="20sp" />
 
                 <TextView
@@ -81,6 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:textColor="?attr/colorLightText"
                     android:textSize="18sp"
                     app:layout_constraintStart_toEndOf="@id/chat_nav_open"
                     app:layout_constraintTop_toBottomOf="@id/chat_name_container"
@@ -101,7 +104,8 @@
                 android:src="@drawable/call"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/chat_menu"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?attr/colorOnActionBar" />
 
             <ImageView
                 android:id="@+id/chat_menu"
@@ -117,7 +121,8 @@
                 android:src="@drawable/menu_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?attr/colorOnActionBar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -201,7 +206,7 @@
         android:id="@+id/chat_message_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white_10"
+        android:background="?colorSendMessageBox"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -209,12 +214,12 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white_40">
+            android:background="?colorSendMessageExtra">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white_40"
+                android:background="?colorSendMessageExtra"
                 android:elevation="10dp"
                 android:paddingTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -237,6 +242,8 @@
                     android:maxLines="5"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="8dp"
+                    android:textColor="?colorOnSendMessageBox"
+                    android:textColorHint="?colorLightText"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/chat_send"
                     app:layout_constraintStart_toStartOf="parent"
@@ -255,7 +262,8 @@
                     android:padding="8dp"
                     android:src="@drawable/send"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="?colorOnSendMessageBox" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

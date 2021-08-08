@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        setTheme(Utils.getTheme(getApplication()));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
