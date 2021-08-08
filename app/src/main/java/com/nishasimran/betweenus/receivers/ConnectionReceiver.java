@@ -7,17 +7,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
 
-import com.nishasimran.betweenus.services.MessageService;
+import com.nishasimran.betweenus.services.ParentService;
 
 public class ConnectionReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
+        ParentService parentService = new ParentService();
         if (isNetworkAvailable(context)) {
-            context.stopService(new Intent(context, MessageService.class));
-            context.startService(new Intent(context, MessageService.class));
+            parentService.startWork(context.getApplicationContext());
         } else {
-            context.stopService(new Intent(context, MessageService.class));
+            parentService.stopWork();
         }
     }
 

@@ -25,15 +25,6 @@
         </activity>
 
         <service
-            android:name=".services.MessageService"
-            android:exported="false"
-            android:process=":remote" >
-            <intent-filter>
-                <action android:name="com.nishasimran.betweenus.services.MessageService" />
-            </intent-filter>
-        </service>
-
-        <service
             android:name=".services.ParentService"
             android:exported="false"
             android:process=":remote" >
@@ -41,14 +32,6 @@
                 <action android:name="com.nishasimran.betweenus.services.ParentService" />
             </intent-filter>
         </service>
-
-        <receiver android:name=".receivers.RebootReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" >
-                </action>
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
