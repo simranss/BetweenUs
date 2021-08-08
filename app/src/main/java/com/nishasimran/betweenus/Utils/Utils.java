@@ -5,6 +5,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 
@@ -335,5 +338,21 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // For 29 api or above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+            if (capabilities == null)
+                return false;
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+        }
+        // For below 29 api
+        else {
+            return connectivityManager.getActiveNetworkInfo() != null && (connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI || connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_MOBILE ||connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_ETHERNET);
+        }
     }
 }

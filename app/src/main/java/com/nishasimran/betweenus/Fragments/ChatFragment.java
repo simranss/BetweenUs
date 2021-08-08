@@ -1,6 +1,5 @@
 package com.nishasimran.betweenus.Fragments;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -24,6 +24,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.nishasimran.betweenus.Activities.BubbleChatActivity;
+import com.nishasimran.betweenus.Activities.MainActivity;
 import com.nishasimran.betweenus.Adapters.ChatAdapter;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.Message;
@@ -49,7 +51,8 @@ public class ChatFragment extends Fragment {
 
     private final String TAG = "ChatFrag";
 
-    private final MainFragment mainFragment;
+    private MainFragment mainFragment;
+    private final AppCompatActivity activity;
 
     private ImageView navOpen, callImageView, menuImageView, sendImageView;
     private TextView nameTextView, lastSeenTextView;
@@ -72,11 +75,16 @@ public class ChatFragment extends Fragment {
 
     public UserDetailsFragment fragment;
 
-    final private MediaPlayer mediaPlayer;
+    //final private MediaPlayer mediaPlayer;
 
-    public ChatFragment(MainFragment fragment) {
+    public ChatFragment(BubbleChatActivity activity) {
+        this.activity = activity;
+    }
+
+    public ChatFragment(MainFragment fragment, MainActivity activity) {
         this.mainFragment = fragment;
-        this.mediaPlayer = MediaPlayer.create(getContext(), R.raw.conv_tone);
+        this.activity = activity;
+        //this.mediaPlayer = MediaPlayer.create(getContext(), R.raw.conv_tone);
     }
 
     @Override
@@ -110,8 +118,9 @@ public class ChatFragment extends Fragment {
                         FMessage fMessage = new FMessage(map);
                         Log.d(TAG, "fMessage: " + fMessage);
                         if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
-                            if (mainFragment.getUid().trim().equals(fMessage.getTo().trim())) {
-                                Key key = KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic(), keys);
+                            String uid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_UID);
+                            if (uid.trim().equals(fMessage.getTo().trim())) {
+                                Key key = KeyViewModel.getInstance(activity, activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic(), keys);
                                 if (key != null) {
                                     snapshot.getRef().removeValue();
                                     long readCurrMillis = System.currentTimeMillis();
@@ -127,12 +136,12 @@ public class ChatFragment extends Fragment {
                                     }
                                     FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_SEEN, readCurrMillis);
                                     insertMessage(message);
-                                    mediaPlayer.start();
+                                    //mediaPlayer.start();
                                     Integer index = adapter.getIndexOf(message);
                                     if (index != null)
                                         recyclerView.scrollToPosition(index);
                                     Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
-                                    mainFragment.insertKey(key1);
+                                    insertKey(key1);
                                 } else {
                                     Log.d(TAG, "key not found");
                                 }
@@ -140,7 +149,7 @@ public class ChatFragment extends Fragment {
                                 Log.d(TAG, "message not sent to you");
                                 if (fMessage.getSentCurrMillis() != null) {
                                     String messageId = snapshot.getRef().getKey();
-                                    Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                                    Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
                                     if (message != null) {
                                         Integer index = adapter.getIndexOf(message);
                                         if (message.getSentCurrMillis() == null) {
@@ -155,7 +164,7 @@ public class ChatFragment extends Fragment {
                             }
                         } else if (fMessage.getSentCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
-                            Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                            Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
                                 Integer index = adapter.getIndexOf(message);
                                 if (message.getSentCurrMillis() == null) {
@@ -188,7 +197,7 @@ public class ChatFragment extends Fragment {
                             }
                         } else if (fMessage.getDeliveredCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
-                            Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                            Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
                                 Integer index = adapter.getIndexOf(message);
                                 if (message.getDeliveredCurrMillis() == null) {
@@ -201,7 +210,7 @@ public class ChatFragment extends Fragment {
                             }
                         } else if (fMessage.getReadCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
-                            Message message = MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).findMessage(messageId, messages);
+                            Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
                                 Integer index = adapter.getIndexOf(message);
                                 if (message.getReadCurrMillis() == null) {
@@ -228,6 +237,10 @@ public class ChatFragment extends Fragment {
         messagesRef.addChildEventListener(messageChildEventListener);
     }
 
+    private void insertKey(Key key) {
+        KeyViewModel.getInstance(activity, activity.getApplication()).insert(key);
+    }
+
     private void populateTheChats() {
         Log.d(TAG, "populateTheChats");
         initMessagesListener();
@@ -235,7 +248,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void initMessagesListener() {
-        MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getHundredMessages(0).observe(mainFragment.activity, messages1 -> {
+        MessageViewModel.getInstance(activity, activity.getApplication()).getHundredMessages(0).observe(activity, messages1 -> {
             if (messages1 != null) {
                 Log.d(TAG, "messages: " + messages1);
                 messages = messages1;
@@ -255,23 +268,29 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
         Log.d(TAG, "onResume()");
-        if (mainFragment.isDocsExpanded()) {
-            mainFragment.setDocsExpanded(false);
+        if (mainFragment != null) {
+            if (mainFragment.isDocsExpanded()) {
+                mainFragment.setDocsExpanded(false);
+            }
+            mainFragment.checkMenuItem(R.id.menu_chat);
         }
-        mainFragment.checkMenuItem(R.id.menu_chat);
         Log.d(TAG, "onResume: now super");
         super.onResume();
     }
 
     private void listenersForViews() {
         Log.d(TAG, "listenersForViews");
-        navOpen.setOnClickListener(v -> mainFragment.openDrawer());
-        nameTextView.setOnClickListener(v -> {
-            if (serverUser != null) {
-                fragment = new UserDetailsFragment(mainFragment.activity, serverUser);
-                Utils.showFragment(mainFragment.activity.getSupportFragmentManager(), R.id.root_fragment_container, fragment);
-            }
-        });
+        if (mainFragment != null && activity instanceof MainActivity) {
+            navOpen.setOnClickListener(v -> mainFragment.openDrawer());
+            nameTextView.setOnClickListener(v -> {
+                if (serverUser != null) {
+                    fragment = new UserDetailsFragment((MainActivity) activity, serverUser);
+                    Utils.showFragment(activity.getSupportFragmentManager(), R.id.root_fragment_container, fragment);
+                }
+            });
+        } else {
+            navOpen.setVisibility(View.GONE);
+        }
 
         callImageView.setOnClickListener(v -> {
             // TODO: add a call option in future
@@ -309,7 +328,7 @@ public class ChatFragment extends Fragment {
                  0 = returns false
                  */
                 if (!recyclerView.canScrollVertically(-1)) {
-                    MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getHundredMessages(100).observe(mainFragment.activity, messages1 -> {
+                    MessageViewModel.getInstance(activity, activity.getApplication()).getHundredMessages(100).observe(activity, messages1 -> {
                         messages.addAll(0, messages1);
                         adapter.setMessages(messages);
                     });
@@ -317,12 +336,13 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+        //mediaPlayer.setOnCompletionListener(MediaPlayer::release);
     }
 
     private void sendMessage() {
         Log.d(TAG, "sendMessage");
-        String serverUid = Utils.getStringFromSharedPreference(mainFragment.activity.getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
+        String serverUid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
+        String uid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_UID);
         if (serverUid.equals(CommonValues.NULL)) {
             Toast.makeText(getContext(), "No partner found", Toast.LENGTH_SHORT).show();
         } else {
@@ -333,7 +353,7 @@ public class ChatFragment extends Fragment {
                     long currMillis = System.currentTimeMillis();
                     Message message = new Message(Utils.getUniqueMessageId(),
                             messageTxt,
-                            mainFragment.getUid(),
+                            uid,
                             serverUid,
                             CommonValues.MESSAGE_TYPE_TEXT,
                             CommonValues.STATUS_SENDING,
@@ -342,13 +362,13 @@ public class ChatFragment extends Fragment {
                             null,
                             null);
                     insertMessage(message);
-                    mainFragment.activity.runOnUiThread(() -> {
+                    activity.runOnUiThread(() -> {
                         Integer index = adapter.getIndexOf(message);
                         if (index != null)
                             recyclerView.scrollToPosition(index);
                     });
 
-                    if (mainFragment.isInternetAvailable()) {
+                    if (Utils.isNetworkAvailable(activity)) {
                         Map<String, String> map = encryptMessage(message.getMessage());
                         if (map != null)
                             createAndSendMessage(map, message);
@@ -367,11 +387,11 @@ public class ChatFragment extends Fragment {
         FMessage fMessage = new FMessage(message.getId(), map.get(CommonValues.ENCRYPTED_MESSAGE), message.getFrom(), message.getTo(), message.getMessageType(), CommonValues.STATUS_SENT, message.getCurrMillis(), null, null, null, serverPublic, myPublic, iv);
         FirebaseDb.getInstance().sendMessage(fMessage);
         Key key = new Key(UUID.randomUUID().toString(), myPrivate, myPublic, serverPublic, message.getCurrMillis());
-        mainFragment.insertKey(key);
+        insertKey(key);
     }
 
     private Map<String, String> encryptMessage(String text) {
-        Key key = KeyViewModel.getInstance(mainFragment, mainFragment.activity.getApplication()).getLastKeyWithServerPublic(keys);
+        Key key = KeyViewModel.getInstance(activity, activity.getApplication()).getLastKeyWithServerPublic(keys);
         if (key != null) {
             String serverPublic = key.getServerPublic();
             return Encryption.encryptText(text, serverPublic);
@@ -463,10 +483,10 @@ public class ChatFragment extends Fragment {
     }
 
     private void showNameAndDp() {
-        UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllUsers().observe(mainFragment.activity, users -> {
+        UserViewModel.getInstance(activity, activity.getApplication()).getAllUsers().observe(activity, users -> {
             if (users != null && !users.isEmpty()) {
                 Log.d(TAG, "showNameAndDp users: " + users);
-                serverUser = UserViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getServerUser(users, Utils.getStringFromSharedPreference(mainFragment.activity.getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID));
+                serverUser = UserViewModel.getInstance(activity, activity.getApplication()).getServerUser(users, Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID));
                 if (serverUser != null) {
                     nameTextView.setText(serverUser.getName());
                     initLastSeenListener(serverUser.getId());
@@ -493,7 +513,8 @@ public class ChatFragment extends Fragment {
         Log.d(TAG, "initRecyclerView");
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new ChatAdapter(this, mainFragment.getUid());
+        String uid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_UID);
+        adapter = new ChatAdapter(this, uid);
 
         recyclerView.setAdapter(adapter);
     }
@@ -515,11 +536,11 @@ public class ChatFragment extends Fragment {
     }
 
     private void insertMessage(Message message) {
-        MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).insert(message);
+        MessageViewModel.getInstance(activity, activity.getApplication()).insert(message);
     }
 
     private void updateMessage(Message message, Integer index) {
-        MessageViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).update(message);
+        MessageViewModel.getInstance(activity, activity.getApplication()).update(message);
         if (index != null)
             adapter.updateMessage(index, message);
     }
@@ -529,7 +550,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void initKeyListener() {
-        KeyViewModel.getInstance(mainFragment.activity, mainFragment.activity.getApplication()).getAllKeys().observe(mainFragment.activity, keys1 -> keys = keys1);
+        KeyViewModel.getInstance(activity, activity.getApplication()).getAllKeys().observe(activity, keys1 -> keys = keys1);
     }
 
     public void removeMessageListener() {

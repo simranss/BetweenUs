@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.nishasimran.betweenus.Activities.BubbleChatActivity;
 import com.nishasimran.betweenus.Activities.MainActivity;
 import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.Message;
@@ -254,7 +255,7 @@ public class ParentService extends LifecycleService {
     }
 
     private void postNotification(Message message, Context context, Application application) {
-        Intent notificationIntent = new Intent(context, MainActivity.class);
+        Intent notificationIntent = new Intent(context, BubbleChatActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 102, notificationIntent, PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
 

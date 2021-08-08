@@ -342,7 +342,7 @@ public class MainFragment extends Fragment {
     private void initViewPager(View parent) {
         viewPager = parent.findViewById(R.id.main_view_pager);
 
-        chatFragment = new ChatFragment(this);
+        chatFragment = new ChatFragment(this, activity);
         memoriesFragment = new MemoriesFragment(this);
         calendarFragment = new CalendarFragment(this);
         tasksFragment = new TasksFragment(this);
