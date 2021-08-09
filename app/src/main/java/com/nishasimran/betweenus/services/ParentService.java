@@ -107,13 +107,6 @@ public class ParentService extends LifecycleService {
 
     }
 
-    @Override
-    public void onDestroy() {
-
-        stopWork();
-        super.onDestroy();
-    }
-
     public void startWork(Context context) {
         Application application = ((Application)context.getApplicationContext());
 
@@ -364,6 +357,7 @@ public class ParentService extends LifecycleService {
     }
 
     public void stopWork() {
-        messagesRef.removeEventListener(handler);
+        if (messagesRef!=null && handler != null)
+            messagesRef.removeEventListener(handler);
     }
 }

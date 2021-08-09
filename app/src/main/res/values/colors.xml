@@ -50,5 +50,7 @@
     <color name="secondaryTextColorBB">#000000</color>
     <color name="surfaceColorBB">#546e7a</color>
     <color name="surfaceTextColorBB">@color/white</color>
+    <color name="colorBackgroundBB">#20323A</color>
+    <color name="colorOnBackgroundBB">@color/white</color>
 
 </resources>
