@@ -180,7 +180,7 @@ public class Utils {
 
     public static int getIntFromSharedPreference(@NonNull Application application, String key) {
         SharedPreferences preferences = application.getSharedPreferences(CommonValues.SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        return preferences.getInt(key, -1);
+        return preferences.getInt(key, 0);
     }
 
     public static long getLongFromSharedPreference(@NonNull Application application, String key) {
@@ -278,6 +278,8 @@ public class Utils {
                 return R.style.Theme_BetweenUs_BlackBlue;
             case 2:
                 return R.style.Theme_BetweenUs_BlackRed;
+            case 3:
+                return R.style.Theme_BetweenUs_WhitePink;
             default:
                 return R.style.Theme_BetweenUs;
         }

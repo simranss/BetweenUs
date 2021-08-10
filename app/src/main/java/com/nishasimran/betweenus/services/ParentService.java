@@ -357,7 +357,7 @@ public class ParentService extends LifecycleService {
     }
 
     public void stopWork() {
-        if (messagesRef!=null && handler != null)
+        if (messagesRef != null && handler != null)
             messagesRef.removeEventListener(handler);
     }
 }
