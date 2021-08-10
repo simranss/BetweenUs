@@ -12,6 +12,8 @@
     <string name="menu_desc">Menu</string>
     <string name="no_messages_icon_desc">Just a random cute image</string>
     <string name="back_img_desc">Image to select as new background</string>
+    <string name="expansion_desc">Expand this item</string>
+    <string name="settings_background_img_desc">Just a background to apply</string>
 
     <!-- Hint strings -->
     <string name="phone_hint">Phone no.</string>
@@ -26,6 +28,11 @@
     <string name="save">Save</string>
     <string name="convo_start">Please start the conversation by sending a message</string>
     <string name="online">Online</string>
+    <string name="background_settings">Background Settings</string>
+    <string name="themes_settings">Themes Settings</string>
+    <string name="background_change">Select a background for the app</string>
+    <string name="background_blur">Background blur?</string>
+    <string name="no_wallpaper">No wallpaper</string>
 
     <!-- Navigation drawer strings -->
     <string name="nav_general">General</string>
@@ -51,6 +58,11 @@
     <string name="menu_whatsapp">Whatsapp</string>
     <string name="menu_sms">SMS</string>
     <string name="menu_telegram">Telegram</string>
+
+    <!-- Themes strings -->
+    <string name="theme_bb">Black and blue</string>
+    <string name="theme_br">Black and red</string>
+    <string name="theme_normal">Normal</string>
 
     <!-- Data strings -->
     <string name="data_name">Name</string>
