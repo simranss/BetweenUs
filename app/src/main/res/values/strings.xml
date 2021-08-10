@@ -33,6 +33,7 @@
     <string name="background_change">Select a background for the app</string>
     <string name="background_blur">Background blur?</string>
     <string name="no_wallpaper">No wallpaper</string>
+    <string name="wallpaper_selected">Selected</string>
 
     <!-- Navigation drawer strings -->
     <string name="nav_general">General</string>
@@ -62,6 +63,7 @@
     <!-- Themes strings -->
     <string name="theme_bb">Black and blue</string>
     <string name="theme_br">Black and red</string>
+    <string name="theme_wp">White and pink</string>
     <string name="theme_normal">Normal</string>
 
     <!-- Data strings -->

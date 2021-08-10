@@ -28,4 +28,68 @@
         <item name="colorSendMessageExtra">@color/blue_40</item>
         <item name="colorOnSendMessageBox">@color/white</item>
     </style>
+
+    <style name="Theme.BetweenUs.BlackRed" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+
+
+        <!-- Custom attributes -->
+
+
+    </style>
+
+    <style name="Theme.BetweenUs.WhitePink" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
+        <item name="colorOnPrimary">@color/primaryTextColor</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
+        <item name="colorOnSecondary">@color/secondaryTextColor</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="colorOnSurface">@color/surfaceTextColor</item>
+        <item name="colorSurface">@color/surfaceColor</item>
+
+        <!-- Custom attributes -->
+        <item name="colorActionBar">@color/white_40</item>
+        <item name="colorActionBarExtra">@color/white_60</item>
+        <item name="colorOnActionBar">@color/black</item>
+        <item name="colorLightText">@color/dark_grey</item>
+        <item name="colorMessageBox">@color/white_40</item>
+        <item name="colorMessageText">@color/black</item>
+        <item name="colorSendMessageBox">@color/white_10</item>
+        <item name="colorSendMessageExtra">@color/white_40</item>
+        <item name="colorOnSendMessageBox">@color/black</item>
+    </style>
+
+    <style name="Theme.BetweenUs.BlackBlue" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primaryColorBB</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColorBB</item>
+        <item name="colorOnPrimary">@color/primaryTextColorBB</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondaryColorBB</item>
+        <item name="colorSecondaryVariant">@color/secondaryDarkColorBB</item>
+        <item name="colorOnSecondary">@color/secondaryTextColorBB</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="colorSurface">@color/surfaceColorBB</item>
+        <item name="colorOnSurface">@color/surfaceTextColorBB</item>
+        <item name="android:colorBackground">@color/colorBackgroundBB</item>
+        <item name="colorOnBackground">@color/colorOnBackgroundBB</item>
+
+        <!-- Custom attributes -->
+        <item name="colorActionBar">@color/blue_40</item>
+        <item name="colorActionBarExtra">@color/blue_30</item>
+        <item name="colorOnActionBar">@color/white</item>
+        <item name="colorLightText">@color/light_grey</item>
+        <item name="colorMessageBox">@color/black_40</item>
+        <item name="colorMessageText">@color/white</item>
+        <item name="colorSendMessageBox">@color/blue_10</item>
+        <item name="colorSendMessageExtra">@color/blue_40</item>
+        <item name="colorOnSendMessageBox">@color/white</item>
+    </style>
 </resources>

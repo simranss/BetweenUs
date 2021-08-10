@@ -89,26 +89,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/settings_background_root"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/background_settings"
-                        android:textColor="?colorOnSurface"
-                        android:textSize="18sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/settings_background_expand"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/expansion_desc"
-                        android:src="@drawable/arrow_down"
+                        android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="?colorOnSurface" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/background_settings"
+                            android:textColor="?colorOnSurface"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/settings_background_expand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/expansion_desc"
+                            android:src="@drawable/arrow_down"
+                            app:tint="?colorOnSurface" />
+
+                    </LinearLayout>
 
                     <include
+                        android:id="@+id/settings_background_expanded_layout"
                         layout="@layout/settings_background"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -116,7 +125,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/settings_background_expand" />
+                        app:layout_constraintTop_toBottomOf="@id/settings_background_root" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -141,24 +150,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/settings_themes_root"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/themes_settings"
-                        android:textColor="?colorOnSurface"
-                        android:textSize="18sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/settings_themes_expand"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/expansion_desc"
-                        android:src="@drawable/arrow_down"
+                        android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="?colorOnSurface" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/themes_settings"
+                            android:textColor="?colorOnSurface"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/settings_themes_expand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/expansion_desc"
+                            android:src="@drawable/arrow_down"
+                            app:tint="?colorOnSurface" />
+
+                    </LinearLayout>
 
                     <RadioGroup
                         android:id="@+id/settings_themes_radio_grp"
@@ -169,13 +186,14 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/settings_themes_expand">
+                        app:layout_constraintTop_toBottomOf="@id/settings_themes_root">
 
                         <RadioButton
                             android:id="@+id/settings_themes_radio_bb"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:buttonTint="?colorOnSurface"
+                            android:tag="1"
                             android:text="@string/theme_bb"
                             android:textColor="?colorOnSurface" />
 
@@ -185,7 +203,18 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:buttonTint="?colorOnSurface"
+                            android:tag="2"
                             android:text="@string/theme_br"
+                            android:textColor="?colorOnSurface" />
+
+                        <RadioButton
+                            android:id="@+id/settings_themes_radio_wp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:buttonTint="?colorOnSurface"
+                            android:tag="3"
+                            android:text="@string/theme_wp"
                             android:textColor="?colorOnSurface" />
 
                         <RadioButton
@@ -194,6 +223,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:buttonTint="?colorOnSurface"
+                            android:tag="0"
                             android:text="@string/theme_normal"
                             android:textColor="?colorOnSurface" />
 
@@ -203,6 +233,19 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </FrameLayout>
+
+            <Button
+                android:id="@+id/settings_save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:text="@string/save"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settings_themes_head" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

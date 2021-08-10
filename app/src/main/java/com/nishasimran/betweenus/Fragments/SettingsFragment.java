@@ -1,16 +1,23 @@
 package com.nishasimran.betweenus.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.nishasimran.betweenus.Activities.MainActivity;
+import com.nishasimran.betweenus.Adapters.WallpaperAdapter;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Utils.Utils;
 
@@ -18,11 +25,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class SettingsFragment extends Fragment {
 
-    private final MainFragment mainFragment;
+    public final MainFragment mainFragment;
 
     private SwitchMaterial blurSwitch;
-    private EditText wallpaperEditText, themeEditText;
-    private Button saveBtn;
+    private LinearLayout backgroundRoot, themeRoot;
+    private ImageView backgroundExpansionImg, themeExpansionImg;
+    private RecyclerView backgroundRecycler;
+    private RadioGroup themeRadioGrp;
+    private boolean isBackgroundExpanded = false, isThemesExpanded = false;
+    private ConstraintLayout backgroundExpandedLayout;
+    private Button saveButton;
 
     public SettingsFragment(MainFragment fragment) {
         mainFragment = fragment;
@@ -44,46 +56,65 @@ public class SettingsFragment extends Fragment {
     }
 
     private void initViews(View parent) {
-        blurSwitch = parent.findViewById(R.id.settings_blur_switch);
-        wallpaperEditText = parent.findViewById(R.id.settings_wallpaper_et);
-        themeEditText = parent.findViewById(R.id.settings_theme_et);
-        saveBtn = parent.findViewById(R.id.settings_save_btn);
+        blurSwitch = parent.findViewById(R.id.settings_background_blur_switch);
+        backgroundRoot = parent.findViewById(R.id.settings_background_root);
+        themeRoot = parent.findViewById(R.id.settings_themes_root);
+        backgroundExpansionImg = parent.findViewById(R.id.settings_background_expand);
+        themeExpansionImg = parent.findViewById(R.id.settings_themes_expand);
+        backgroundRecycler = parent.findViewById(R.id.settings_background_recycler);
+        themeRadioGrp = parent.findViewById(R.id.settings_themes_radio_grp);
+        backgroundExpandedLayout = parent.findViewById(R.id.settings_background_expanded_layout);
+        saveButton = parent.findViewById(R.id.settings_save);
 
-        setDefaultsForViews();
+        setDefaultsForViews(parent);
     }
 
-    private void setDefaultsForViews() {
-        boolean blur = Utils.getIsBackgroundBlur(mainFragment.activity.getApplication());
-        blurSwitch.setChecked(blur);
+    private void setDefaultsForViews(View parent) {
 
-        int wallpaperId = Utils.getBackgroundInt(mainFragment.activity.getApplication());
-        wallpaperEditText.setText(String.valueOf((wallpaperId == -1?14:wallpaperId)));
+        boolean backBlur = Utils.getIsBackgroundBlur(mainFragment.activity.getApplication());
+        int defaultThemeInt = Utils.getThemeInt(mainFragment.activity.getApplication());
+        blurSwitch.setChecked(backBlur);
+        RadioButton defaultThemeRadio = themeRadioGrp.findViewWithTag(String.valueOf(defaultThemeInt));
+        defaultThemeRadio.setChecked(true);
 
-        int themeId = Utils.getThemeInt(mainFragment.activity.getApplication());
-        themeEditText.setText(String.valueOf((themeId == -1?14:themeId)));
-
-        blurSwitch.setOnCheckedChangeListener((compoundButton, b) -> Utils.setIsBackgroundBlur(mainFragment.activity.getApplication(), b));
-        saveBtn.setOnClickListener(view -> {
-            if (!wallpaperEditText.getText().toString().trim().isEmpty() && !themeEditText.getText().toString().trim().isEmpty()) {
-                try {
-                    int wallpaperValue = Integer.parseInt(wallpaperEditText.getText().toString().trim());
-                    if (wallpaperValue < 1 || wallpaperValue > 17) {
-                        Toast.makeText(mainFragment.activity, "Enter a wallpaperValue between 1-17", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Utils.setBackgroundInt(mainFragment.activity.getApplication(), wallpaperValue);
-                    }
-                    int themeValue = Integer.parseInt(themeEditText.getText().toString().trim());
-                    if (themeValue != 1 && themeValue != 0) {
-                        Toast.makeText(mainFragment.activity, "Enter a themeValue as either 0 or 1", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Utils.setThemeInt(mainFragment.activity.getApplication(), themeValue);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        backgroundRoot.setOnClickListener(view -> {
+            if (isBackgroundExpanded) {
+                backgroundExpansionImg.setImageResource(R.drawable.arrow_down);
+                backgroundExpandedLayout.setVisibility(View.GONE);
+                isBackgroundExpanded = false;
             } else {
-                Toast.makeText(mainFragment.activity, "Values are empty", Toast.LENGTH_SHORT).show();
+                backgroundExpansionImg.setImageResource(R.drawable.arrow_up);
+                backgroundExpandedLayout.setVisibility(View.VISIBLE);
+                isBackgroundExpanded = true;
             }
+        });
+        themeRoot.setOnClickListener(view -> {
+            if (isThemesExpanded) {
+                themeExpansionImg.setImageResource(R.drawable.arrow_down);
+                themeRadioGrp.setVisibility(View.GONE);
+                isThemesExpanded = false;
+            } else {
+                themeExpansionImg.setImageResource(R.drawable.arrow_up);
+                themeRadioGrp.setVisibility(View.VISIBLE);
+                isThemesExpanded = true;
+            }
+        });
+
+        WallpaperAdapter adapter = new WallpaperAdapter(mainFragment.activity, this);
+        backgroundRecycler.setAdapter(adapter);
+
+        saveButton.setOnClickListener(view -> {
+            Utils.setIsBackgroundBlur(mainFragment.activity.getApplication(), blurSwitch.isChecked());
+            RadioButton radioButton = parent.findViewById(themeRadioGrp.getCheckedRadioButtonId());
+            try {
+                int themeInt = Integer.parseInt(radioButton.getTag().toString());
+                Utils.setThemeInt(mainFragment.activity.getApplication(), themeInt);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            mainFragment.activity.finish();
+            startActivity(intent);
         });
     }
 
