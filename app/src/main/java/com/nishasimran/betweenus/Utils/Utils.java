@@ -202,10 +202,12 @@ public class Utils {
 
 
     @DrawableRes
-    public static int getBackgroundId(@NonNull Application application) {
+    public static Integer getBackgroundId(@NonNull Application application) {
         int index = getIntFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_BACKGROUND);
         @DrawableRes int DEFAULT = R.drawable.background_13_img;
         switch (index) {
+            case 0:
+                return null;
             case 1:
                 return R.drawable.background_01_img;
             case 2:

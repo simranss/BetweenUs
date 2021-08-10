@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
@@ -83,13 +84,16 @@ public class MainFragment extends Fragment {
 
         root = parent.findViewById(R.id.main_root);
         FrameLayout extraLayer = parent.findViewById(R.id.main_extra_layer);
-        if (Utils.getIsBackgroundBlur(activity.getApplication())) {
-            initOnGlobalLayoutListener();
+        @DrawableRes Integer backgroundId = Utils.getBackgroundId(activity.getApplication());
+        if (backgroundId != null) {
+            if (Utils.getIsBackgroundBlur(activity.getApplication())) {
+                initOnGlobalLayoutListener(backgroundId);
 
-            blurBackground();
-        } else {
-            extraLayer.setBackgroundResource(R.color.transparent);
-            root.setBackgroundResource(Utils.getBackgroundId(activity.getApplication()));
+                blurBackground(backgroundId);
+            } else {
+                extraLayer.setBackgroundResource(R.color.transparent);
+                root.setBackgroundResource(backgroundId);
+            }
         }
 
         // by default load the home fragment
@@ -115,11 +119,11 @@ public class MainFragment extends Fragment {
         super.onPause();
     }
 
-    private void blurBackground() {
+    private void blurBackground(@DrawableRes int backgroundId) {
         Log.d(TAG, "blurBackground");
         if (getContext() != null) {
             if (root.getWidth() > 0) {
-                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), Utils.getBackgroundId(activity.getApplication()), null, null);
+                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), backgroundId, null, null);
                 root.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
             } else {
                 root.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
@@ -127,15 +131,15 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void initOnGlobalLayoutListener() {
+    private void initOnGlobalLayoutListener(@DrawableRes int backgroundId) {
         Log.d(TAG, "initOnGlobalLayoutListener");
         if (getContext() != null)
             onGlobalLayoutListener = () -> {
-                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), Utils.getBackgroundId(activity.getApplication()), null, null);
+                Bitmap blurredBitmap = BlurBuilder.blur(getContext(), backgroundId, null, null);
                 if (blurredBitmap != null) {
                     root.setBackground(new BitmapDrawable(getResources(), blurredBitmap));
                 } else {
-                    root.setBackgroundResource(Utils.getBackgroundId(activity.getApplication()));
+                    root.setBackgroundResource(backgroundId);
                 }
             };
     }
