@@ -37,7 +37,7 @@ public class MainFragment extends Fragment {
 
     private final String TAG = "MainFrag";
 
-    protected final MainActivity activity;
+    public final MainActivity activity;
 
     // navigation UI
     private DrawerLayout drawerLayout;
