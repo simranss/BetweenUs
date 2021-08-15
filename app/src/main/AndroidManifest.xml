@@ -17,7 +17,9 @@
         android:theme="@style/Theme.BetweenUs">
         <activity
             android:name=".Activities.BubbleChatActivity"
-            android:exported="true" />
+            android:allowEmbedded="true"
+            android:exported="true"
+            android:resizeableActivity="true" />
         <activity
             android:name=".Activities.MainActivity"
             android:exported="true">
