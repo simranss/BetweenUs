@@ -21,12 +21,9 @@ public class KeyViewModel extends AndroidViewModel {
 
     private final KeyRepository repository;
 
-    private final LiveData<List<Key>> allKeys;
-
     public KeyViewModel (Application application) {
         super(application);
         repository = new KeyRepository(application);
-        allKeys = repository.getAllKeys();
     }
 
     public static KeyViewModel getInstance(@NonNull ViewModelStoreOwner owner, @NonNull Application application) {
@@ -37,7 +34,7 @@ public class KeyViewModel extends AndroidViewModel {
         return INSTANCE;
     }
 
-    public LiveData<List<Key>> getAllKeys() { return allKeys; }
+    public LiveData<List<Key>> getAllKeys() { return repository.getAllKeys(); }
 
     public void insert(Key key) { repository.insert(key); }
 

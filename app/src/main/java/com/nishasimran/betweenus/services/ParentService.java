@@ -135,6 +135,7 @@ public class ParentService extends LifecycleService {
                         Log.d(TAG, "fMessage: " + fMessage);
                         if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
                             if (uid.trim().equals(fMessage.getTo().trim())) {
+                                Log.d(TAG, "onChildAdded: keys: " + keys);
                                 Key key = keyViewModel.findKeyByMyPublic(fMessage.getServerPublic(), keys);
                                 if (key != null) {
                                     snapshot.getRef().removeValue();
@@ -228,7 +229,7 @@ public class ParentService extends LifecycleService {
         messagesRef.addChildEventListener(handler);
     }
     private void initMessagesListener() {
-        messageViewModel.getHundredMessages(0).observe(this, messages1 -> messages = messages1);
+        messageViewModel.getHundredMessages(0).observeForever( messages1 -> messages = messages1);
     }
 
     private String decryptMessage(String serverPublic, String myPrivateKey, String iv, String encryptedMessage) {
@@ -244,7 +245,12 @@ public class ParentService extends LifecycleService {
     }
 
     private void initKeyListener() {
-        keyViewModel.getAllKeys().observe(this, keys1 -> keys = keys1);
+        Log.d(TAG, "initKeyListener: keyVM: " + keyViewModel);
+        Log.d(TAG, "initKeyListener: livekeys: " + keyViewModel.getAllKeys());
+        keyViewModel.getAllKeys().observeForever(keys1 -> {
+            keys = keys1;
+            Log.d(TAG, "initKeyListener: keys: " + keys1);
+        });
     }
 
     private void postNotification(Message message, Context context, Application application) {
@@ -256,7 +262,8 @@ public class ParentService extends LifecycleService {
         String serverUid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_SERVER_UID);
         String from = (serverUid.equals(message.getFrom().trim())) ? serverName : "Name";
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
@@ -279,13 +286,13 @@ public class ParentService extends LifecycleService {
                     .setName("You")
                     .setImportant(true)
                     .build();
-            ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(this, "short_id")
+            ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(context, "short_id")
                     .setLongLived(true)
-                    .setIntent(new Intent(this, MainActivity.class).setAction(Intent.ACTION_VIEW))
+                    .setIntent(new Intent(context, MainActivity.class).setAction(Intent.ACTION_VIEW))
                     .setShortLabel(from)
                     .setPerson(person)
                     .build();
-            ((ShortcutManager) getSystemService(Context.SHORTCUT_SERVICE)).pushDynamicShortcut(shortcut.toShortcutInfo());
+            ((ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE)).pushDynamicShortcut(shortcut.toShortcutInfo());
             NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle((person));
             for (Message message1 : unreadMessages) {
                 if (message1.getFrom().equals(serverUid))
@@ -293,7 +300,7 @@ public class ParentService extends LifecycleService {
                 else
                     messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), you));
             }
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "message")
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "message")
                     .setSmallIcon(R.drawable.notif_icon)
                     .setStyle(messagingStyle)
                     .setShortcutId("short_id")
@@ -340,7 +347,7 @@ public class ParentService extends LifecycleService {
                 inboxStyle.addLine(message1.getMessage());
             }
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "message")
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "message")
                     .setSmallIcon(R.drawable.notif_icon)
                     .setContentIntent(contentIntent)
                     .setNumber(unreadMessages.size())
