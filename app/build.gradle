@@ -5,6 +5,15 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
+
+    signingConfigs {
+        debug {
+            storeFile file('/home/simran/Desktop/My Apps/BetweenUs/debugKey.keystore')
+            storePassword 'mili2000'
+            keyAlias 'debugkey'
+            keyPassword 'mili2000'
+        }
+    }
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
@@ -19,6 +28,7 @@ android {
 
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
+        multiDexEnabled true
     }
 
     buildTypes {
