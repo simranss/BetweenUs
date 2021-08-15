@@ -30,6 +30,10 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".receivers.NotificationReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
         <service
             android:name=".services.ParentService"
             android:exported="false"

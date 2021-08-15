@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.Person;
+import androidx.core.app.RemoteInput;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.lifecycle.LifecycleService;
 
@@ -40,6 +41,7 @@ import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.ViewModels.MessageViewModel;
 import com.nishasimran.betweenus.receivers.ConnectionReceiver;
+import com.nishasimran.betweenus.receivers.NotificationReceiver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,13 +57,13 @@ public class ParentService extends LifecycleService {
     private DatabaseReference messagesRef;
     private MessageViewModel messageViewModel;
     private KeyViewModel keyViewModel;
-    private List<Key> keys;
+    public static List<Key> keys;
     private List<Message> messages;
 
-    private List<Message> unreadMessages;
+    private static List<Message> unreadMessages;
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(@NonNull Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
         CharSequence name = "Foreground";
@@ -253,7 +255,7 @@ public class ParentService extends LifecycleService {
         });
     }
 
-    private void postNotification(Message message, Context context, Application application) {
+    public static void postNotification(Message message, Context context, Application application) {
         Intent notificationIntent = new Intent(context, BubbleChatActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 102, notificationIntent, PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
@@ -264,6 +266,17 @@ public class ParentService extends LifecycleService {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
+        Intent replyIntent = new Intent(context, NotificationReceiver.class);
+        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 102, replyIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        RemoteInput remoteInput = new RemoteInput.Builder("key_reply")
+                .setLabel("Reply")
+                .build();
+
+        NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(R.drawable.send, "Reply", replyPendingIntent)
+                .addRemoteInput(remoteInput)
+                .setAllowGeneratedReplies(true)
+                .build();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
@@ -288,7 +301,7 @@ public class ParentService extends LifecycleService {
                     .build();
             ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(context, "short_id")
                     .setLongLived(true)
-                    .setIntent(new Intent(context, MainActivity.class).setAction(Intent.ACTION_VIEW))
+                    .setIntent(new Intent(context, BubbleChatActivity.class).setAction(Intent.ACTION_VIEW))
                     .setShortLabel(from)
                     .setPerson(person)
                     .build();
@@ -304,6 +317,9 @@ public class ParentService extends LifecycleService {
                     .setSmallIcon(R.drawable.notif_icon)
                     .setStyle(messagingStyle)
                     .setShortcutId("short_id")
+                    .setOnlyAlertOnce(true)
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                    .addAction(replyAction)
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                     .setBubbleMetadata(bubbleMetadata)
                     .setContentIntent(contentIntent)
@@ -353,6 +369,9 @@ public class ParentService extends LifecycleService {
                     .setNumber(unreadMessages.size())
                     .setContentTitle(from)
                     .setContentText(message.getMessage())
+                    .addAction(replyAction)
+                    .setOnlyAlertOnce(true)
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                     .setStyle(inboxStyle)
                     .setContentText(contentInfo)
