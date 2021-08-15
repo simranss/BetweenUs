@@ -152,29 +152,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkForBiometric() {
         BiometricManager biometricManager = BiometricManager.from(this);
-        switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG | BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
-            case BiometricManager.BIOMETRIC_SUCCESS:
-                Log.d(TAG, "App can authenticate using biometrics.");
-                biometricPrompt.authenticate(promptInfo);
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-                Log.d(TAG, "No biometric features available on this device.");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
-                Log.d(TAG, "Biometric features are currently unavailable.");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-                Log.d(TAG, "BIOMETRIC_ERROR_NONE_ENROLLED");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED:
-                Log.d(TAG, "BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED:
-                Log.d(TAG, "BIOMETRIC_ERROR_UNSUPPORTED");
-                break;
-            case BiometricManager.BIOMETRIC_STATUS_UNKNOWN:
-                Log.d(TAG, "BIOMETRIC_STATUS_UNKNOWN");
-                break;
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG | BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
+            Log.d(TAG, "App can authenticate using biometrics.");
+            biometricPrompt.authenticate(promptInfo);
+        } else {
+            Utils.showFragment(getSupportFragmentManager(), R.id.root_fragment_container, mainFragment);
         }
     }
 
