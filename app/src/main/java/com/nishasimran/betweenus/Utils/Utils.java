@@ -22,10 +22,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.nishasimran.betweenus.Database.CommonDatabase;
 import com.nishasimran.betweenus.R;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.FirebaseValues;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Date;
 import java.util.Locale;
 
@@ -344,6 +350,7 @@ public class Utils {
         return null;
     }
 
+
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -357,6 +364,31 @@ public class Utils {
         // For below 29 api
         else {
             return connectivityManager.getActiveNetworkInfo() != null && (connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI || connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_MOBILE ||connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_ETHERNET);
+        }
+    }
+
+
+    public static void exportRoomDatabase(Context appContext) {
+        String path = CommonDatabase.getDatabase(appContext).getOpenHelper().getWritableDatabase().getPath();
+        File dir = appContext.getObbDir();
+        if (!dir.exists()) {
+            dir.mkdir();
+            dir.mkdirs();
+            Log.d(TAG, "getAppPath: " + dir.getAbsolutePath());
+        }
+        String backupDBPath = "database.sqlite";    //you can modify the file type you need to export
+        File currentDB = new  File(path);
+        File backupDB = new File(dir, backupDBPath);
+        if (currentDB.exists()) {
+            try {
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
