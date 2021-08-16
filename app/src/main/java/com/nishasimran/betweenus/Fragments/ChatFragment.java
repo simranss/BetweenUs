@@ -53,7 +53,7 @@ public class ChatFragment extends Fragment {
     private final String TAG = "ChatFrag";
 
     private MainFragment mainFragment;
-    private final AppCompatActivity activity;
+    public final AppCompatActivity activity;
 
     private ImageView navOpen, callImageView, menuImageView, sendImageView;
     private TextView nameTextView, lastSeenTextView;
@@ -376,7 +376,7 @@ public class ChatFragment extends Fragment {
         }
     }
 
-    private void createAndSendMessage(Map<String, String> map, Message message) {
+    public void createAndSendMessage(Map<String, String> map, Message message) {
         String serverPublic = map.get(CommonValues.SERVER_KEY);
         String myPublic = map.get(CommonValues.MY_PUBLIC_KEY);
         String myPrivate = map.get(CommonValues.MY_PRIVATE_KEY);
@@ -387,7 +387,7 @@ public class ChatFragment extends Fragment {
         insertKey(key);
     }
 
-    private Map<String, String> encryptMessage(String text) {
+    public Map<String, String> encryptMessage(String text) {
         Key key = KeyViewModel.getInstance(activity, activity.getApplication()).getLastKeyWithServerPublic(keys);
         if (key != null) {
             String serverPublic = key.getServerPublic();

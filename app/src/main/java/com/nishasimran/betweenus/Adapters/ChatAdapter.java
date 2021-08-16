@@ -21,6 +21,7 @@ import com.nishasimran.betweenus.Values.CommonValues;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
@@ -70,6 +71,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                 holder.sendTimeTxt.setText(time);
                 holder.sendStatusTxt.setText(Utils.getMessageStatus(message.getStatus()));
 
+                if (message.getStatus().equals(CommonValues.STATUS_SENDING)) {
+                    sendMessages(message);
+                }
+
             } else if (message.getTo().trim().equals(uid.trim())) {
                 holder.comeContainer.setVisibility(View.VISIBLE);
                 holder.sendContainer.setVisibility(View.GONE);
@@ -79,6 +84,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
                 if (message.getUnread() != null) {
                     if (message.getUnread())
+                        if (!(holder.dateTxt.getVisibility() == View.VISIBLE)) {
+                            holder.dateTxt.setVisibility(View.VISIBLE);
+                            holder.dateTxt.setText(R.string.unread);
+                        }
                         message.setUnread(false);
                         FirebaseDb.getInstance().updateMessageStatus(message.getId(), CommonValues.STATUS_SEEN, System.currentTimeMillis());
                 }
@@ -91,6 +100,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         int size = messages == null ? 0 : messages.size();
         fragment.noMessages(size < 1);
         return size;
+    }
+
+    private void sendMessages(Message message) {
+        if (Utils.isNetworkAvailable(fragment.activity)) {
+            Map<String, String> map = fragment.encryptMessage(message.getMessage());
+            if (map != null)
+                fragment.createAndSendMessage(map, message);
+        }
     }
 
     public void setMessages(final List<Message> messages1) {
