@@ -8,16 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.core.app.RemoteInput;
-import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.nishasimran.betweenus.DataClasses.Key;
 import com.nishasimran.betweenus.DataClasses.Message;
-import com.nishasimran.betweenus.Encryption.Encryption;
-import com.nishasimran.betweenus.Firebase.FirebaseDb;
-import com.nishasimran.betweenus.FirebaseDataClasses.FMessage;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
-import com.nishasimran.betweenus.ViewModels.KeyViewModel;
 import com.nishasimran.betweenus.services.ParentService;
 
 import java.util.Map;
@@ -37,40 +31,22 @@ public class NotificationReceiver extends BroadcastReceiver {
             Log.i("TAG", "onReceive: " + uid);
             Log.i("TAG", "onReceive: " + serverUid);
             Log.i("TAG", "onReceive: " + answer.getMessage());
+            if (ParentService.getUnreadMessages() != null) {
+                ParentService.addUnreadMessages(answer);
+            }
             ParentService.postNotification(answer, context, (Application) context.getApplicationContext());
 
             if (Utils.isNetworkAvailable(context)) {
                 Log.i("TAG", "onReceive: network avail");
-                Map<String, String> map = encryptMessage(answer.getMessage(), context);
+                Map<String, String> map = ParentService.encryptMessage(answer.getMessage(), context);
                 if (map != null)
-                    createAndSendMessage(map, answer, context);
+                    ParentService.createAndSendMessage(map, answer, context);
+            } else {
+                Log.d("TAG", "onReceive: no network");
             }
+        } else {
+            Log.d("TAG", "onReceive: result null");
         }
-    }
-
-    private void createAndSendMessage(Map<String, String> map, Message message, Context context) {
-        String serverPublic = map.get(CommonValues.SERVER_KEY);
-        String myPublic = map.get(CommonValues.MY_PUBLIC_KEY);
-        String myPrivate = map.get(CommonValues.MY_PRIVATE_KEY);
-        String iv = map.get(CommonValues.IV);
-        FMessage fMessage = new FMessage(message.getId(), map.get(CommonValues.ENCRYPTED_MESSAGE), message.getFrom(), message.getTo(), message.getMessageType(), CommonValues.STATUS_SENT, message.getCurrMillis(), null, null, null, serverPublic, myPublic, iv);
-        FirebaseDb.getInstance().sendMessage(fMessage);
-        ParentService.postNotification(message, context, (Application) context.getApplicationContext());
-        Key key = new Key(UUID.randomUUID().toString(), myPrivate, myPublic, serverPublic, message.getCurrMillis());
-        insertKey(key, context);
-    }
-
-    private Map<String, String> encryptMessage(String text, Context context) {
-        Key key = KeyViewModel.getInstance((ViewModelStoreOwner) context, (Application) context.getApplicationContext()).getLastKeyWithServerPublic(ParentService.keys);
-        if (key != null) {
-            String serverPublic = key.getServerPublic();
-            return Encryption.encryptText(text, serverPublic);
-        }
-        return null;
-    }
-
-    private void insertKey(Key key, Context context) {
-        KeyViewModel.getInstance((ViewModelStoreOwner) context, (Application) context.getApplicationContext()).insert(key);
     }
 
 

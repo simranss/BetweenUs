@@ -70,16 +70,13 @@ public class ParentService extends LifecycleService {
         String description = "Foreground notifications";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        NotificationChannel channel = new NotificationChannel("sticky", name, importance);
+        channel.setDescription(description);
+        channel.setShowBadge(false);
 
-            NotificationChannel channel = new NotificationChannel("sticky", name, importance);
-            channel.setDescription(description);
-            channel.setShowBadge(false);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-            notificationManager.createNotificationChannel(channel);
-        }
+        notificationManager.createNotificationChannel(channel);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
@@ -262,12 +259,11 @@ public class ParentService extends LifecycleService {
 
         String serverName = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_SERVER_NAME);
         String serverUid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_SERVER_UID);
-        String from = (serverUid.equals(message.getFrom().trim())) ? serverName : "Name";
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
 
         Intent replyIntent = new Intent(context, NotificationReceiver.class);
-        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 102, replyIntent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 0, replyIntent, 0);
 
         RemoteInput remoteInput = new RemoteInput.Builder("key_reply")
                 .setLabel("Reply")
@@ -275,7 +271,6 @@ public class ParentService extends LifecycleService {
 
         NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(R.drawable.send, "Reply", replyPendingIntent)
                 .addRemoteInput(remoteInput)
-                .setAllowGeneratedReplies(true)
                 .build();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -292,7 +287,7 @@ public class ParentService extends LifecycleService {
 
             NotificationCompat.BubbleMetadata bubbleMetadata = new NotificationCompat.BubbleMetadata.Builder("short_id").build();
             Person person = new Person.Builder()
-                    .setName(from)
+                    .setName(serverName)
                     .setImportant(true)
                     .build();
             Person you = new Person.Builder()
@@ -302,17 +297,18 @@ public class ParentService extends LifecycleService {
             ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(context, "short_id")
                     .setLongLived(true)
                     .setIntent(new Intent(context, BubbleChatActivity.class).setAction(Intent.ACTION_VIEW))
-                    .setShortLabel(from)
+                    .setShortLabel(serverName)
                     .setPerson(person)
                     .build();
             ((ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE)).pushDynamicShortcut(shortcut.toShortcutInfo());
             NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle((person));
-            for (Message message1 : unreadMessages) {
-                if (message1.getFrom().equals(serverUid))
-                    messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), person));
-                else
-                    messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), you));
-            }
+            if (unreadMessages != null)
+                for (Message message1 : unreadMessages) {
+                    if (message1.getFrom().equals(serverUid))
+                        messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), person));
+                    else
+                        messagingStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message1.getMessage(), message1.getCurrMillis(), you));
+                }
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "message")
                     .setSmallIcon(R.drawable.notif_icon)
                     .setStyle(messagingStyle)
@@ -323,24 +319,21 @@ public class ParentService extends LifecycleService {
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                     .setBubbleMetadata(bubbleMetadata)
                     .setContentIntent(contentIntent)
-                    .setNumber(unreadMessages.size())
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
             // notificationId is a unique int for each notification that you must define
             notificationManager.notify(101, builder.build());
         } else {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                CharSequence name = "Messages";
-                String description = "Message notifications";
-                int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            CharSequence name = "Messages";
+            String description = "Message notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
-                NotificationChannel channel = new NotificationChannel("message", name, importance);
-                channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
-                channel.setDescription(description);
+            NotificationChannel channel = new NotificationChannel("message", name, importance);
+            channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+            channel.setDescription(description);
 
-                notificationManager.createNotificationChannel(channel);
-            }
+            notificationManager.createNotificationChannel(channel);
 
             String contentInfo = "";
 
@@ -367,7 +360,7 @@ public class ParentService extends LifecycleService {
                     .setSmallIcon(R.drawable.notif_icon)
                     .setContentIntent(contentIntent)
                     .setNumber(unreadMessages.size())
-                    .setContentTitle(from)
+                    .setContentTitle(serverName)
                     .setContentText(message.getMessage())
                     .addAction(replyAction)
                     .setOnlyAlertOnce(true)
@@ -385,5 +378,40 @@ public class ParentService extends LifecycleService {
     public static void stopWork() {
         if (messagesRef != null && handler != null)
             messagesRef.removeEventListener(handler);
+    }
+
+    public static List<Message> getUnreadMessages() {
+        return unreadMessages;
+    }
+
+    public static void addUnreadMessages(Message message) {
+        unreadMessages.add(message);
+    }
+
+    public static void createAndSendMessage(Map<String, String> map, Message message, Context context) {
+        String serverPublic = map.get(CommonValues.SERVER_KEY);
+        String myPublic = map.get(CommonValues.MY_PUBLIC_KEY);
+        String myPrivate = map.get(CommonValues.MY_PRIVATE_KEY);
+        String iv = map.get(CommonValues.IV);
+        FMessage fMessage = new FMessage(message.getId(), map.get(CommonValues.ENCRYPTED_MESSAGE), message.getFrom(), message.getTo(), message.getMessageType(), CommonValues.STATUS_SENT, message.getCurrMillis(), null, null, null, serverPublic, myPublic, iv);
+        FirebaseDb.getInstance().sendMessage(fMessage);
+        ParentService.postNotification(message, context, (Application) context.getApplicationContext());
+        Key key = new Key(UUID.randomUUID().toString(), myPrivate, myPublic, serverPublic, message.getCurrMillis());
+        insertKey(key, context);
+        insertMessage(message);
+    }
+
+    public static Map<String, String> encryptMessage(String text, Context context) {
+
+        Key key = new KeyViewModel((Application) context.getApplicationContext()).getLastKeyWithServerPublic(ParentService.keys);
+        if (key != null) {
+            String serverPublic = key.getServerPublic();
+            return Encryption.encryptText(text, serverPublic);
+        }
+        return null;
+    }
+
+    public static void insertKey(Key key, Context context) {
+        new KeyViewModel((Application) context.getApplicationContext()).insert(key);
     }
 }
