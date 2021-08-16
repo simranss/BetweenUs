@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
         if (mainFragment.chatFragment != null)
             mainFragment.chatFragment.removeMessageListener();
         FirebaseDb.getInstance().userOffline(uid);
-        startService(new Intent(getApplicationContext(), ParentService.class));
+        startForegroundService(new Intent(getApplicationContext(), ParentService.class));
 
         super.onStop();
     }

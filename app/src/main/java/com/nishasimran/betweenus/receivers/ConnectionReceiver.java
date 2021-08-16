@@ -13,11 +13,10 @@ public class ConnectionReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        ParentService parentService = new ParentService();
         if (isNetworkAvailable(context)) {
-            parentService.startWork(context.getApplicationContext());
+            ParentService.startWork(context.getApplicationContext());
         } else {
-            parentService.stopWork();
+            ParentService.stopWork();
         }
     }
 
