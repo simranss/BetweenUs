@@ -1,5 +1,6 @@
 package com.nishasimran.betweenus.Fragments;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,7 +76,7 @@ public class ChatFragment extends Fragment {
 
     public UserDetailsFragment fragment;
 
-    //final private MediaPlayer mediaPlayer;
+    private MediaPlayer comeMediaPlayer, sendMediaPlayer;
 
     public ChatFragment(BubbleChatActivity activity) {
         this.activity = activity;
@@ -84,12 +85,6 @@ public class ChatFragment extends Fragment {
     public ChatFragment(MainFragment fragment, MainActivity activity) {
         this.mainFragment = fragment;
         this.activity = activity;
-        //this.mediaPlayer = MediaPlayer.create(getContext(), R.raw.conv_tone);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -136,7 +131,7 @@ public class ChatFragment extends Fragment {
                                     }
                                     FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_SEEN, readCurrMillis);
                                     insertMessage(message);
-                                    //mediaPlayer.start();
+                                    comeMediaPlayer.start();
                                     Integer index = adapter.getIndexOf(message);
                                     if (index != null)
                                         recyclerView.scrollToPosition(index);
@@ -336,7 +331,8 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        //mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+        comeMediaPlayer.setOnCompletionListener(MediaPlayer::release);
+        sendMediaPlayer.setOnCompletionListener(MediaPlayer::release);
     }
 
     private void sendMessage() {
@@ -366,6 +362,7 @@ public class ChatFragment extends Fragment {
                         Integer index = adapter.getIndexOf(message);
                         if (index != null)
                             recyclerView.scrollToPosition(index);
+                        sendMediaPlayer.start();
                     });
 
                     if (Utils.isNetworkAvailable(activity)) {
@@ -414,6 +411,9 @@ public class ChatFragment extends Fragment {
         recyclerView = parent.findViewById(R.id.chat_recycler);
         messageEditText = parent.findViewById(R.id.chat_message);
         sendImageView = parent.findViewById(R.id.chat_send);
+
+        this.comeMediaPlayer = MediaPlayer.create(activity, R.raw.swoosh);
+        this.sendMediaPlayer = MediaPlayer.create(activity, R.raw.pop);
 
         createPopupMenu();
 
