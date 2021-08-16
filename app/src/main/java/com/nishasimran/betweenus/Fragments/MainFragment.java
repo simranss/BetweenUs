@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -84,16 +85,22 @@ public class MainFragment extends Fragment {
 
         root = parent.findViewById(R.id.main_root);
         FrameLayout extraLayer = parent.findViewById(R.id.main_extra_layer);
+        Log.d(TAG, "onCreateView: frame layout init");
         @DrawableRes Integer backgroundId = Utils.getBackgroundId(activity.getApplication());
         if (backgroundId != null) {
             if (Utils.getIsBackgroundBlur(activity.getApplication())) {
                 initOnGlobalLayoutListener(backgroundId);
 
+                Log.d(TAG, "onCreateView: blur selected");
                 blurBackground(backgroundId);
             } else {
-                extraLayer.setBackgroundResource(R.color.transparent);
+                Log.d(TAG, "onCreateView: blur not selected");
+                extraLayer.setBackground(ResourcesCompat.getDrawable(getResources(), R.color.transparent, activity.getTheme()));
                 root.setBackgroundResource(backgroundId);
             }
+        } else {
+            Log.d(TAG, "onCreateView: backgroundId is null");
+            extraLayer.setBackground(ResourcesCompat.getDrawable(getResources(), R.color.transparent, activity.getTheme()));
         }
 
         // by default load the home fragment

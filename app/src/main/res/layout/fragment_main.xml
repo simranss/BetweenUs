@@ -13,24 +13,17 @@
         android:id="@+id/main_root">
 
         <FrameLayout
+            android:id="@+id/main_extra_layer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white_20"
+            android:background="@color/white_50"
             tools:ignore="UselessParent">
 
-            <FrameLayout
-                android:id="@+id/main_extra_layer"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/main_view_pager"
                 android:layout_width="match_parent"
-                android:background="@color/white_50"
-                android:layout_height="match_parent">
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/main_view_pager"
-                    android:layout_width="match_parent"
-                    android:background="@color/transparent"
-                    android:layout_height="match_parent" />
-
-            </FrameLayout>
+                android:layout_height="match_parent"
+                android:background="@color/transparent" />
 
         </FrameLayout>
 
