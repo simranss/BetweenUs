@@ -51,14 +51,14 @@ import java.util.UUID;
 
 public class ParentService extends LifecycleService {
 
-    private final String TAG = "MessageService";
+    private static final String TAG = "MessageService";
 
-    private ChildEventListener handler;
-    private DatabaseReference messagesRef;
-    private MessageViewModel messageViewModel;
-    private KeyViewModel keyViewModel;
+    private static ChildEventListener handler;
+    private static DatabaseReference messagesRef;
+    private static MessageViewModel messageViewModel;
+    private static KeyViewModel keyViewModel;
     public static List<Key> keys;
-    private List<Message> messages;
+    private static  List<Message> messages;
 
     private static List<Message> unreadMessages;
 
@@ -109,7 +109,7 @@ public class ParentService extends LifecycleService {
 
     }
 
-    public void startWork(Context context) {
+    public static void startWork(Context context) {
         Application application = ((Application)context.getApplicationContext());
 
         Log.d(TAG, "init firebaseApp");
@@ -230,23 +230,23 @@ public class ParentService extends LifecycleService {
         Log.d(TAG, "adding the listeners to databaseReference");
         messagesRef.addChildEventListener(handler);
     }
-    private void initMessagesListener() {
+    private static void initMessagesListener() {
         messageViewModel.getHundredMessages(0).observeForever( messages1 -> messages = messages1);
     }
 
-    private String decryptMessage(String serverPublic, String myPrivateKey, String iv, String encryptedMessage) {
+    private static String decryptMessage(String serverPublic, String myPrivateKey, String iv, String encryptedMessage) {
         return Encryption.decryptText(serverPublic, myPrivateKey, iv, encryptedMessage);
     }
 
-    private void insertMessage(Message message) {
+    private static void insertMessage(Message message) {
         messageViewModel.insert(message);
     }
 
-    private void updateMessage(Message message) {
+    private static void updateMessage(Message message) {
         messageViewModel.update(message);
     }
 
-    private void initKeyListener() {
+    private static void initKeyListener() {
         Log.d(TAG, "initKeyListener: keyVM: " + keyViewModel);
         Log.d(TAG, "initKeyListener: livekeys: " + keyViewModel.getAllKeys());
         keyViewModel.getAllKeys().observeForever(keys1 -> {
@@ -382,7 +382,7 @@ public class ParentService extends LifecycleService {
         }
     }
 
-    public void stopWork() {
+    public static void stopWork() {
         if (messagesRef != null && handler != null)
             messagesRef.removeEventListener(handler);
     }

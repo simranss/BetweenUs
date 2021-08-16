@@ -34,6 +34,16 @@
             android:enabled="true"
             android:exported="false" />
 
+        <receiver android:name=".receivers.BootReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.APP_MESSAGING" />
+            </intent-filter>
+
+        </receiver>
+
         <service
             android:name=".services.ParentService"
             android:exported="false"
