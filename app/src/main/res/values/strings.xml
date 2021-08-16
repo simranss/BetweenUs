@@ -34,6 +34,7 @@
     <string name="background_blur">Background blur?</string>
     <string name="no_wallpaper">No wallpaper</string>
     <string name="wallpaper_selected">Selected</string>
+    <string name="unread">Unread</string>
 
     <!-- Navigation drawer strings -->
     <string name="nav_general">General</string>
