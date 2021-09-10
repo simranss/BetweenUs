@@ -8,7 +8,7 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file('/home/simran/Desktop/My Apps/BetweenUs/debugKey.keystore')
+            storeFile file('/home/simran/Documents/My apps/BetweenUs/debugKey.keystore')
             storePassword 'mili2000'
             keyAlias 'debugkey'
             keyPassword 'mili2000'
@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId "com.nishasimran.betweenus"
-        minSdkVersion 26
+        minSdkVersion 30
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
@@ -41,6 +41,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+    ndkVersion '23.0.7599858'
 }
 
 dependencies {
@@ -66,10 +67,27 @@ dependencies {
     androidTestImplementation "androidx.room:room-testing:$room_version"
 
     // Lifecycle components
-    implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
-    // noinspection LifecycleAnnotationProcessorWithJava8
-    annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+    def lifecycle_version = "2.3.1"
+    def arch_version = "2.1.0"
 
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
+    // Saved state module for ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+    // alternately - if using Java8, use the following instead of lifecycle-compiler
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    // optional - helpers for implementing LifecycleOwner in a Service
+    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
+    // optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
+    // optional - ReactiveStreams support for LiveData
+    implementation "androidx.lifecycle:lifecycle-reactivestreams:$lifecycle_version"
+    // optional - Test helpers for LiveData
+    testImplementation "androidx.arch.core:core-testing:$arch_version"
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:28.3.0')
 
@@ -82,5 +100,7 @@ dependencies {
 
     // biometric lock
     implementation "androidx.biometric:biometric:1.1.0"
+
+    implementation "androidx.security:security-crypto:1.0.0"
 
 }
