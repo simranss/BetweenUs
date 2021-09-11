@@ -14,13 +14,13 @@ android {
             keyPassword 'mili2000'
         }
     }
-    compileSdkVersion 31
+    compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.nishasimran.betweenus"
         minSdkVersion 30
-        targetSdkVersion 31
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -89,7 +89,7 @@ dependencies {
     // optional - Test helpers for LiveData
     testImplementation "androidx.arch.core:core-testing:$arch_version"
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:28.3.0')
+    implementation platform('com.google.firebase:firebase-bom:28.4.0')
 
     // Add the dependency for the Firebase SDK for Google Analytics
     // When using the BoM, don't specify versions in Firebase dependencies
@@ -97,6 +97,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-storage'
 
     // biometric lock
     implementation "androidx.biometric:biometric:1.1.0"
