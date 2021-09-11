@@ -67,9 +67,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                 holder.comeContainer.setVisibility(View.GONE);
                 holder.sendContainer.setVisibility(View.VISIBLE);
 
-                holder.sendMessageTxt.setText(messageText);
-                holder.sendTimeTxt.setText(time);
-                holder.sendStatusTxt.setText(Utils.getMessageStatus(message.getStatus()));
+                if (message.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT)) {
+                    holder.sendMessageTxt.setText(messageText);
+                    holder.sendTimeTxt.setText(time);
+                    holder.sendStatusTxt.setText(Utils.getMessageStatus(message.getStatus()));
+                } else if (CommonValues.MESSAGE_TYPE_IMAGE.equals(message.getMessageType())) {
+                    // TODO: show image
+                    holder.sendMessageTxt.setText("image");
+                    holder.sendTimeTxt.setText(time);
+                    holder.sendStatusTxt.setText(Utils.getMessageStatus(message.getStatus()));
+                }
 
                 if (message.getStatus().equals(CommonValues.STATUS_SENDING)) {
                     sendMessages(message);
@@ -79,8 +86,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                 holder.comeContainer.setVisibility(View.VISIBLE);
                 holder.sendContainer.setVisibility(View.GONE);
 
-                holder.comeMessageTxt.setText(messageText);
-                holder.comeTimeTxt.setText(time);
+                if (message.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT)) {
+                    holder.comeMessageTxt.setText(messageText);
+                    holder.comeTimeTxt.setText(time);
+                } else if (CommonValues.MESSAGE_TYPE_IMAGE.equals(message.getMessageType())) {
+                    // TODO: show image
+                    holder.comeMessageTxt.setText("image");
+                    holder.comeTimeTxt.setText(time);
+                }
 
                 if (message.getUnread() != null) {
                     if (message.getUnread())
@@ -104,9 +117,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     private void sendMessages(Message message) {
         if (Utils.isNetworkAvailable(fragment.activity)) {
-            Map<String, String> map = fragment.encryptMessage(message.getMessage());
-            if (map != null)
-                fragment.createAndSendMessage(map, message);
+
+            if (message.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT)) {
+                Map<String, String> map = fragment.encryptTextMessage(message.getMessage());
+                if (map != null)
+                    fragment.createAndSendMessage(map, message);
+            }
         }
     }
 
@@ -154,6 +170,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
 
+        // TODO: Add an imageview in viewHolder to show images
         private final ConstraintLayout sendContainer;
         private final ConstraintLayout comeContainer;
         private final TextView dateTxt, comeTimeTxt, sendTimeTxt, comeMessageTxt, sendMessageTxt, sendStatusTxt;

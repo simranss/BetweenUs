@@ -63,7 +63,7 @@ public class ParentService extends LifecycleService {
     private static List<Message> unreadMessages;
 
     @Override
-    public int onStartCommand(@NonNull Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
         CharSequence name = "Foreground";
@@ -142,7 +142,22 @@ public class ParentService extends LifecycleService {
                                     Log.d(TAG, "map iv: " + fMessage.getIv());
                                     Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
                                     Log.d(TAG, "map message: " + fMessage.getMessage());
-                                    String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
+                                    String messageTxt;
+                                    if (fMessage.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT))
+                                        messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
+                                    else {
+
+                                        /*
+                                        TODO:
+                                         1. download image file
+                                         2. decode the string from the file
+                                         3. save the file only for your application
+                                         4. show the decoded decoded image to the user
+                                         */
+                                        //String imageStr = ImageUtil.convertToStr(decryptImageMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage()));
+
+                                        messageTxt = "image";
+                                    }
                                     Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
                                     message.setUnread(true);
                                     unreadMessages.add(message);
@@ -245,7 +260,7 @@ public class ParentService extends LifecycleService {
 
     private static void initKeyListener() {
         Log.d(TAG, "initKeyListener: keyVM: " + keyViewModel);
-        Log.d(TAG, "initKeyListener: livekeys: " + keyViewModel.getAllKeys());
+        Log.d(TAG, "initKeyListener: liveKeys: " + keyViewModel.getAllKeys());
         keyViewModel.getAllKeys().observeForever(keys1 -> {
             keys = keys1;
             Log.d(TAG, "initKeyListener: keys: " + keys1);
@@ -263,7 +278,7 @@ public class ParentService extends LifecycleService {
         NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
 
         Intent replyIntent = new Intent(context, NotificationReceiver.class);
-        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 0, replyIntent, 0);
+        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
 
         RemoteInput remoteInput = new RemoteInput.Builder("key_reply")
                 .setLabel("Reply")
