@@ -246,9 +246,25 @@
                     android:textColor="?colorOnSendMessageBox"
                     android:textColorHint="?colorLightText"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/chat_send"
+                    app:layout_constraintEnd_toStartOf="@id/chat_image"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/chat_image"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/send_desc"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:padding="8dp"
+                    android:src="@drawable/image"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/chat_send"
+                    app:tint="?colorOnSendMessageBox" />
 
                 <ImageView
                     android:id="@+id/chat_send"

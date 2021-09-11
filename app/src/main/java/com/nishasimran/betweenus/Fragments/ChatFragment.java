@@ -1,6 +1,9 @@
 package com.nishasimran.betweenus.Fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +30,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.nishasimran.betweenus.Activities.BubbleChatActivity;
 import com.nishasimran.betweenus.Activities.MainActivity;
 import com.nishasimran.betweenus.Adapters.ChatAdapter;
@@ -35,6 +42,8 @@ import com.nishasimran.betweenus.Encryption.Encryption;
 import com.nishasimran.betweenus.Firebase.FirebaseDb;
 import com.nishasimran.betweenus.FirebaseDataClasses.FMessage;
 import com.nishasimran.betweenus.R;
+import com.nishasimran.betweenus.Utils.FileUtil;
+import com.nishasimran.betweenus.Utils.ImageUtil;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.FirebaseValues;
@@ -44,6 +53,8 @@ import com.nishasimran.betweenus.ViewModels.UserViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -53,9 +64,9 @@ public class ChatFragment extends Fragment {
     private final String TAG = "ChatFrag";
 
     private MainFragment mainFragment;
-    public final AppCompatActivity activity;
+    public AppCompatActivity activity;
 
-    private ImageView navOpen, callImageView, menuImageView, sendImageView;
+    private ImageView navOpen, callImageView, menuImageView, sendImageView, imageImageView;
     private TextView nameTextView, lastSeenTextView;
     private CardView noMessagesCard;
     private RecyclerView recyclerView;
@@ -122,7 +133,22 @@ public class ChatFragment extends Fragment {
                                     Log.d(TAG, "map iv: " + fMessage.getIv());
                                     Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
                                     Log.d(TAG, "map message: " + fMessage.getMessage());
-                                    String messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
+                                    String messageTxt;
+                                    if (fMessage.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT))
+                                        messageTxt = decryptTextMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
+                                    else {
+
+                                        /*
+                                        TODO:
+                                         1. download image file
+                                         2. decode the string from the file
+                                         3. save the file only for your application
+                                         4. show the decoded decoded image to the user
+                                         */
+                                        //String imageStr = ImageUtil.convertToStr(decryptImageMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage()));
+
+                                        messageTxt = "image";
+                                    }
                                     Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, readCurrMillis, null, readCurrMillis, readCurrMillis);
                                     message.setUnread(false);
                                     if (fMessage.getSentCurrMillis() != null) {
@@ -312,16 +338,20 @@ public class ChatFragment extends Fragment {
             return false;
         });
 
+        imageImageView.setOnClickListener(v -> chooseImageLauncher.launch("image/*"));
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            /**
+             * recyclerView.canScrollVertically(direction)
+             * direction can be any of the below values
+             * -1 = up
+             * 1 = down
+             * 0 = returns false
+             */
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
-                /*
-                 -1 = up
-                 1 = down
-                 0 = returns false
-                 */
                 if (!recyclerView.canScrollVertically(-1)) {
                     MessageViewModel.getInstance(activity, activity.getApplication()).getHundredMessages(100).observe(activity, messages1 -> {
                         messages.addAll(0, messages1);
@@ -330,10 +360,22 @@ public class ChatFragment extends Fragment {
                 }
             }
         });
-
-        comeMediaPlayer.setOnCompletionListener(MediaPlayer::release);
-        sendMediaPlayer.setOnCompletionListener(MediaPlayer::release);
     }
+
+
+    ActivityResultLauncher<String> chooseImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                ImageDecoder.Source source = ImageDecoder.createSource(activity.getContentResolver(), uri);
+                try {
+                    Bitmap bitmap = ImageDecoder.decodeBitmap(source);
+                    sendImageMessage(bitmap);
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
     private void sendMessage() {
         Log.d(TAG, "sendMessage");
@@ -366,7 +408,7 @@ public class ChatFragment extends Fragment {
                     });
 
                     if (Utils.isNetworkAvailable(activity)) {
-                        Map<String, String> map = encryptMessage(message.getMessage());
+                        Map<String, String> map = encryptTextMessage(message.getMessage());
                         if (map != null)
                             createAndSendMessage(map, message);
                     }
@@ -376,7 +418,66 @@ public class ChatFragment extends Fragment {
         }
     }
 
-    public void createAndSendMessage(Map<String, String> map, Message message) {
+    public void sendImageMessage(Bitmap bitmap) {
+        Log.d(TAG, "sendMessage");
+        String serverUid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
+        String uid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_UID);
+        if (serverUid.equals(CommonValues.NULL)) {
+            Toast.makeText(getContext(), "No partner found", Toast.LENGTH_SHORT).show();
+        } else {
+            Thread thread = new Thread(() -> {
+                long currMillis = System.currentTimeMillis();
+                String messageId = Utils.getUniqueMessageId();
+                File file = FileUtil.writeImageToFile(mainFragment.activity, messageId, ImageUtil.convertToStr(bitmap));
+                if (file != null) {
+                    Message message = new Message(messageId,
+                            file.getAbsolutePath(),
+                            uid,
+                            serverUid,
+                            CommonValues.MESSAGE_TYPE_IMAGE,
+                            CommonValues.STATUS_SENDING,
+                            currMillis,
+                            null,
+                            null,
+                            null);
+                    insertMessage(message);
+                    activity.runOnUiThread(() -> {
+                        Integer index = adapter.getIndexOf(message);
+                        if (index != null)
+                            recyclerView.scrollToPosition(index);
+                        sendMediaPlayer.start();
+                    });
+
+                    if (Utils.isNetworkAvailable(activity)) {
+                        createAndSendImageMessage(file, message);
+                    }
+                } else {
+                    Thread.currentThread().interrupt();
+                }
+
+            });
+            thread.start();
+        }
+    }
+
+    private void createAndSendImageMessage(File file, Message message) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        StorageReference imagesRef = storageRef.child("images/" + file.getName());
+        imagesRef.putFile(Uri.fromFile(file))
+                .addOnProgressListener(snapshot -> {
+                    int progress = (int) (snapshot.getBytesTransferred() / snapshot.getTotalByteCount()) * 100;
+                    Log.d(TAG, "image upload progress: " + progress);
+                })
+                .addOnSuccessListener(taskSnapshot -> {
+                    FMessage fMessage = new FMessage(file.getName(), imagesRef.getPath(), message.getFrom(), message.getTo(), message.getMessageType(), CommonValues.STATUS_SENT, message.getCurrMillis(), null, null, null, null, null, null);
+                    FirebaseDb.getInstance().sendMessage(fMessage);
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "image upload", e));
+    }
+
+    public void createAndSendMessage(@NonNull Map<String, String> map, @NonNull Message message) {
         String serverPublic = map.get(CommonValues.SERVER_KEY);
         String myPublic = map.get(CommonValues.MY_PUBLIC_KEY);
         String myPrivate = map.get(CommonValues.MY_PRIVATE_KEY);
@@ -387,7 +488,7 @@ public class ChatFragment extends Fragment {
         insertKey(key);
     }
 
-    public Map<String, String> encryptMessage(String text) {
+    public Map<String, String> encryptTextMessage(String text) {
         Key key = KeyViewModel.getInstance(activity, activity.getApplication()).getLastKeyWithServerPublic(keys);
         if (key != null) {
             String serverPublic = key.getServerPublic();
@@ -396,7 +497,7 @@ public class ChatFragment extends Fragment {
         return null;
     }
 
-    private String decryptMessage(String serverPublic, String myPrivateKey, String iv, String encryptedMessage) {
+    private String decryptTextMessage(String serverPublic, String myPrivateKey, String iv, String encryptedMessage) {
         return Encryption.decryptText(serverPublic, myPrivateKey, iv, encryptedMessage);
     }
 
@@ -411,6 +512,7 @@ public class ChatFragment extends Fragment {
         recyclerView = parent.findViewById(R.id.chat_recycler);
         messageEditText = parent.findViewById(R.id.chat_message);
         sendImageView = parent.findViewById(R.id.chat_send);
+        imageImageView = parent.findViewById(R.id.chat_image);
 
         this.comeMediaPlayer = MediaPlayer.create(activity, R.raw.swoosh);
         this.sendMediaPlayer = MediaPlayer.create(activity, R.raw.pop);
@@ -532,6 +634,9 @@ public class ChatFragment extends Fragment {
 
     @Override
     public void onPause() {
+
+        comeMediaPlayer.setOnCompletionListener(MediaPlayer::release);
+        sendMediaPlayer.setOnCompletionListener(MediaPlayer::release);
         super.onPause();
     }
 

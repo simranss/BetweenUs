@@ -1,9 +1,7 @@
 package com.nishasimran.betweenus.Encryption;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.nishasimran.betweenus.Utils.ImageUtil;
 import com.nishasimran.betweenus.Utils.Utils;
 import com.nishasimran.betweenus.Values.CommonValues;
 import com.nishasimran.betweenus.Values.EncryptionString;
@@ -16,7 +14,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -113,70 +110,6 @@ public class Encryption {
 
         return decryptedMessage;
     }
-
-    public static Bitmap decryptImage(String serverPublicKey, String private_key, String ivStr, String encryptedText) {
-        Bitmap decryptedBitmap = null;
-        byte[] serverKey = Utils.stringByteArrayToByteArray(serverPublicKey);
-        byte[] privateKey = Utils.stringByteArrayToByteArray(private_key);
-        byte[] cipherText = Utils.stringByteArrayToByteArray(encryptedText);
-        byte[] iv = Utils.stringByteArrayToByteArray(ivStr);
-
-        byte[] sharedKey = generateSharedKey(privateKey, serverKey);
-
-        SecretKey decryptionKey = new SecretKeySpec(sharedKey, 0, sharedKey.length, EncryptionString.ALGORITHM_ARC4);
-
-        try {
-
-            Cipher decryptCipher = Cipher.getInstance(EncryptionString.TRANSFORMATION_ARC4);
-            decryptCipher.init(Cipher.DECRYPT_MODE, decryptionKey, new IvParameterSpec(iv));
-            byte[] decryptedBytes = decryptCipher.doFinal(cipherText);
-            decryptedBitmap = ImageUtil.convert(decryptedBytes);
-            Log.d(TAG, "decryptedBytes: " + Arrays.toString(decryptedBytes));
-            Log.d(TAG, "decryptedMessage: " + decryptedBitmap);
-
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException | InvalidKeyException e) {
-            e.printStackTrace();
-        }
-
-        return decryptedBitmap;
-    }
-
-    public static Map<String, String> encryptImage(Bitmap bitmap, String serverPublicKey) {
-        byte[] bM = ImageUtil.convert(bitmap);
-
-        SecureRandom random = new SecureRandom();
-
-        byte[] privateKey = generatePrivateKey(random);
-        byte[] publicKey = generatePublicKey(privateKey);
-        byte[] serverKey = Utils.stringByteArrayToByteArray(serverPublicKey);
-        byte[] sharedKey = generateSharedKey(privateKey, serverKey);
-
-        SecretKey encryptionKey = new SecretKeySpec(sharedKey, 0, sharedKey.length, EncryptionString.ALGORITHM_ARC4);
-
-        HashMap<String, String> map = null;
-
-        try {
-            Cipher cipher = Cipher.getInstance(EncryptionString.TRANSFORMATION_ARC4);
-            cipher.init(Cipher.ENCRYPT_MODE, encryptionKey);
-            byte[] ciphertext = cipher.doFinal(bM);
-            byte[] iv = cipher.getIV();
-            Log.d(TAG, "cipherText: " + Arrays.toString(ciphertext));
-
-            map = new HashMap<>();
-            map.put(CommonValues.MY_PRIVATE_KEY, Arrays.toString(privateKey));
-            map.put(CommonValues.MY_PUBLIC_KEY, Arrays.toString(publicKey));
-            map.put(CommonValues.SERVER_KEY, serverPublicKey);
-            map.put(CommonValues.ENCRYPTED_MESSAGE, Arrays.toString(ciphertext));
-            map.put(CommonValues.IV, Arrays.toString(iv));
-
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException e) {
-            e.printStackTrace();
-        }
-
-        return map;
-    }
-
-
 
 
     public static byte[] generatePrivateKey(SecureRandom random) {
