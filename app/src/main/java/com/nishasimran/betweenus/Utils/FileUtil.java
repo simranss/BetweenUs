@@ -19,15 +19,21 @@ public class FileUtil {
 
     @Nullable
     public static File writeToFile(File dir, String id, String data) {
+        Log.d(TAG, "writeToFile id: " + id);
+        Log.d(TAG, "writeToFile dir path: " + dir.getAbsolutePath());
         try {
-            File file = new File(dir, id + ".txt");
+            File file = File.createTempFile(id.substring(1), ".txt", dir);
+            file.createNewFile();
+            Log.d(TAG, "writeToFile file path: " + file.getAbsolutePath());
+
             FileWriter outputStreamWriter = new FileWriter(file);
             outputStreamWriter.write(data);
             outputStreamWriter.close();
             return file;
         }
         catch (IOException e) {
-            Log.e(TAG, "File write failed: " + e.getMessage());
+            Log.e(TAG, "File write failed: " + e.getMessage(), e);
+            e.printStackTrace();
             return null;
         }
     }
@@ -53,8 +59,11 @@ public class FileUtil {
     }
 
     @Nullable
-    public static File writeImageToFile(Context context, String id, String data) {
+    public static File writeImageToFile(@NonNull Context context, String id, String data) {
         File dir = new File(context.getFilesDir(), "images");
+        if (!dir.exists())
+            dir.mkdirs();
+        Log.d(TAG, "writeImageToFile path of dir: " + dir.getAbsolutePath());
         return writeToFile(dir, id, data);
     }
 

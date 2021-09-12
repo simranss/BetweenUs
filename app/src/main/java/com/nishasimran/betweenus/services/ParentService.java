@@ -62,6 +62,13 @@ public class ParentService extends LifecycleService {
 
     private static List<Message> unreadMessages;
 
+    public static void makeUnreadRead() {
+        for (Message message : unreadMessages) {
+            message.setUnread(false);
+            updateMessage(message);
+        }
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -106,6 +113,129 @@ public class ParentService extends LifecycleService {
 
     }
 
+    private static void checkingForMessagesOnline(DataSnapshot snapshot, Context context, Application application) {
+        if (snapshot.exists()) {
+            Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+            if (map != null) {
+                FMessage fMessage = new FMessage(map);
+                Log.d(TAG, "fMessage: " + fMessage);
+                if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
+                    String uid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID);
+                    if (uid.trim().equals(fMessage.getTo().trim())) {
+                        Key key = keyViewModel.findKeyByMyPublic(fMessage.getServerPublic(), keys);
+                        if (key != null) {
+                            snapshot.getRef().removeValue();
+                            long deliveredCurrMillis = System.currentTimeMillis();
+                            Log.d(TAG, "map iv: " + fMessage.getIv());
+                            Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
+                            Log.d(TAG, "map message: " + fMessage.getMessage());
+                            String messageTxt;
+                            if (fMessage.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT))
+                                messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
+                            else {
+                                        /*
+                                        TODO:
+                                         1. download image file
+                                         2. decode the string from the file
+                                         3. save the file only for your application
+                                         4. show the decoded decoded image to the user
+                                         */
+                                //String imageStr = ImageUtil.convertToStr(decryptImageMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage()));
+
+                                messageTxt = "image";
+                            }
+                            Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
+                            message.setUnread(true);
+                            if (fMessage.getSentCurrMillis() != null) {
+                                message.setCurrMillis(fMessage.getSentCurrMillis());
+                                message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                            }
+                            FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
+                            addUnreadMessages(message);
+                            postNotification(message, context, application);
+                            insertMessage(message);
+                            Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
+                            insertKey(key1, context);
+                        } else {
+                            Log.d(TAG, "key not found");
+                        }
+                    } else {
+                        Log.d(TAG, "message not sent to you");
+                        if (fMessage.getSentCurrMillis() != null) {
+                            String messageId = snapshot.getRef().getKey();
+                            Message message = messageViewModel.findMessage(messageId, messages);
+                            if (message != null) {
+                                if (message.getSentCurrMillis() == null) {
+                                    message.setStatus(CommonValues.STATUS_SENT);
+                                    message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                                    updateMessage(message);
+                                } else {
+                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                                }
+                            }
+                        }
+                    }
+                } else if (fMessage.getSentCurrMillis() != null) {
+                    String messageId = snapshot.getRef().getKey();
+                    Message message = messageViewModel.findMessage(messageId, messages);
+                    if (message != null) {
+                        if (message.getSentCurrMillis() == null) {
+                            message.setStatus(CommonValues.STATUS_SENT);
+                            message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                            updateMessage(message);
+                        } else {
+                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                        }
+
+                        if (fMessage.getDeliveredCurrMillis() != null) {
+                            if (message.getDeliveredCurrMillis() == null) {
+                                message.setStatus(CommonValues.STATUS_DELIVERED);
+                                message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                                updateMessage(message);
+                            } else {
+                                Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                            }
+                        }
+
+                        if (fMessage.getReadCurrMillis() != null) {
+                            if (message.getReadCurrMillis() == null) {
+                                message.setStatus(CommonValues.STATUS_SEEN);
+                                message.setReadCurrMillis(fMessage.getReadCurrMillis());
+                                updateMessage(message);
+                            } else {
+                                Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                            }
+                        }
+                    }
+                } else if (fMessage.getDeliveredCurrMillis() != null) {
+                    String messageId = snapshot.getRef().getKey();
+                    Message message = messageViewModel.findMessage(messageId, messages);
+                    if (message != null) {
+                        if (message.getDeliveredCurrMillis() == null) {
+                            message.setStatus(CommonValues.STATUS_DELIVERED);
+                            message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                            updateMessage(message);
+                        } else {
+                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                        }
+                    }
+                } else if (fMessage.getReadCurrMillis() != null) {
+                    String messageId = snapshot.getRef().getKey();
+                    Message message = messageViewModel.findMessage(messageId, messages);
+                    if (message != null) {
+                        if (message.getReadCurrMillis() == null) {
+                            message.setStatus(CommonValues.STATUS_SEEN);
+                            message.setReadCurrMillis(fMessage.getReadCurrMillis());
+                            updateMessage(message);
+                        } else {
+                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public static void startWork(Context context) {
         Application application = ((Application)context.getApplicationContext());
 
@@ -127,108 +257,12 @@ public class ParentService extends LifecycleService {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Log.d(TAG, "messageService onChildAdded");
-                if (snapshot.exists()) {
-                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
-                    if (map != null) {
-                        FMessage fMessage = new FMessage(map);
-                        Log.d(TAG, "fMessage: " + fMessage);
-                        if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
-                            if (uid.trim().equals(fMessage.getTo().trim())) {
-                                Log.d(TAG, "onChildAdded: keys: " + keys);
-                                Key key = keyViewModel.findKeyByMyPublic(fMessage.getServerPublic(), keys);
-                                if (key != null) {
-                                    snapshot.getRef().removeValue();
-                                    long deliveredCurrMillis = System.currentTimeMillis();
-                                    Log.d(TAG, "map iv: " + fMessage.getIv());
-                                    Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
-                                    Log.d(TAG, "map message: " + fMessage.getMessage());
-                                    String messageTxt;
-                                    if (fMessage.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT))
-                                        messageTxt = decryptMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
-                                    else {
-
-                                        /*
-                                        TODO:
-                                         1. download image file
-                                         2. decode the string from the file
-                                         3. save the file only for your application
-                                         4. show the decoded decoded image to the user
-                                         */
-                                        //String imageStr = ImageUtil.convertToStr(decryptImageMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage()));
-
-                                        messageTxt = "image";
-                                    }
-                                    Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis, null, deliveredCurrMillis, null);
-                                    message.setUnread(true);
-                                    unreadMessages.add(message);
-                                    if (fMessage.getSentCurrMillis() != null) {
-                                        message.setCurrMillis(fMessage.getSentCurrMillis());
-                                        message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                    }
-                                    FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_DELIVERED, deliveredCurrMillis);
-                                    insertMessage(message);
-                                    postNotification(message, context, application);
-                                    Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
-                                    keyViewModel.insert(key1);
-                                } else {
-                                    Log.d(TAG, "key not found");
-                                }
-                            } else {
-                                Log.d(TAG, "message not sent to you");
-                                if (fMessage.getSentCurrMillis() != null) {
-                                    String messageId = snapshot.getRef().getKey();
-                                    Message message = messageViewModel.findMessage(messageId, messages);
-                                    if (message != null) {
-                                        if (message.getSentCurrMillis() == null) {
-                                            message.setStatus(CommonValues.STATUS_SENT);
-                                            message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                            updateMessage(message);
-                                        } else {
-                                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                        }
-                                    }
-                                }
-                            }
-                        } else if (fMessage.getSentCurrMillis() != null) {
-                            String messageId = snapshot.getRef().getKey();
-                            Message message = messageViewModel.findMessage(messageId, messages);
-                            if (message != null) {
-                                if (message.getSentCurrMillis() == null) {
-                                    message.setStatus(CommonValues.STATUS_SENT);
-                                    message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                    updateMessage(message);
-                                } else {
-                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                }
-
-                                if (fMessage.getDeliveredCurrMillis() != null) {
-                                    if (message.getDeliveredCurrMillis() == null) {
-                                        message.setStatus(CommonValues.STATUS_DELIVERED);
-                                        message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
-                                        updateMessage(message);
-                                    } else {
-                                        Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                    }
-                                }
-                            }
-                        } else if (fMessage.getDeliveredCurrMillis() != null) {
-                            String messageId = snapshot.getRef().getKey();
-                            Message message = messageViewModel.findMessage(messageId, messages);
-                            if (message != null) {
-                                if (message.getDeliveredCurrMillis() == null) {
-                                    message.setStatus(CommonValues.STATUS_DELIVERED);
-                                    message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
-                                    updateMessage(message);
-                                } else {
-                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                }
-                            }
-                        }
-                    }
-                }
+                checkingForMessagesOnline(snapshot, context, application);
             }
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                checkingForMessagesOnline(snapshot, context, application);
+            }
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
             @Override
@@ -278,7 +312,7 @@ public class ParentService extends LifecycleService {
         NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
 
         Intent replyIntent = new Intent(context, NotificationReceiver.class);
-        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         RemoteInput remoteInput = new RemoteInput.Builder("key_reply")
                 .setLabel("Reply")
