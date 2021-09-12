@@ -114,29 +114,26 @@ public class ChatFragment extends Fragment {
         return parent;
     }
 
-    private void initMessageReceiver() {
-        messageChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
-                if (snapshot.exists()) {
-                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
-                    if (map != null) {
-                        FMessage fMessage = new FMessage(map);
-                        Log.d(TAG, "fMessage: " + fMessage);
-                        if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
-                            String uid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_UID);
-                            if (uid.trim().equals(fMessage.getTo().trim())) {
-                                Key key = KeyViewModel.getInstance(activity, activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic(), keys);
-                                if (key != null) {
-                                    snapshot.getRef().removeValue();
-                                    long readCurrMillis = System.currentTimeMillis();
-                                    Log.d(TAG, "map iv: " + fMessage.getIv());
-                                    Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
-                                    Log.d(TAG, "map message: " + fMessage.getMessage());
-                                    String messageTxt;
-                                    if (fMessage.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT))
-                                        messageTxt = decryptTextMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
-                                    else {
+    private void checkingForMessagesOnline(DataSnapshot snapshot) {
+        if (snapshot.exists()) {
+            Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+            if (map != null) {
+                FMessage fMessage = new FMessage(map);
+                Log.d(TAG, "fMessage: " + fMessage);
+                if (fMessage.getFrom() != null && fMessage.getTo() != null && fMessage.getMessage() != null) {
+                    String uid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_UID);
+                    if (uid.trim().equals(fMessage.getTo().trim())) {
+                        Key key = KeyViewModel.getInstance(activity, activity.getApplication()).findKeyByMyPublic(fMessage.getServerPublic(), keys);
+                        if (key != null) {
+                            snapshot.getRef().removeValue();
+                            long readCurrMillis = System.currentTimeMillis();
+                            Log.d(TAG, "map iv: " + fMessage.getIv());
+                            Log.d(TAG, "map myPublic: " + fMessage.getMyPublic());
+                            Log.d(TAG, "map message: " + fMessage.getMessage());
+                            String messageTxt;
+                            if (fMessage.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT))
+                                messageTxt = decryptTextMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage());
+                            else {
 
                                         /*
                                         TODO:
@@ -145,45 +142,30 @@ public class ChatFragment extends Fragment {
                                          3. save the file only for your application
                                          4. show the decoded decoded image to the user
                                          */
-                                        //String imageStr = ImageUtil.convertToStr(decryptImageMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage()));
+                                //String imageStr = ImageUtil.convertToStr(decryptImageMessage(fMessage.getMyPublic(), key.getMyPrivate(), fMessage.getIv(), fMessage.getMessage()));
 
-                                        messageTxt = "image";
-                                    }
-                                    Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, readCurrMillis, null, readCurrMillis, readCurrMillis);
-                                    message.setUnread(false);
-                                    if (fMessage.getSentCurrMillis() != null) {
-                                        message.setCurrMillis(fMessage.getSentCurrMillis());
-                                        message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                    }
-                                    FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_SEEN, readCurrMillis);
-                                    insertMessage(message);
-                                    comeMediaPlayer.start();
-                                    Integer index = adapter.getIndexOf(message);
-                                    if (index != null)
-                                        recyclerView.scrollToPosition(index);
-                                    Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
-                                    insertKey(key1);
-                                } else {
-                                    Log.d(TAG, "key not found");
-                                }
-                            } else {
-                                Log.d(TAG, "message not sent to you");
-                                if (fMessage.getSentCurrMillis() != null) {
-                                    String messageId = snapshot.getRef().getKey();
-                                    Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
-                                    if (message != null) {
-                                        Integer index = adapter.getIndexOf(message);
-                                        if (message.getSentCurrMillis() == null) {
-                                            message.setStatus(CommonValues.STATUS_SENT);
-                                            message.setSentCurrMillis(fMessage.getSentCurrMillis());
-                                            updateMessage(message, index);
-                                        } else {
-                                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                        }
-                                    }
-                                }
+                                messageTxt = "image";
                             }
-                        } else if (fMessage.getSentCurrMillis() != null) {
+                            Message message = new Message(fMessage.getId(), messageTxt, fMessage.getFrom(), fMessage.getTo(), fMessage.getMessageType(), CommonValues.STATUS_DELIVERED, readCurrMillis, null, readCurrMillis, readCurrMillis);
+                            message.setUnread(false);
+                            if (fMessage.getSentCurrMillis() != null) {
+                                message.setCurrMillis(fMessage.getSentCurrMillis());
+                                message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                            }
+                            FirebaseDb.getInstance().updateMessageStatus(fMessage.getId(), CommonValues.STATUS_SEEN, readCurrMillis);
+                            insertMessage(message);
+                            comeMediaPlayer.start();
+                            Integer index = adapter.getIndexOf(message);
+                            if (index != null)
+                                recyclerView.scrollToPosition(index);
+                            Key key1 = new Key(UUID.randomUUID().toString(), null, fMessage.getServerPublic(), fMessage.getMyPublic(), fMessage.getCurrMillis());
+                            insertKey(key1);
+                        } else {
+                            Log.d(TAG, "key not found");
+                        }
+                    } else {
+                        Log.d(TAG, "message not sent to you");
+                        if (fMessage.getSentCurrMillis() != null) {
                             String messageId = snapshot.getRef().getKey();
                             Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
                             if (message != null) {
@@ -195,59 +177,86 @@ public class ChatFragment extends Fragment {
                                 } else {
                                     Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                                 }
+                            }
+                        }
+                    }
+                } else if (fMessage.getSentCurrMillis() != null) {
+                    String messageId = snapshot.getRef().getKey();
+                    Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
+                    if (message != null) {
+                        Integer index = adapter.getIndexOf(message);
+                        if (message.getSentCurrMillis() == null) {
+                            message.setStatus(CommonValues.STATUS_SENT);
+                            message.setSentCurrMillis(fMessage.getSentCurrMillis());
+                            updateMessage(message, index);
+                        } else {
+                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                        }
 
-                                if (fMessage.getDeliveredCurrMillis() != null) {
-                                    if (message.getDeliveredCurrMillis() == null) {
-                                        message.setStatus(CommonValues.STATUS_DELIVERED);
-                                        message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
-                                        updateMessage(message, index);
-                                    } else {
-                                        Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                    }
-                                }
+                        if (fMessage.getDeliveredCurrMillis() != null) {
+                            if (message.getDeliveredCurrMillis() == null) {
+                                message.setStatus(CommonValues.STATUS_DELIVERED);
+                                message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                                updateMessage(message, index);
+                            } else {
+                                Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                            }
+                        }
 
-                                if (fMessage.getReadCurrMillis() != null) {
-                                    if (message.getReadCurrMillis() == null) {
-                                        message.setStatus(CommonValues.STATUS_SEEN);
-                                        message.setReadCurrMillis(fMessage.getReadCurrMillis());
-                                        updateMessage(message, index);
-                                    } else {
-                                        Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                    }
-                                }
+                        if (fMessage.getReadCurrMillis() != null) {
+                            if (message.getReadCurrMillis() == null) {
+                                message.setStatus(CommonValues.STATUS_SEEN);
+                                message.setReadCurrMillis(fMessage.getReadCurrMillis());
+                                updateMessage(message, index);
+                            } else {
+                                Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                             }
-                        } else if (fMessage.getDeliveredCurrMillis() != null) {
-                            String messageId = snapshot.getRef().getKey();
-                            Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
-                            if (message != null) {
-                                Integer index = adapter.getIndexOf(message);
-                                if (message.getDeliveredCurrMillis() == null) {
-                                    message.setStatus(CommonValues.STATUS_DELIVERED);
-                                    message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
-                                    updateMessage(message, index);
-                                } else {
-                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                }
-                            }
-                        } else if (fMessage.getReadCurrMillis() != null) {
-                            String messageId = snapshot.getRef().getKey();
-                            Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
-                            if (message != null) {
-                                Integer index = adapter.getIndexOf(message);
-                                if (message.getReadCurrMillis() == null) {
-                                    message.setStatus(CommonValues.STATUS_SEEN);
-                                    message.setReadCurrMillis(fMessage.getReadCurrMillis());
-                                    updateMessage(message, index);
-                                } else {
-                                    Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
-                                }
-                            }
+                        }
+                    }
+                } else if (fMessage.getDeliveredCurrMillis() != null) {
+                    String messageId = snapshot.getRef().getKey();
+                    Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
+                    if (message != null) {
+                        Integer index = adapter.getIndexOf(message);
+                        if (message.getDeliveredCurrMillis() == null) {
+                            message.setStatus(CommonValues.STATUS_DELIVERED);
+                            message.setDeliveredCurrMillis(fMessage.getDeliveredCurrMillis());
+                            updateMessage(message, index);
+                        } else {
+                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
+                        }
+                    }
+                } else if (fMessage.getReadCurrMillis() != null) {
+                    String messageId = snapshot.getRef().getKey();
+                    Message message = MessageViewModel.getInstance(activity, activity.getApplication()).findMessage(messageId, messages);
+                    if (message != null) {
+                        Integer index = adapter.getIndexOf(message);
+                        if (message.getReadCurrMillis() == null) {
+                            message.setStatus(CommonValues.STATUS_SEEN);
+                            message.setReadCurrMillis(fMessage.getReadCurrMillis());
+                            updateMessage(message, index);
+                        } else {
+                            Log.d(TAG, "sentCurrMillis not null: " + message.getSentCurrMillis());
                         }
                     }
                 }
             }
+        }
+    }
+
+    private void initMessageReceiver() {
+        Log.d(TAG, "initMessageReceiver");
+        messageChildEventListener = new ChildEventListener() {
             @Override
-            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) { }
+            public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                Log.d(TAG, "onChildAdded");
+                checkingForMessagesOnline(snapshot);
+            }
+            @Override
+            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                Log.d(TAG, "onChildChanged");
+                checkingForMessagesOnline(snapshot);
+            }
             @Override
             public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) { }
             @Override
@@ -255,6 +264,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) { }
         };
+        Log.d(TAG, "initMessageReceiver messagesRef: " + messagesRef);
         messagesRef.addChildEventListener(messageChildEventListener);
     }
 
@@ -295,6 +305,10 @@ public class ChatFragment extends Fragment {
             }
             mainFragment.checkMenuItem(R.id.menu_chat);
         }
+
+        initMessagesListener();
+        this.comeMediaPlayer = MediaPlayer.create(activity, R.raw.swoosh);
+        this.sendMediaPlayer = MediaPlayer.create(activity, R.raw.pop);
         Log.d(TAG, "onResume: now super");
         super.onResume();
     }
@@ -366,12 +380,11 @@ public class ChatFragment extends Fragment {
     ActivityResultLauncher<String> chooseImageLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
+                Log.d(TAG, "uri: " + uri);
                 ImageDecoder.Source source = ImageDecoder.createSource(activity.getContentResolver(), uri);
                 try {
                     Bitmap bitmap = ImageDecoder.decodeBitmap(source);
                     sendImageMessage(bitmap);
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -400,6 +413,7 @@ public class ChatFragment extends Fragment {
                             null,
                             null);
                     insertMessage(message);
+                    Log.d(TAG, "sendMessage message: " + message);
                     activity.runOnUiThread(() -> {
                         Integer index = adapter.getIndexOf(message);
                         if (index != null)
@@ -409,8 +423,10 @@ public class ChatFragment extends Fragment {
 
                     if (Utils.isNetworkAvailable(activity)) {
                         Map<String, String> map = encryptTextMessage(message.getMessage());
-                        if (map != null)
+                        if (map != null) {
+                            Log.d(TAG, "sendMessage message map: " + map);
                             createAndSendMessage(map, message);
+                        }
                     }
 
                 }).start();
@@ -419,12 +435,13 @@ public class ChatFragment extends Fragment {
     }
 
     public void sendImageMessage(Bitmap bitmap) {
-        Log.d(TAG, "sendMessage");
+        Log.d(TAG, "sendImageMessage");
         String serverUid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_SERVER_UID);
         String uid = Utils.getStringFromSharedPreference(activity.getApplication(), CommonValues.SHARED_PREFERENCE_UID);
         if (serverUid.equals(CommonValues.NULL)) {
             Toast.makeText(getContext(), "No partner found", Toast.LENGTH_SHORT).show();
         } else {
+            Log.d(TAG, "sendImageMessage: starting thread");
             Thread thread = new Thread(() -> {
                 long currMillis = System.currentTimeMillis();
                 String messageId = Utils.getUniqueMessageId();
@@ -450,11 +467,13 @@ public class ChatFragment extends Fragment {
 
                     if (Utils.isNetworkAvailable(activity)) {
                         createAndSendImageMessage(file, message);
+                    } else {
+                        Log.e(TAG, "sendImageMessage: no internet");
                     }
                 } else {
+                    Log.e(TAG, "sendImageMessage: image null");
                     Thread.currentThread().interrupt();
                 }
-
             });
             thread.start();
         }
@@ -471,7 +490,8 @@ public class ChatFragment extends Fragment {
                     Log.d(TAG, "image upload progress: " + progress);
                 })
                 .addOnSuccessListener(taskSnapshot -> {
-                    FMessage fMessage = new FMessage(file.getName(), imagesRef.getPath(), message.getFrom(), message.getTo(), message.getMessageType(), CommonValues.STATUS_SENT, message.getCurrMillis(), null, null, null, null, null, null);
+                    Log.d(TAG, "imagesRef: " + imagesRef.getPath());
+                    FMessage fMessage = new FMessage(message.getId(), file.getName(), message.getFrom(), message.getTo(), message.getMessageType(), CommonValues.STATUS_SENT, message.getCurrMillis(), null, null, null, null, null, null);
                     FirebaseDb.getInstance().sendMessage(fMessage);
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "image upload", e));
@@ -659,6 +679,7 @@ public class ChatFragment extends Fragment {
     }
 
     public void removeMessageListener() {
-        messagesRef.removeEventListener(messageChildEventListener);
+        if (messageChildEventListener != null)
+            messagesRef.removeEventListener(messageChildEventListener);
     }
 }
