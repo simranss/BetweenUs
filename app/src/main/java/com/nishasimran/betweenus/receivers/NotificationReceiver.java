@@ -33,6 +33,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             Log.i("TAG", "onReceive: " + answer.getMessage());
             if (ParentService.getUnreadMessages() != null) {
                 ParentService.addUnreadMessages(answer);
+                ParentService.makeUnreadRead();
             }
             ParentService.postNotification(answer, context, (Application) context.getApplicationContext());
 
