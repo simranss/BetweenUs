@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ShortcutManager;
-import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -44,7 +43,6 @@ import com.nishasimran.betweenus.receivers.ConnectionReceiver;
 import com.nishasimran.betweenus.receivers.NotificationReceiver;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -322,7 +320,7 @@ public class ParentService extends LifecycleService {
                 .addRemoteInput(remoteInput)
                 .build();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        {
 
             CharSequence name = "Messages";
             String description = "Message notifications";
@@ -372,55 +370,6 @@ public class ParentService extends LifecycleService {
 
             // notificationId is a unique int for each notification that you must define
             notificationManager.notify(101, builder.build());
-        } else {
-
-            CharSequence name = "Messages";
-            String description = "Message notifications";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-            NotificationChannel channel = new NotificationChannel("message", name, importance);
-            channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
-            channel.setDescription(description);
-
-            notificationManager.createNotificationChannel(channel);
-
-            String contentInfo = "";
-
-            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-
-            List<Message> list1 = new ArrayList<>(unreadMessages);
-            List<Message> list2 = new ArrayList<>();
-
-            Collections.reverse(list1);
-            int i = 0;
-            for (Message message1 : list1) {
-                i++;
-                if (i == 6)
-                    break;
-                list2.add(message1);
-            }
-
-            Collections.reverse(list2);
-            for (Message message1 : list2) {
-                inboxStyle.addLine(message1.getMessage());
-            }
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "message")
-                    .setSmallIcon(R.drawable.notif_icon)
-                    .setContentIntent(contentIntent)
-                    .setNumber(unreadMessages.size())
-                    .setContentTitle(serverName)
-                    .setContentText(message.getMessage())
-                    .addAction(replyAction)
-                    .setOnlyAlertOnce(true)
-                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
-                    .setStyle(inboxStyle)
-                    .setContentText(contentInfo)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-            // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(101, builder.build());
         }
     }
 
@@ -450,12 +399,12 @@ public class ParentService extends LifecycleService {
         insertMessage(message);
     }
 
-    public static Map<String, String> encryptMessage(String text, Context context) {
+    public static Map<String, String> encryptMessage(String text, Context context, long millis) {
 
         Key key = new KeyViewModel((Application) context.getApplicationContext()).getLastKeyWithServerPublic(ParentService.keys);
         if (key != null) {
             String serverPublic = key.getServerPublic();
-            return Encryption.encryptText(text, serverPublic);
+            return Encryption.encryptText(text, serverPublic, millis);
         }
         return null;
     }

@@ -27,7 +27,8 @@ public class NotificationReceiver extends BroadcastReceiver {
             Application application = ((Application)context.getApplicationContext());
             String uid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_UID);
             String serverUid = Utils.getStringFromSharedPreference(application, CommonValues.SHARED_PREFERENCE_SERVER_UID);
-            Message answer = new Message(UUID.randomUUID().toString(), replyText.toString(), uid, serverUid, CommonValues.MESSAGE_TYPE_TEXT, CommonValues.STATUS_SENDING, System.currentTimeMillis(), null, null, null);
+            long currMillis = System.currentTimeMillis();
+            Message answer = new Message(UUID.randomUUID().toString(), replyText.toString(), uid, serverUid, CommonValues.MESSAGE_TYPE_TEXT, CommonValues.STATUS_SENDING, currMillis, null, null, null);
             Log.i("TAG", "onReceive: " + uid);
             Log.i("TAG", "onReceive: " + serverUid);
             Log.i("TAG", "onReceive: " + answer.getMessage());
@@ -39,7 +40,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
             if (Utils.isNetworkAvailable(context)) {
                 Log.i("TAG", "onReceive: network avail");
-                Map<String, String> map = ParentService.encryptMessage(answer.getMessage(), context);
+                Map<String, String> map = ParentService.encryptMessage(answer.getMessage(), context, currMillis);
                 if (map != null)
                     ParentService.createAndSendMessage(map, answer, context);
             } else {

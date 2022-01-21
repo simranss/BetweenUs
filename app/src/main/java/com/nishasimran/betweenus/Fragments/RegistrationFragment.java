@@ -31,8 +31,7 @@ import com.nishasimran.betweenus.Values.FirebaseValues;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.security.SecureRandom;
-import java.util.Arrays;
+import java.util.Random;
 import java.util.UUID;
 
 public class RegistrationFragment extends Fragment {
@@ -145,9 +144,9 @@ public class RegistrationFragment extends Fragment {
 
                         keyCurrMillis = System.currentTimeMillis();
                         keyId = UUID.randomUUID().toString();
-                        byte[] private_key = Encryption.generatePrivateKey(new SecureRandom());
-                        privateKey = Arrays.toString(private_key);
-                        publicKey = Arrays.toString(Encryption.generatePublicKey(private_key));
+                        int private_key = new Random().nextInt(10);
+                        privateKey = String.valueOf(private_key);
+                        publicKey = String.valueOf(Encryption.generatePublicKey(private_key, System.currentTimeMillis()));
 
                         Key key = new Key(keyId, privateKey, publicKey, null, keyCurrMillis);
 
