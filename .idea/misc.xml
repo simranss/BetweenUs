@@ -6,6 +6,8 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.3014105419450631" />
         <entry key="app/src/main/res/drawable/drawer_item_background.xml" value="0.15045045045045044" />
         <entry key="app/src/main/res/drawable/drawer_text_color.xml" value="0.15045045045045044" />
+        <entry key="app/src/main/res/drawable/ic_round_arrow_circle_down_24.xml" value="0.2" />
+        <entry key="app/src/main/res/drawable/image.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/send.xml" value="0.17395833333333333" />
         <entry key="app/src/main/res/layout-v26/fragment_chat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_bubble_chat.xml" value="0.13648648648648648" />
@@ -27,7 +29,7 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="corretto-11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
