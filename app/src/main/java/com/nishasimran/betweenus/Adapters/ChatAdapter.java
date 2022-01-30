@@ -64,8 +64,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                 }
             }
             if (message.getFrom().trim().equals(uid.trim())) {
-                holder.comeContainer.setVisibility(View.GONE);
-                holder.sendContainer.setVisibility(View.VISIBLE);
+                holder.comeTextContainer.setVisibility(View.GONE);
+                holder.sendTextContainer.setVisibility(View.VISIBLE);
 
                 if (message.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT)) {
                     holder.sendMessageTxt.setText(messageText);
@@ -83,8 +83,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                 }
 
             } else if (message.getTo().trim().equals(uid.trim())) {
-                holder.comeContainer.setVisibility(View.VISIBLE);
-                holder.sendContainer.setVisibility(View.GONE);
+                holder.comeTextContainer.setVisibility(View.VISIBLE);
+                holder.sendTextContainer.setVisibility(View.GONE);
 
                 if (message.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT)) {
                     holder.comeMessageTxt.setText(messageText);
@@ -119,7 +119,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         if (Utils.isNetworkAvailable(fragment.activity)) {
 
             if (message.getMessageType().equals(CommonValues.MESSAGE_TYPE_TEXT)) {
-                Map<String, String> map = fragment.encryptTextMessage(message.getMessage());
+                Map<String, String> map = fragment.encryptTextMessage(message.getMessage(), message.getCurrMillis());
                 if (map != null)
                     fragment.createAndSendMessage(map, message);
             }
@@ -171,28 +171,28 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     static class ChatViewHolder extends RecyclerView.ViewHolder {
 
         // TODO: Add an imageview in viewHolder to show images
-        private final ConstraintLayout sendContainer;
-        private final ConstraintLayout comeContainer;
+        private final ConstraintLayout sendTextContainer;
+        private final ConstraintLayout comeTextContainer;
         private final TextView dateTxt, comeTimeTxt, sendTimeTxt, comeMessageTxt, sendMessageTxt, sendStatusTxt;
 
         public ChatViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
 
             ConstraintLayout root = itemView.findViewById(R.id.message_root);
-            sendContainer = root.findViewById(R.id.message_send_msg);
-            comeContainer = root.findViewById(R.id.message_come_msg);
+            sendTextContainer = root.findViewById(R.id.message_send_msg);
+            comeTextContainer = root.findViewById(R.id.message_come_msg);
 
             dateTxt = root.findViewById(R.id.message_date);
 
-            comeTimeTxt = comeContainer.findViewById(R.id.message_come_time);
-            comeMessageTxt = comeContainer.findViewById(R.id.message_come_text);
+            comeTimeTxt = comeTextContainer.findViewById(R.id.message_come_time);
+            comeMessageTxt = comeTextContainer.findViewById(R.id.message_come_text);
 
-            sendTimeTxt = sendContainer.findViewById(R.id.message_send_time);
-            sendMessageTxt = sendContainer.findViewById(R.id.message_send_text);
-            sendStatusTxt = sendContainer.findViewById(R.id.message_send_status);
+            sendTimeTxt = sendTextContainer.findViewById(R.id.message_send_time);
+            sendMessageTxt = sendTextContainer.findViewById(R.id.message_send_text);
+            sendStatusTxt = sendTextContainer.findViewById(R.id.message_send_status);
 
-            sendContainer.setVisibility(View.GONE);
-            comeContainer.setVisibility(View.GONE);
+            sendTextContainer.setVisibility(View.GONE);
+            comeTextContainer.setVisibility(View.GONE);
             dateTxt.setVisibility(View.GONE);
         }
     }

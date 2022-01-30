@@ -422,7 +422,7 @@ public class ChatFragment extends Fragment {
                     });
 
                     if (Utils.isNetworkAvailable(activity)) {
-                        Map<String, String> map = encryptTextMessage(message.getMessage());
+                        Map<String, String> map = encryptTextMessage(message.getMessage(), currMillis);
                         if (map != null) {
                             Log.d(TAG, "sendMessage message map: " + map);
                             createAndSendMessage(map, message);
@@ -508,11 +508,11 @@ public class ChatFragment extends Fragment {
         insertKey(key);
     }
 
-    public Map<String, String> encryptTextMessage(String text) {
+    public Map<String, String> encryptTextMessage(String text, long millis) {
         Key key = KeyViewModel.getInstance(activity, activity.getApplication()).getLastKeyWithServerPublic(keys);
         if (key != null) {
             String serverPublic = key.getServerPublic();
-            return Encryption.encryptText(text, serverPublic);
+            return Encryption.encryptText(text, serverPublic, millis);
         }
         return null;
     }
@@ -592,7 +592,7 @@ public class ChatFragment extends Fragment {
                             Log.d(TAG, "lastSeen calculated: " + lastSeenStr);
                             lastSeenTextView.setText(lastSeenStr);
                         } else {
-                            Log.d(TAG, "lastSeen class: " + o.getClass().getName() + o.toString());
+                            Log.d(TAG, "lastSeen class: " + o.getClass().getName() + o);
                         }
                     } else {
                         Log.d(TAG, "lastSeen null");
