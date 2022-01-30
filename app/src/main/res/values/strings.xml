@@ -14,6 +14,7 @@
     <string name="back_img_desc">Image to select as new background</string>
     <string name="expansion_desc">Expand this item</string>
     <string name="settings_background_img_desc">Just a background to apply</string>
+    <string name="download_icon_desc">Download</string>
 
     <!-- Hint strings -->
     <string name="phone_hint">Phone no.</string>
